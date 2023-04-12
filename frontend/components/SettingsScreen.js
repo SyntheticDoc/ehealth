@@ -77,6 +77,6 @@ const styles = StyleSheet.create({
 	},
 	formInput: {
 		fontSize: 35,
-		backgoundColor: 'white',
+		backgroundColor: 'white',
 	},
 });

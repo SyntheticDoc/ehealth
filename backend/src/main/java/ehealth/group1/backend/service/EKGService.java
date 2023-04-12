@@ -3,6 +3,8 @@ package ehealth.group1.backend.service;
 import ehealth.group1.backend.persistence.EKGDao;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 @Component
 public class EKGService {
   EKGDao ekgDao;
@@ -11,7 +13,7 @@ public class EKGService {
     this.ekgDao = ekgDao;
   }
 
-  public String getThing(){
+  public List<String> getThing(){
     return ekgDao.getThing();
   }
 

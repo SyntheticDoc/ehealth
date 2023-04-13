@@ -11,6 +11,8 @@ public class ErrorHandler {
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private ApplicationContext appctx;
 
+    private final String div = "   ";
+
     public ErrorHandler(ApplicationContext appctx) {
         this.appctx = appctx;
     }
@@ -26,11 +28,11 @@ public class ErrorHandler {
 
         errorMsg.append(errLevel).append(" Error: ");
         errorMsg.append("In ").append(errLocation).append(": ").append(customErrDesc).append("\n");
-        errorMsg.append("ERROR DETAILS:").append("\n");
-        errorMsg.append(e.getMessage());
+        errorMsg.append(div).append("ERROR DETAILS:").append("\n");
+        errorMsg.append(div).append(e.getMessage());
 
         for(StackTraceElement elem : e.getStackTrace()) {
-            errorMsg.append(elem).append("\n");
+            errorMsg.append(div).append(elem).append("\n");
         }
 
         LOGGER.error(errorMsg.toString());

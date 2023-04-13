@@ -40,7 +40,7 @@ public class DataService {
             obs = parser.parseResource(Observation.class, JsonData);
         } catch(Exception e) {
             errorHandler.handleCriticalError("DataService.getObservation(String JsonData)",
-                    "Could not parse JSON data!", e);
+                    "Could not parse JSON data!\nData provided: " + JsonData + "\n", e);
             return null;
         }
 

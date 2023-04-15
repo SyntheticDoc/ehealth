@@ -22,6 +22,10 @@ public class ErrorHandler {
         shutdown(-1);
     }
 
+    public void handleCustomException(String errLocation, String customErrDesc, Exception e) {
+        postError("CustomException", errLocation, customErrDesc, e);
+    }
+
     // Posts a critical error to the console and then shuts down server gracefully (hopefully!)
     private void postError(String errLevel, String errLocation, String customErrDesc, Exception e) {
         StringBuilder errorMsg = new StringBuilder();

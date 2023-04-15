@@ -6,7 +6,6 @@ import ehealth.group1.backend.helper.ErrorHandler;
 import org.hl7.fhir.r5.model.Observation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.lang.invoke.MethodHandles;
@@ -18,12 +17,9 @@ public class DataService {
     private final FhirContext ctx;
     private final ErrorHandler errorHandler;
 
-    // TODO: Check if autowired is really necessary here
-    @Autowired
     public DataService(FhirContext ctx, ErrorHandler errorHandler) {
         this.ctx = ctx;
         this.errorHandler = errorHandler;
-        getObservation("Bla");
     }
 
     public Observation getObservation(Observation obs) {

@@ -3,14 +3,12 @@ import React, { useEffect, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faHeartPulse } from '@fortawesome/free-solid-svg-icons/faHeartPulse';
 import { faGear } from '@fortawesome/free-solid-svg-icons/faGear';
-// import * as Linking from 'expo-linking';
 
 const HomeScreen = ({ navigation }) => {
-	const [catFact, setCatFact] = useState('');
-	const [healthStatus, setHealthStatus] = useState(0);
+	const [data, setData] = useState('');
+	const [healthStatus, setHealthStatus] = useState(2);
 
 	useEffect(() => {
-		// Linking.openURL('tel://+43 664 3268 438');
 		clearInterval(x);
 		getData();
 		var x = setInterval(() => {
@@ -28,14 +26,15 @@ const HomeScreen = ({ navigation }) => {
 	}, [healthStatus]);
 
 	const getData = () => {
-		fetch('https://catfact.ninja/fact', { method: 'GET' })
+		fetch('http://192.168.0.143:8080', { method: 'GET' })
 			.then((response) => response.json())
 			.then((responseJson) => {
-				setCatFact(JSON.stringify(responseJson.fact));
+				setData(JSON.stringify(responseJson));
+				setHealthStatus(JSON.stringify(responseJson));
 			})
 			.catch((error) => {
 				//Error
-				Alert.alert(JSON.stringify(error));
+				// Alert.alert(JSON.stringify(error));
 				console.error(error);
 			});
 	};
@@ -74,7 +73,7 @@ const HomeScreen = ({ navigation }) => {
 				</Text>
 			</View>
 			<View style={styles.apiResponse}>
-				<Text style={{ color: 'white', fontSize: 20 }}>{catFact}</Text>
+				<Text style={{ color: 'white', fontSize: 20 }}>{data}</Text>
 			</View>
 
 			<TouchableOpacity

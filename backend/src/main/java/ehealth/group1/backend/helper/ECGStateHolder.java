@@ -1,9 +1,11 @@
 package ehealth.group1.backend.helper;
 
 import ehealth.group1.backend.enums.ECGSTATE;
+import org.hl7.fhir.r5.model.Observation;
 
 public class ECGStateHolder {
     ECGSTATE current, last;
+    Observation currentObservation;
 
     // TODO: Get from user settings
     private int iterationsToStateTransitionLeft = 5;
@@ -14,7 +16,8 @@ public class ECGStateHolder {
         last = ECGSTATE.OK;
     }
 
-    public void update(ECGSTATE analysisResult) {
+    public void update(ECGSTATE analysisResult, Observation observation) {
+        currentObservation = observation;
         last = current;
         current = analysisResult;
 
@@ -42,5 +45,9 @@ public class ECGStateHolder {
 
     public ECGSTATE getCurrent() {
         return current;
+    }
+
+    public Observation getCurrentObservation() {
+        return currentObservation;
     }
 }

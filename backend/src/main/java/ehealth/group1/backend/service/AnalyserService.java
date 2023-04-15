@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 import java.lang.invoke.MethodHandles;
 import java.math.BigDecimal;
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
 
 @Component
@@ -34,8 +35,6 @@ public class AnalyserService {
     public ECGSTATE analyse(Observation obs) {
         Instant start = Instant.now();
 
-        ECGSTATE state;
-
         ECGSTATE[] stateList = new ECGSTATE[obs.getComponent().size()];
 
         for(int i = 0; i < obs.getComponent().size(); i++) {
@@ -44,15 +43,16 @@ public class AnalyserService {
 
         for(ECGSTATE s : stateList) {
             if(s == ECGSTATE.OK) {
-                state = ECGSTATE.OK;
-                break;
+                return ECGSTATE.OK;
             } else if(s == ECGSTATE.INVALID) {
-                state = ECGSTATE.INVALID;
-                break;
+                return ECGSTATE.INVALID;
             }
         }
 
         Instant end = Instant.now();
+
+        long millisecondsNeeded = ChronoUnit.MILLIS.between(end, start);
+        LOGGER.debug("Analysis of ecg data needed " + millisecondsNeeded + " ms");
 
         return ECGSTATE.WARNING;
     }
@@ -86,6 +86,7 @@ public class AnalyserService {
             }
         }
 
+        // not enough large deviations? Possible asystole!
         return ECGSTATE.WARNING;
     }
 }

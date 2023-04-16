@@ -1,8 +1,10 @@
 package ehealth.group1.backend.service;
 
+import ehealth.group1.backend.dto.Settings;
 import ehealth.group1.backend.enums.ECGSTATE;
 import ehealth.group1.backend.helper.ECGStateHolder;
 import ehealth.group1.backend.persistence.DataDao;
+import ehealth.group1.backend.persistence.SettingsDao;
 import org.hl7.fhir.r5.model.Observation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,15 +18,21 @@ import java.util.List;
 public class ECGService {
   private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
   DataDao dataDao;
+  SettingsDao settingsDao;
 
+  private Settings settings;
   private final DataService dataService;
   private final AnalyserService analyserService;
-  private ECGStateHolder ecgStateHolder = new ECGStateHolder();
+  private ECGStateHolder ecgStateHolder;
 
-  public ECGService(DataDao dataDao, DataService dataService, AnalyserService analyserService){
+  public ECGService(DataDao dataDao, SettingsDao settingsDao, DataService dataService, AnalyserService analyserService){
     this.dataDao = dataDao;
+    this.settingsDao = settingsDao;
     this.dataService = dataService;
     this.analyserService = analyserService;
+    // TODO: Use production settings
+    settings = settingsDao.getTestSetting();
+    ecgStateHolder = new ECGStateHolder(settings.ecgStateHolderSettings());
   }
 
   public List<String> getThing(){
@@ -33,7 +41,7 @@ public class ECGService {
 
   public void processECG(String data) {
     Observation observation = dataService.getObservation(data);
-    ECGSTATE currentState = analyserService.analyse(observation);
+    ECGSTATE currentState = analyserService.analyse(observation, settings.ecgAnalysisSettings());
 
     ecgStateHolder.update(currentState, observation);
 
@@ -54,7 +62,7 @@ public class ECGService {
 
   public void abortEmergencyCall() {
     LOGGER.warn("ECG emergency call aborted by user!");
-    ecgStateHolder = new ECGStateHolder();
+    ecgStateHolder = new ECGStateHolder(settings.ecgStateHolderSettings());
   }
 
   public String getData(int component) {

@@ -1,5 +1,6 @@
 package ehealth.group1.backend.service;
 
+import ehealth.group1.backend.dto.ECGAnalysisSettings;
 import ehealth.group1.backend.enums.ECGSTATE;
 import ehealth.group1.backend.exception.InvalidIntervalUnitException;
 import ehealth.group1.backend.helper.ErrorHandler;
@@ -32,13 +33,13 @@ public class AnalyserService {
      * @param obs The observation containing all ecg electrode components to be analysed
      * @return The ECGSTATE of the analysed observation
      */
-    public ECGSTATE analyse(Observation obs) {
+    public ECGSTATE analyse(Observation obs, ECGAnalysisSettings ecgAnalysisSettings) {
         Instant start = Instant.now();
 
         ECGSTATE[] stateList = new ECGSTATE[obs.getComponent().size()];
 
         for(int i = 0; i < obs.getComponent().size(); i++) {
-            stateList[i] = analyseComponent(obs.getComponent().get(i));
+            stateList[i] = analyseComponent(obs.getComponent().get(i), ecgAnalysisSettings);
         }
 
         for(ECGSTATE s : stateList) {
@@ -57,15 +58,11 @@ public class AnalyserService {
         return ECGSTATE.WARNING;
     }
 
-    private ECGSTATE analyseComponent(Observation.ObservationComponentComponent c) {
+    private ECGSTATE analyseComponent(Observation.ObservationComponentComponent c, ECGAnalysisSettings ecgAnalysisSettings) {
         SampledData rawData = c.getValueSampledData();
         int[] data = Arrays.stream(rawData.getData().split(" ")).mapToInt(Integer::parseInt).toArray();
 //        BigDecimal interval = rawData.getInterval();
 //        String intervalUnit = rawData.getIntervalUnit();
-
-        // TODO: Get this from settings
-        int maxDeviation = 10;
-        int maxDeviationNum = 5;
 
 //        if(!intervalUnit.equals("ms")) {
 //            InvalidIntervalUnitException e = new InvalidIntervalUnitException("In component " + c.getCode().getCoding().get(0).getDisplay() +
@@ -77,11 +74,11 @@ public class AnalyserService {
         int largeDeviationCount = 0;
 
         for(int i = 0; i < (data.length - 1); i++) {
-            if(Math.abs(data[i] - data[i+1]) > maxDeviation) {
+            if(Math.abs(data[i] - data[i+1]) > ecgAnalysisSettings.maxDeviation()) {
                 largeDeviationCount++;
             }
 
-            if(largeDeviationCount > maxDeviationNum) {
+            if(largeDeviationCount > ecgAnalysisSettings.maxDeviationNum()) {
                 return ECGSTATE.OK;
             }
         }

@@ -1,17 +1,26 @@
 package ehealth.group1.backend.helper;
 
+import ehealth.group1.backend.dto.ECGStateHolderSettings;
 import ehealth.group1.backend.enums.ECGSTATE;
 import org.hl7.fhir.r5.model.Observation;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.lang.invoke.MethodHandles;
 
 public class ECGStateHolder {
+    private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     ECGSTATE current, last;
     Observation currentObservation;
 
-    // TODO: Get from user settings
-    private int iterationsToStateTransitionLeft = 5;
-    private int iterationsToEmergencyCallLeft = 30;
+    private ECGStateHolderSettings ecgStateHolderSettings;
 
-    public ECGStateHolder() {
+    private int iterationsToStateTransitionLeft;
+    private int iterationsToEmergencyCallLeft;
+
+    public ECGStateHolder(ECGStateHolderSettings ecgStateHolderSettings) {
+        this.ecgStateHolderSettings = ecgStateHolderSettings;
+        resetTimers();
         current = ECGSTATE.OK;
         last = ECGSTATE.OK;
     }
@@ -41,6 +50,13 @@ public class ECGStateHolder {
     public void abortEmergency() {
         current = ECGSTATE.OK;
         last = ECGSTATE.OK;
+        resetTimers();
+    }
+
+    public void updateSettings(ECGStateHolderSettings ecgStateHolderSettings) {
+        LOGGER.warn("ECGStateHolderSettings resetted by updateSettings() call - this resets all timers in ECGStateHolder!");
+        this.ecgStateHolderSettings = ecgStateHolderSettings;
+        resetTimers();
     }
 
     public ECGSTATE getCurrent() {
@@ -49,5 +65,10 @@ public class ECGStateHolder {
 
     public Observation getCurrentObservation() {
         return currentObservation;
+    }
+
+    private void resetTimers() {
+        iterationsToStateTransitionLeft = ecgStateHolderSettings.iterationsToStateTransition();
+        iterationsToEmergencyCallLeft = ecgStateHolderSettings.iterationsToEmergencyCall();
     }
 }

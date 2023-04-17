@@ -1,24 +1,45 @@
 package ehealth.group1.backend.service;
 
-import ehealth.group1.backend.persistence.DataDao;
+import ca.uhn.fhir.context.FhirContext;
+import ca.uhn.fhir.parser.IParser;
+import ehealth.group1.backend.helper.ErrorHandler;
+import org.hl7.fhir.r5.model.Observation;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
+import java.lang.invoke.MethodHandles;
 
 @Component
 public class DataService {
-  DataDao ekgDao;
+    private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-  public DataService(DataDao ekgDao){
-    this.ekgDao = ekgDao;
-  }
+    private final FhirContext ctx;
+    private final ErrorHandler errorHandler;
 
-  public List<String> getThing(){
-    return ekgDao.getThing();
-  }
+    public DataService(FhirContext ctx, ErrorHandler errorHandler) {
+        this.ctx = ctx;
+        this.errorHandler = errorHandler;
+    }
 
-  public String getData(String data){
-    return data;
-  }
+    public Observation getObservation(Observation obs) {
+        // TODO: Validate Observation received
+        return obs;
+    }
 
+    public Observation getObservation(String JsonData) {
+        // TODO: Validate JSON contents and format
+        IParser parser = ctx.newJsonParser();
+        Observation obs;
+
+        try {
+            obs = parser.parseResource(Observation.class, JsonData);
+        } catch(Exception e) {
+            errorHandler.handleCriticalError("DataService.getObservation(String JsonData)",
+                    "Could not parse JSON data!\nData provided: " + JsonData + "\n", e);
+            return null;
+        }
+
+        return obs;
+    }
 }

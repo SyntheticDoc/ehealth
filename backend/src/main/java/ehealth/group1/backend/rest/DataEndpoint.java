@@ -3,14 +3,13 @@ package ehealth.group1.backend.rest;
 import ehealth.group1.backend.service.ECGService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
 
 import java.lang.invoke.MethodHandles;
 
 @RestController
+@RequestMapping(path = "/data")
 public class DataEndpoint {
   private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
   ECGService ecgService;
@@ -24,8 +23,17 @@ public class DataEndpoint {
     return 1;
   }
 
-  @PostMapping("/data")
+  @PostMapping("/test")
   public String getData(@RequestBody String data){
+    LOGGER.info("/data called?");
     return ecgService.getData(data);
+  }
+
+  @PostMapping("/receive")
+  @ResponseStatus(HttpStatus.OK)
+  public void receiveData(@RequestBody String data) {
+    LOGGER.info("Received ecg data from client");
+    LOGGER.debug("\n" + "Data:\n" + data + "\n");
+    ecgService.processECG(data);
   }
 }

@@ -53,7 +53,7 @@ public class AnalyserService {
         Instant end = Instant.now();
 
         long millisecondsNeeded = ChronoUnit.MILLIS.between(end, start);
-        LOGGER.debug("Analysis of ecg data needed " + millisecondsNeeded + " ms");
+        LOGGER.info("Analysis of ecg data needed " + millisecondsNeeded + " ms");
 
         return ECGSTATE.WARNING;
     }
@@ -71,6 +71,8 @@ public class AnalyserService {
 //            return ECGSTATE.INVALID;
 //        }
 
+        LOGGER.info("Analyzing data:\n" + Arrays.toString(rawData.getData().split(" ")) + "\n");
+
         int largeDeviationCount = 0;
 
         for(int i = 0; i < (data.length - 1); i++) {
@@ -79,11 +81,13 @@ public class AnalyserService {
             }
 
             if(largeDeviationCount > ecgAnalysisSettings.maxDeviationNum()) {
+                LOGGER.info("Result OK");
                 return ECGSTATE.OK;
             }
         }
 
         // not enough large deviations? Possible asystole!
+        LOGGER.warn("Result WARNING");
         return ECGSTATE.WARNING;
     }
 }

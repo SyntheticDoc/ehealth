@@ -52,7 +52,7 @@ public class AnalyserService {
 
         Instant end = Instant.now();
 
-        long millisecondsNeeded = ChronoUnit.MILLIS.between(end, start);
+        long millisecondsNeeded = ChronoUnit.MILLIS.between(start, end);
         LOGGER.info("Analysis of ecg data needed " + millisecondsNeeded + " ms");
 
         return ECGSTATE.WARNING;

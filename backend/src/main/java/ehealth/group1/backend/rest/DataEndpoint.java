@@ -1,10 +1,7 @@
 package ehealth.group1.backend.rest;
 
-import ehealth.group1.backend.jely.JELYmaster.de.fau.mad.jely.Heartbeat;
-import ehealth.group1.backend.jely.JELYmaster.de.fau.mad.jely.LeadConfiguration;
-import ehealth.group1.backend.jely.JELYmaster.de.fau.mad.jely.QrsComplex;
+import ehealth.group1.backend.jely.JELYmaster.de.fau.mad.jely.*;
 import ehealth.group1.backend.jely.JELYmaster.de.fau.mad.jely.detectors.HeartbeatDetector;
-import ehealth.group1.backend.jely.JELYmaster.de.fau.mad.jely.Ecg;
 import ehealth.group1.backend.jely.JELYmaster.de.fau.mad.jely.io.FileLoader;
 import ehealth.group1.backend.service.ECGService;
 import org.slf4j.Logger;
@@ -32,6 +29,7 @@ public class DataEndpoint {
   }
 
   @PostMapping("/test")
+  @ResponseStatus(HttpStatus.OK)
   public String getData(@RequestBody String data){
     LOGGER.info("/data called?");
     return ecgService.getData(data);
@@ -48,6 +46,8 @@ public class DataEndpoint {
   @GetMapping("/jelytest")
   @ResponseStatus(HttpStatus.OK)
   public void jelyTest() {
+    Ecglib.setDebugMode(true);
+    LOGGER.info("EcgLib.isDebugMode? " + Ecglib.isDebugMode());
     Ecg ecgFile = FileLoader.loadKnownEcgFile("src/main/java/ehealth/group1/backend/jely/testfiles/jelyecg4.csv",
             LeadConfiguration.SINGLE_UNKNOWN_LEAD, 125);
     LOGGER.info("\n\necgFile: " + ecgFile.toString() + "\n\n");

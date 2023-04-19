@@ -41,12 +41,12 @@ public class ECGService {
 
   public void processECG(String data) {
     Observation observation = dataService.getObservation(data);
-    LOGGER.info("Starting analysis...");
+    LOGGER.info("Starting analysis of ecg observation");
     ECGSTATE currentState = analyserService.analyse(observation, settings.ecgAnalysisSettings());
 
     ecgStateHolder.update(currentState, observation);
 
-    LOGGER.info("\ncurrentState: " + currentState.toString() + "\n");
+    LOGGER.info("currentState of stateHolder: " + currentState.toString());
 
     switch(ecgStateHolder.getCurrent()) {
       case WARNING:

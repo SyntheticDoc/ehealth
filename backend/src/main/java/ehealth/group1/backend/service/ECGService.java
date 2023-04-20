@@ -31,7 +31,7 @@ public class ECGService {
     this.dataService = dataService;
     this.analyserService = analyserService;
     // TODO: Use production settings
-    settings = settingsDao.getTestSetting();
+    settings = settingsDao.getForUserId(0L).get(0);
     ecgStateHolder = new ECGStateHolder(settings.ecgStateHolderSettings());
   }
 
@@ -41,12 +41,12 @@ public class ECGService {
 
   public void processECG(String data) {
     Observation observation = dataService.getObservation(data);
-    LOGGER.info("Starting analysis...");
+    LOGGER.info("Starting analysis of ecg observation");
     ECGSTATE currentState = analyserService.analyse(observation, settings.ecgAnalysisSettings());
 
     ecgStateHolder.update(currentState, observation);
 
-    LOGGER.info("\ncurrentState: " + currentState.toString() + "\n");
+    LOGGER.info("currentState of stateHolder: " + currentState.toString());
 
     switch(ecgStateHolder.getCurrent()) {
       case WARNING:

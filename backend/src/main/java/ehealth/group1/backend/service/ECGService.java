@@ -31,7 +31,7 @@ public class ECGService {
     this.dataService = dataService;
     this.analyserService = analyserService;
     // TODO: Use production settings
-    settings = settingsDao.getTestSetting();
+    settings = settingsDao.getForUserId(0L).get(0);
     ecgStateHolder = new ECGStateHolder(settings.ecgStateHolderSettings());
   }
 

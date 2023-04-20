@@ -18,17 +18,6 @@ public class DataEndpoint {
     this.ecgService = ecgService;
   }
 
-  @GetMapping("/")
-  public int returnHealthStatus(){
-    return 1;
-  }
-
-  @PostMapping("/test")
-  public String getData(@RequestBody String data){
-    LOGGER.info("/data called?");
-    return ecgService.getData(data);
-  }
-
   @PostMapping("/receive")
   @ResponseStatus(HttpStatus.OK)
   public void receiveData(@RequestBody String data) {

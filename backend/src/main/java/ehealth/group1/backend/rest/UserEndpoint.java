@@ -3,6 +3,7 @@ package ehealth.group1.backend.rest;
 import ehealth.group1.backend.service.ECGService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.lang.invoke.MethodHandles;
@@ -16,6 +17,12 @@ public class UserEndpoint {
 
     public UserEndpoint(ECGService ecgService){
         this.ecgService = ecgService;
+    }
+
+    @GetMapping("/test")
+    @ResponseStatus(HttpStatus.OK)
+    public String testConnection(@RequestBody String data) {
+        return "Connection test successful. Your data: " + data;
     }
 
     @GetMapping("/")

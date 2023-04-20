@@ -1,6 +1,10 @@
 package ehealth.group1.backend;
 
 import ca.uhn.fhir.context.FhirContext;
+import ehealth.group1.backend.dto.ECGAnalysisSettings;
+import ehealth.group1.backend.dto.ECGStateHolderSettings;
+import ehealth.group1.backend.dto.Settings;
+import ehealth.group1.backend.persistence.SettingsDao;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
@@ -16,9 +20,11 @@ public class BackendApplication {
   private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
   private final FhirContext ctx;
+  private final SettingsDao settingsDao;
 
-  public BackendApplication(FhirContext ctx) {
+  public BackendApplication(FhirContext ctx, SettingsDao settingsDao) {
     this.ctx = ctx;
+    this.settingsDao = settingsDao;
   }
 
   public static void main(String[] args) {
@@ -39,11 +45,36 @@ public class BackendApplication {
           // Code to execute if argument is present
           switch (arg) {
             case "test":
-              execTests();
+              execDBTests();
           }
         }
       }
     };
+  }
+
+  private void execDBTests() {
+    LOGGER.warn("Executing database tests...");
+
+    Settings settings = settingsDao.getForUserId(0L).get(0);
+    ECGStateHolderSettings stateholder = settings.ecgStateHolderSettings();
+    ECGAnalysisSettings analysis = settings.ecgAnalysisSettings();
+
+    StringBuilder s = new StringBuilder();
+
+    s.append("\n\n");
+    s.append("Settings - id: ").append(settings.id()).append("\n");
+    s.append("Settings - user_id: ").append(settings.user_id()).append("\n");
+    s.append("Stateholder - id: ").append(stateholder.id()).append("\n");
+    s.append("Stateholder - user_id: ").append(stateholder.user_id()).append("\n");
+    s.append("Stateholder - iterations_transition: ").append(stateholder.iterationsToStateTransition()).append("\n");
+    s.append("Stateholder - iterations_emergency: ").append(stateholder.iterationsToEmergencyCall()).append("\n");
+    s.append("Analysis - id: ").append(analysis.id()).append("\n");
+    s.append("Analysis - user_id: ").append(analysis.user_id()).append("\n");
+    s.append("Analysis - maxDeviations: ").append(analysis.maxDeviation()).append("\n");
+    s.append("Analysis - maxDeviations_num: ").append(analysis.maxDeviationNum()).append("\n");
+    s.append("\n\n");
+
+    LOGGER.info("Data:" + s);
   }
 
   private void execTests() {

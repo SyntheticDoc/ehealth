@@ -1,8 +1,9 @@
-import { View, Text, StyleSheet, TouchableOpacity, Alert } from 'react-native';
+import { View, Text, Switch, StyleSheet, TextInput, TouchableOpacity, Alert } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faHeartPulse } from '@fortawesome/free-solid-svg-icons/faHeartPulse';
 import { faGear } from '@fortawesome/free-solid-svg-icons/faGear';
+import { faUser } from '@fortawesome/free-solid-svg-icons/faUser';
 
 const HomeScreen = ({ navigation }) => {
 	const [data, setData] = useState('');
@@ -26,7 +27,7 @@ const HomeScreen = ({ navigation }) => {
 	}, [healthStatus]);
 
 	const getData = () => {
-		fetch('http://192.168.0.143:8080', { method: 'GET' })
+		fetch('http://catfact.ninja/fact', { method: 'GET' })
 			.then((response) => response.json())
 			.then((responseJson) => {
 				setData(JSON.stringify(responseJson));
@@ -76,6 +77,7 @@ const HomeScreen = ({ navigation }) => {
 				<Text style={{ color: 'white', fontSize: 20 }}>{data}</Text>
 			</View>
 
+
 			<TouchableOpacity
 				style={styles.gear}
 				onPress={() => {
@@ -84,10 +86,25 @@ const HomeScreen = ({ navigation }) => {
 			>
 				<FontAwesomeIcon
 					icon={faGear}
-					style={{ color: '#fff' }}
+					style={{ color: '#454545' }}
 					size={50}
 				></FontAwesomeIcon>
 			</TouchableOpacity>
+			
+			
+			<TouchableOpacity
+				style={styles.user}
+				onPress={() => {
+					navigation.navigate('Register');
+				}}
+			>
+				<FontAwesomeIcon
+					icon={faUser}
+					style={{ color: '#454545' }}
+					size={50}
+				></FontAwesomeIcon>
+			</TouchableOpacity>
+			
 		</View>
 	);
 };
@@ -116,6 +133,12 @@ const styles = StyleSheet.create({
 		position: 'absolute',
 		bottom: 0,
 		right: 0,
+		margin: 60,
+	},
+	user: {
+		position: 'absolute',
+		bottom: 0,
+		left: 0,
 		margin: 60,
 	},
 	apiResponse: {

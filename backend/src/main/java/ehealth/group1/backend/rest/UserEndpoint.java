@@ -36,4 +36,8 @@ public class UserEndpoint {
         return ecgService.getData(data);
     }
 
+    //get User
+    //post User
+    //update USer
+
 }

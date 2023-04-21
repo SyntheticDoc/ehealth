@@ -1,5 +1,6 @@
 package ehealth.group1.backend.persistence;
 import ehealth.group1.backend.entity.User;
+import ehealth.group1.backend.exception.PersistenceException;
 import ehealth.group1.backend.helper.ErrorHandler;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -21,6 +22,14 @@ public class DataDao {
   private static final String SQL_SELECT_ALL_TEST = "SELECT DISTINCT * FROM " + TABLE_NAME_TEST;
   private static final String SQL_SELECT_ORDER_BY_ID = "ORDER BY id FETCH FIRST ? ROWS ONLY";
   private static final String SQL_USER_SELECT_ONE_BY_ID = "SELECT * FROM " + TABLE_NAME_USER + " WHERE id=?";
+  private static final String SQL_USER_CREATE = "INSERT INTO " + TABLE_NAME_USER + " (name, address, phone, emergency, password)" +
+          " VALUES (?, ?, ?, ?, ?);";
+  private static final String SQL_USER_UPDATE = "UPDATE " + TABLE_NAME_USER + " SET name=?, address=?, phone=?, " +
+          "emergency=?, password=? WHERE id=?";
+  private static final String SQL_USER_EXISTS = "SELECT id FROM " + TABLE_NAME_USER + " WHERE id=?";
+  private static final String SQL_USER_DELETE = "DELETE FROM " + TABLE_NAME_USER + " WHERE id=?";
+  private static final String SQL_SEARCH_USER = "SELECT * FROM " + TABLE_NAME_USER + " WHERE name=? AND address=? " +
+          "AND phone=? AND password=?";
 
   public DataDao(JdbcTemplate jdbcTemplate, ErrorHandler errorHandler){
     this.jdbcTemplate = jdbcTemplate;
@@ -45,6 +54,118 @@ public class DataDao {
     }
   }
 
+  public void createUser(User user) {
+    int updateRowsAffected;
+
+    try {
+      updateRowsAffected = jdbcTemplate.update(SQL_USER_CREATE, user.getName(), user.getAddress(),
+              user.getPhone(), user.getEmergency(), user.getPassword());
+
+      if (updateRowsAffected == 0) {
+        PersistenceException e = new PersistenceException("Could not create new user, no specific error was thrown, but no new record was created");
+        errorHandler.handleCustomException("DataDao.createUser(" + user + ")", "Could not create user", e);
+        throw e;
+      }
+
+      if (updateRowsAffected > 1) {
+        PersistenceException e = new PersistenceException("Could not create new user, no specific error was thrown, but several records were created! " +
+                "Please contact database administrator immediately!");
+        errorHandler.handleCustomException("DataDao.createUser(" + user + ")", "Could not create user", e);
+        throw e;
+      }
+    } catch (DataAccessException e) {
+      PersistenceException ex = new PersistenceException("Could not create user", e);
+      errorHandler.handleCustomException("DataDao.createUser(" + user + ")", "Could not create user", ex);
+      throw ex;
+    }
+  }
+
+  public void updateUser(User user) {
+    int updateRowsAffected;
+
+    if (!userExists(user.getId())) {
+      PersistenceException e = new PersistenceException("Error while updating user: user not found in database! Please try again!");
+      errorHandler.handleCustomException("DataDao.updateUser(" + user + ")", "Could not update user, user does not exist", e);
+      throw e;
+    }
+
+    try {
+      updateRowsAffected = jdbcTemplate.update(SQL_USER_UPDATE, user.getName(), user.getAddress(),
+              user.getPhone(), user.getEmergency(), user.getPassword(), user.getId());
+
+      if (updateRowsAffected == 0) {
+        PersistenceException e = new PersistenceException("Could not update user, no specific error was thrown, but no new record was created");
+        errorHandler.handleCustomException("DataDao.updateUser(" + user + ")", "Could not update user", e);
+        throw e;
+      }
+
+      if (updateRowsAffected > 1) {
+        PersistenceException e = new PersistenceException("Could not update user, no specific error was thrown, but several records were created! " +
+                "Please contact database administrator immediately!");
+        errorHandler.handleCustomException("DataDao.updateUser(" + user + ")", "Could not update user", e);
+        throw e;
+      }
+    } catch (DataAccessException e) {
+      PersistenceException ex = new PersistenceException("Could not update user", e);
+      errorHandler.handleCustomException("DataDao.updateUser(" + user + ")", "Could not update user", ex);
+      throw ex;
+    }
+  }
+
+  public void deleteUser(User user) {
+    int deleteRowsAffected;
+
+    if (!userExists(user.getId())) {
+      PersistenceException e = new PersistenceException("Error while deleting user: user not found in database! Please try again!");
+      errorHandler.handleCustomException("DataDao.deleteUser(" + user + ")", "Could not delete user, user does not exist", e);
+      throw e;
+    }
+
+    try {
+      deleteRowsAffected = jdbcTemplate.update(SQL_USER_DELETE, user.getId());
+
+      if (deleteRowsAffected == 0) {
+        PersistenceException e = new PersistenceException("Could not delete user, no specific error was thrown, but no new record was created");
+        errorHandler.handleCustomException("DataDao.deleteUser(" + user + ")", "Could not update user", e);
+        throw e;
+      }
+
+      if (deleteRowsAffected > 1) {
+        PersistenceException e = new PersistenceException("Could not delete user, no specific error was thrown, but several records were created! " +
+                "Please contact database administrator immediately!");
+        errorHandler.handleCustomException("DataDao.deleteUser(" + user + ")", "Could not delete user", e);
+        throw e;
+      }
+    } catch (DataAccessException e) {
+      PersistenceException ex = new PersistenceException("Could not delete user", e);
+      errorHandler.handleCustomException("DataDao.deleteUser(" + user + ")", "Could not delete user", ex);
+      throw ex;
+    }
+  }
+
+  public boolean userExists(Long id) {
+    Boolean hasRecord;
+
+    try {
+      hasRecord = jdbcTemplate.query(SQL_USER_EXISTS, new Object[]{id}, (ResultSet rs) -> rs.next());
+      return hasRecord != null && hasRecord;
+    } catch (DataAccessException e) {
+      PersistenceException ex = new PersistenceException("Could not check if user exists", e);
+      errorHandler.handleCustomException("DataDao.userExists(" + id + ")", "Could not check if id exists for user", ex);
+      throw ex;
+    }
+  }
+
+  public List<User> searchUser(User user) {
+    try {
+      return jdbcTemplate.query(SQL_SEARCH_USER, this::mapRow_user, user.getName(), user.getAddress(), user.getPhone(), user.getPassword());
+    } catch (DataAccessException e) {
+      PersistenceException ex = new PersistenceException("Could not search for user", e);
+      errorHandler.handleCustomException("DataDao.searchUser(" + user + ")", "Could not search for user", ex);
+      throw ex;
+    }
+  }
+
   public List<String> getThing(){
     List<String> result = new ArrayList<>();
     try {
@@ -62,7 +183,11 @@ public class DataDao {
   private User mapRow_user(ResultSet result, int rownum) throws SQLException {
     Long id = result.getLong("id");
     String name = result.getString("name");
+    String address = result.getString("address");
+    Long phone = result.getLong("phone");
+    boolean emergency = result.getBoolean("emergency");
+    String password = result.getString("password");
 
-    return new User(id, name);
+    return new User(id, name, address, phone, emergency, password);
   }
 }

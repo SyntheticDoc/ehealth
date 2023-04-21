@@ -8,8 +8,8 @@ DELETE FROM settings_ecgstateholder where id=0;
 DELETE FROM settings_ecganalysis where id=0;
 DELETE FROM settings where id=0;
 
-INSERT INTO users (id, name)
-VALUES (0, 'TestUser')
+INSERT INTO users (id, name, address, phone, emergency, password)
+VALUES (0, 'TestUser', 'Example Street 54/Stiege 300/top 0, 1010 Wien', '06500123456', 'true', 'VeryUnsafePWD')
 ;
 
 INSERT INTO settings_ecgstateholder(id, user_id, iterations_transition, iterations_emergency)

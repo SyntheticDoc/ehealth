@@ -51,4 +51,8 @@ public class UserEndpoint {
         return "Alrighty";
     }
 
+    //get User
+    //post User
+    //update USer
+
 }

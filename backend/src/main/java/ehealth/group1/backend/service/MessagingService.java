@@ -1,44 +1,37 @@
 package ehealth.group1.backend.service;
 
 import okhttp3.*;
+import org.springframework.stereotype.Component;
 
+import javax.net.ssl.HttpsURLConnection;
+import java.io.DataOutputStream;
 import java.io.IOException;
+import java.net.URL;
+import java.net.URLEncoder;
 
+@Component
 public class MessagingService {
-    private static final String API_KEY = "your-api-key";
-    private static final String API_SECRET = "your-api-secret";
-    private static final String API_SENDER = "your-sender-name";
+    private static final String API_KEY = "OCB1GooMCbJJN6mQDxFkCSSV";
+    private static final String API_SECRET = "03*w!0je)Ao.dJ7WW&LDkAQjX3l0Nnv@uSnrKZBz";
+    private static final String API_SENDER = "Heart Guard";
     private static final String API_BASE_URL = "https://api.gatewayapi.com/rest";
 
-    public static void sendSMS(String recipient, String message) throws IOException {
-        OkHttpClient client = new OkHttpClient();
 
-        // creating requestBody as JSON-String
-        MediaType mediaType = MediaType.get("application/json");
-        String jsonBody = "{\"sender\":\"" + API_SENDER + "\",\"message\":\"" + message + "\",\"recipients\":[\"" + recipient + "\"]}";
-        RequestBody requestBody = RequestBody.create(jsonBody, mediaType);
+    public void sendSMS(String recipient, String message) throws IOException {
+        URL url = new URL("https://gatewayapi.com/rest/mtsms");
+        HttpsURLConnection con = (HttpsURLConnection) url.openConnection();
+        con.setDoOutput(true);
 
-        // creating request with the authentication header
-        Request request = new Request.Builder()
-                .url(API_BASE_URL + "/mtsms")
-                .post(requestBody)
-                .addHeader("gateway-api-key", API_KEY)
-                .addHeader("gateway-api-secret", API_SECRET)
-                .build();
+        DataOutputStream wr = new DataOutputStream(con.getOutputStream());
+        wr.writeBytes(
+            "token=dRqKDAmySTepkA8RZAkklfeJpyWFAVOekrqKfAGkj4pWd5W-QAB8VIZLvhKEuRkg"
+                + "&sender=" + URLEncoder.encode(API_SENDER, "UTF-8")
+                + "&message=" + URLEncoder.encode(message, "UTF-8")
+                + "&recipients.0.msisdn="+recipient
+        );
+        wr.close();
 
-        // Call via the okhttp client
-        try {
-            Response response = client.newCall(request).execute();
-
-            if (response.isSuccessful()) {
-                System.out.println("Message sent successfully to " + recipient);
-                System.out.println(response.body().string());
-            } else {
-                System.err.println("Failed to send Message to " + recipient + ", response code: " + response.code());
-            }
-
-        }   catch (IOException e) {
-                System.err.println("Failed to send Message to " + recipient + ", error message: " + e.getMessage());
-        }
+        int responseCode = con.getResponseCode();
+        System.out.println("Got response " + responseCode);
     }
-}
+    }

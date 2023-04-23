@@ -5,7 +5,11 @@ create table test(
 CREATE TABLE IF NOT EXISTS users
 (
     id          BIGINT AUTO_INCREMENT PRIMARY KEY,
-    name        VARCHAR(255)
+    name        VARCHAR(255),
+    address     VARCHAR(5000),
+    phone       BIGINT,
+    emergency   BOOLEAN,
+    password    VARCHAR(512)
 );
 
 CREATE TABLE IF NOT EXISTS settings_ecgstateholder

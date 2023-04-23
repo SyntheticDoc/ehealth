@@ -34,10 +34,25 @@ public class User {
         return name;
     }
 
+    public String getAddress() {
+        return address;
+    }
 
+    public Long getPhone() {
+        return phone;
+    }
+
+    public boolean getEmergency() {
+        return emergency;
+    }
+
+    public String getPassword() {
+        return password;
+    }
 
     @Override
     public String toString() {
-        return "User[id=" + id + ",name=" + name + "]";
+        return "User[id=" + id + ",name=" + name + ",address=" + address + ",phone=" + phone + ",emergency=" + emergency +
+                ",password=" + password + "]";
     }
 }

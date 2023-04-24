@@ -47,7 +47,7 @@ public class ECGService {
 
     ecgStateHolder.update(currentState, observation);
 
-    LOGGER.info("currentState of stateHolder: " + currentState.toString());
+    LOGGER.info("currentState of stateHolder: " + ecgStateHolder.getCurrent().toString());
 
     dataDao.createECGData(observation, 123, LocalDateTime.now());
 
@@ -64,6 +64,10 @@ public class ECGService {
         // TODO: Start emergency call
         break;
     }
+  }
+
+  public ECGSTATE getCurrentState() {
+    return ecgStateHolder.getCurrent();
   }
 
   public void abortEmergencyCall() {

@@ -30,6 +30,22 @@ public class ECGStateHolder {
         last = current;
         current = analysisResult;
 
+        //LOGGER.warn("STATE OLD - AnalysisResult: " + analysisResult + ", current: " + current + ", last: " + last);
+
+        if(current == ECGSTATE.OK) {
+            resetTimers();
+            return;
+        }
+
+        if(current == ECGSTATE.WARNING && last == ECGSTATE.CRITICAL) {
+            current = ECGSTATE.CRITICAL;
+        }
+
+        if(current == ECGSTATE.WARNING && last == ECGSTATE.CALLEMERGENCY) {
+            current = ECGSTATE.CALLEMERGENCY;
+            return;
+        }
+
         if(current == ECGSTATE.WARNING && last == ECGSTATE.WARNING) {
             iterationsToStateTransitionLeft--;
 
@@ -45,6 +61,8 @@ public class ECGStateHolder {
                 current = ECGSTATE.CALLEMERGENCY;
             }
         }
+
+        //LOGGER.warn("STATE NEW - AnalysisResult: " + analysisResult + ", current: " + current + ", last: " + last);
     }
 
     public void abortEmergency() {

@@ -7,7 +7,7 @@ import { faUser } from '@fortawesome/free-solid-svg-icons/faUser';
 import { getData, castEmergencyCall } from './NetworkFunctions';
 
 const HomeScreen = ({ navigation }) => {
-	const [healthStatus, setHealthStatus] = useState(2);
+	const [healthStatus, setHealthStatus] = useState(1);
 	const [countdown, setCountdown] = useState(30);
 	var timer = useRef();
 
@@ -26,10 +26,11 @@ const HomeScreen = ({ navigation }) => {
 		}
 		if (healthStatus == 1) {
 			Alert.alert('Starting Alarm and Waiting for user input!');
-			if (timer.current) return;
+			// if (timer.current) return;
 			timer.current = setInterval(() => {
 				setCountdown((previous) => {
-					if ((previous = 1)) {
+					if (previous == 1) {
+						setHealthStatus(0);
 						castEmergencyCall();
 						clearInterval(timer.current);
 					}

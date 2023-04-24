@@ -1,7 +1,9 @@
 package ehealth.group1.backend.rest;
 
+import ehealth.group1.backend.entity.User;
 import ehealth.group1.backend.service.ECGService;
 import ehealth.group1.backend.service.MessagingService;
+import ehealth.group1.backend.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -9,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.lang.invoke.MethodHandles;
+import java.util.List;
 
 @RestController
 @RequestMapping(path = "/user")
@@ -17,10 +20,12 @@ public class UserEndpoint {
 
     ECGService ecgService;
     MessagingService msgService;
+    UserService userService;
 
-    public UserEndpoint(ECGService ecgService,MessagingService msgService){
+    public UserEndpoint(ECGService ecgService,MessagingService msgService, UserService userService){
         this.ecgService = ecgService;
         this.msgService = msgService;
+        this.userService = userService;
     }
 
     @PostMapping("/test")
@@ -51,8 +56,29 @@ public class UserEndpoint {
         return "Alrighty";
     }
 
-    //get User
-    //post User
+    @GetMapping("/get-user")
+    public User getUser(@RequestParam Long id){
+        List<User> userList = null;
+        try {
+            userList = userService.getUser(id);
+            return userList.get(0);
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+            return null;
+        }
+
+    }
+    @PostMapping("/post-user")
+    public User postUser(@RequestParam String name, @RequestParam String address, @RequestParam Long phone,@RequestParam boolean emergency,@RequestParam String password){
+        try{
+            return userService.postUser(name, address, phone, emergency, password);
+        }catch(Error e){
+            return null;
+
+        }
+    }
+
+
     //update USer
 
 }

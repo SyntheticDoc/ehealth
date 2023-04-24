@@ -27,7 +27,7 @@ const RegisterScreen = ({ navigation }) => {
 					icon={faHeartPulse}
 					size={50}
 				/>
-                <Text style={styles.heading}> - monitor </Text>
+                <Text style={styles.heading}>Guard </Text>
 				
 			</View>
         <Text style={styles.subtitle}>Bitte registriere dich:</Text>
@@ -84,21 +84,10 @@ const RegisterScreen = ({ navigation }) => {
                     handleRegister;
 				}}
 			>
-				 <Text style={styles.buttonText}>Anmelden</Text>
+				 <Text style={styles.buttonText}>Registrieren</Text>
         
 			</TouchableOpacity>
-        <TouchableOpacity
-				style={styles.arrow}
-				onPress={() => {
-					navigation.navigate('Home');
-				}}
-			>
-				<FontAwesomeIcon
-					icon={faArrowLeft}
-					style={{ color: '#454545' }}
-					size={50}
-				></FontAwesomeIcon>
-			</TouchableOpacity>
+        
       </View>);
 };
 

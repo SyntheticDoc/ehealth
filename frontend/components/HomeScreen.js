@@ -26,30 +26,31 @@ const HomeScreen = ({ navigation }) => {
 		}
 	}, [healthStatus]);
 
-	const getData = () => {
-		fetch('http://catfact.ninja/fact', { method: 'GET' })
+	 const getData = () => {
+	 	fetch('http://catfact.ninja/fact', { method: 'GET' })
 			.then((response) => response.json())
 			.then((responseJson) => {
-				setData(JSON.stringify(responseJson));
+	 			setData(JSON.stringify(responseJson));
 				setHealthStatus(JSON.stringify(responseJson));
 			})
 			.catch((error) => {
 				//Error
 				// Alert.alert(JSON.stringify(error));
 				console.error(error);
-			});
-	};
+	 		});
+	 };
 	return (
 		<View style={styles.container}>
 			<View style={styles.headerContainer}>
-				<Text style={styles.heading}>monitor </Text>
-				<FontAwesomeIcon
+			<FontAwesomeIcon
 					style={{
 						color: '#fff',
 					}}
 					icon={faHeartPulse}
 					size={50}
 				/>
+				<Text style={styles.heading}>Guard </Text>
+				
 			</View>
 			<View
 				style={[

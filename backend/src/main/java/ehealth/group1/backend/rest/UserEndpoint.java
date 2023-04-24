@@ -39,6 +39,7 @@ public class UserEndpoint {
         LOGGER.info("/data called?");
         return ecgService.getData(data);
     }
+
     @GetMapping("/sendsms")
     public String sendSMS(@RequestParam String recipient,@RequestParam String message){
         try {
@@ -49,5 +50,9 @@ public class UserEndpoint {
         }
         return "Alrighty";
     }
+
+    //get User
+    //post User
+    //update USer
 
 }

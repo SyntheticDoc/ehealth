@@ -44,18 +44,25 @@ public class AnalyserService {
 
         for(ECGSTATE s : stateList) {
             if(s == ECGSTATE.OK) {
+                Instant end = Instant.now();
+                logTimeNeededForAnalysis(start, end);
                 return ECGSTATE.OK;
             } else if(s == ECGSTATE.INVALID) {
+                Instant end = Instant.now();
+                logTimeNeededForAnalysis(start, end);
                 return ECGSTATE.INVALID;
             }
         }
 
         Instant end = Instant.now();
-
-        long millisecondsNeeded = ChronoUnit.MILLIS.between(end, start);
-        LOGGER.info("Analysis of ecg data needed " + millisecondsNeeded + " ms");
+        logTimeNeededForAnalysis(start, end);
 
         return ECGSTATE.WARNING;
+    }
+
+    private void logTimeNeededForAnalysis(Instant start, Instant end) {
+        long millisecondsNeeded = ChronoUnit.MILLIS.between(start, end);
+        LOGGER.info("Analysis of ecg data needed " + millisecondsNeeded + " ms");
     }
 
     private ECGSTATE analyseComponent(Observation.ObservationComponentComponent c, ECGAnalysisSettings ecgAnalysisSettings) {

@@ -49,7 +49,7 @@ public class ECGDao {
         ArrayList<Long> dataIds = new ArrayList<>();
         char ch = 'a' - 1;
 
-        LOGGER.info("Begin saving ecg data");
+        // LOGGER.info("Begin saving ecg data");
 
         for(Observation.ObservationComponentComponent c : o.getComponent()) {
             componentIds.add(createECGComponent(c, "" + ch++));

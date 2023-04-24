@@ -2,7 +2,6 @@ package ehealth.group1.backend.service;
 
 import ehealth.group1.backend.dto.ECGAnalysisSettings;
 import ehealth.group1.backend.enums.ECGSTATE;
-import ehealth.group1.backend.exception.InvalidIntervalUnitException;
 import ehealth.group1.backend.helper.ErrorHandler;
 import org.hl7.fhir.r5.model.Observation;
 import org.hl7.fhir.r5.model.SampledData;
@@ -11,7 +10,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import java.lang.invoke.MethodHandles;
-import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
@@ -52,7 +50,7 @@ public class AnalyserService {
 
         Instant end = Instant.now();
 
-        long millisecondsNeeded = ChronoUnit.MILLIS.between(end, start);
+        long millisecondsNeeded = ChronoUnit.MILLIS.between(start, end);
         LOGGER.info("Analysis of ecg data needed " + millisecondsNeeded + " ms");
 
         return ECGSTATE.WARNING;

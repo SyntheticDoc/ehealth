@@ -25,4 +25,11 @@ public class DataEndpoint {
     LOGGER.debug("\n" + "Data:\n" + data + "\n");
     ecgService.processECG(data);
   }
+
+  /*@PostMapping("/entityTest")
+  @ResponseStatus(HttpStatus.OK)
+  public String testEntityConversion(@RequestBody String data) {
+    LOGGER.info("Received ecg data from client");
+    return ecgService.convertToEntity(data).getJSONRepresentation();
+  }*/
 }

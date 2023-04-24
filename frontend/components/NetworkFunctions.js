@@ -1,7 +1,10 @@
 const getData = () => {
 	fetch('http://catfact.ninja/fact', { method: 'GET' })
 		.then((response) => response.json())
-		
+		.then((responseJson) => {
+			
+			// setHealthStatus(JSON.stringify(responseJson));
+		})
 		.catch((error) => {
 			//Error
 			// Alert.alert(JSON.stringify(error));

@@ -48,7 +48,7 @@ public class UserEndpoint {
     @GetMapping("/sendsms")
     public String sendSMS(@RequestParam String recipient,@RequestParam String message){
         try {
-            msgService.sendSMS("+4369913242451","Sikerim");
+            msgService.sendSMS(recipient,message);
         } catch (IOException e) {
             e.printStackTrace();
             return "OOOpsie";

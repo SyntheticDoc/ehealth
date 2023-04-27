@@ -1,5 +1,6 @@
 package ehealth.group1.backend.service;
 
+import ehealth.group1.backend.customfhirstructures.CustomObservation;
 import ehealth.group1.backend.dto.Settings;
 import ehealth.group1.backend.enums.ECGSTATE;
 import ehealth.group1.backend.helper.ECGStateHolder;
@@ -41,15 +42,22 @@ public class ECGService {
   }
 
   public void processECG(String data) {
-    Observation observation = dataService.getObservation(data);
-    LOGGER.info("Starting analysis of ecg observation");
-    ECGSTATE currentState = analyserService.analyse(observation, settings.ecgAnalysisSettings());
+    processECGObservation(dataService.getObservation(data));
+  }
 
-    ecgStateHolder.update(currentState, observation);
+  public void processECG(CustomObservation data) {
+    processECGObservation(dataService.getObservation(data));
+  }
+
+  private void processECGObservation(CustomObservation obs) {
+    LOGGER.info("Starting analysis of ecg observation");
+    ECGSTATE currentState = analyserService.analyse(obs, settings.ecgAnalysisSettings());
+
+    ecgStateHolder.update(currentState, obs);
 
     LOGGER.info("currentState of stateHolder: " + ecgStateHolder.getCurrent().toString());
 
-    dataDao.createECGData(observation, 123, LocalDateTime.now());
+    //dataDao.createECGData(obs, 123, LocalDateTime.now());
 
     switch(ecgStateHolder.getCurrent()) {
       case WARNING:

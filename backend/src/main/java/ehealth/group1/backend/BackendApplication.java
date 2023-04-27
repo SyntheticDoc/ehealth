@@ -5,6 +5,7 @@ import ehealth.group1.backend.dto.ECGAnalysisSettings;
 import ehealth.group1.backend.dto.ECGStateHolderSettings;
 import ehealth.group1.backend.dto.Settings;
 import ehealth.group1.backend.entity.User;
+import ehealth.group1.backend.generators.IDStringGenerator;
 import ehealth.group1.backend.persistence.DataDao;
 import ehealth.group1.backend.persistence.SettingsDao;
 import org.slf4j.Logger;
@@ -50,11 +51,17 @@ public class BackendApplication {
           // Code to execute if argument is present
           switch (arg) {
             case "test":
-              execDBTests2();
+              execHexIDTests();
           }
         }
       }
     };
+  }
+
+  private void execHexIDTests() {
+    for(int i = 0; i < 5; i++) {
+      LOGGER.warn("Generated hex id: " + IDStringGenerator.getNewIDString());
+    }
   }
 
   private void execDBTests2() {

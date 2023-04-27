@@ -2,6 +2,7 @@ package ehealth.group1.backend.service;
 
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.parser.IParser;
+import ehealth.group1.backend.customfhirstructures.CustomObservation;
 import ehealth.group1.backend.exception.HeaderParseException;
 import ehealth.group1.backend.helper.ErrorHandler;
 import org.hl7.fhir.r5.model.Observation;
@@ -26,12 +27,17 @@ public class DataService {
         this.errorHandler = errorHandler;
     }
 
-    public Observation getObservation(Observation obs) {
+    public CustomObservation getObservation(CustomObservation obs) {
         // TODO: Validate Observation received
         return obs;
     }
 
-    public Observation getObservation(String JsonData) {
+    public CustomObservation getObservation(String JsonData) {
+        IParser parser = ctx.newJsonParser();
+        return parser.parseResource(CustomObservation.class, JsonData);
+    }
+
+    /*public Observation getObservation(String JsonData) {
         // TODO: Validate JSON contents and format
         IParser parser = ctx.newJsonParser();
         Observation obs;
@@ -77,7 +83,7 @@ public class DataService {
         }
 
         return obs;
-    }
+    }*/
 
     private void validateChecksum(int checksum, LocalDateTime timestamp, String data) {
         // TODO: Validate

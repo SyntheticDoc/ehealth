@@ -22,14 +22,8 @@ public class DataEndpoint {
     this.ecgService = ecgService;
   }
 
-  /*@PostMapping("/receive")
-  @ResponseStatus(HttpStatus.OK)
-  public void receiveData(@RequestBody String data) {
-    LOGGER.info("Received ecg data from client");
-    LOGGER.debug("\n" + "Data:\n" + data + "\n");
-    ecgService.processECG(data);
-  }*/
-
+  // Method for letting spring boot deserialize the json immediately into a custom Observation, using a custom
+  // FhirHapiDeserializer to replace the default jackson deserializer
   @RequestMapping(value="/receive", consumes = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
   //@JsonDeserialize(using = FhirHapiDeserializer.class)
   @ResponseStatus(HttpStatus.OK)
@@ -38,6 +32,8 @@ public class DataEndpoint {
     ecgService.processECG(obs);
   }
 
+  // Method for processing incoming data missing a "Content-Type: application/json"-header or otherwise not conforming
+  // to the json-format expected by the custom FhirHapiDeserializer
   @PostMapping("/receive")
   @ResponseStatus(HttpStatus.OK)
   public void receiveJson(@RequestBody String data) {

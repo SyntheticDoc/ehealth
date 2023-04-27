@@ -5,6 +5,17 @@ import java.util.concurrent.ThreadLocalRandom;
 public class IDStringGenerator {
 
     public static String getNewIDString() {
+        StringBuilder completeID = new StringBuilder();
+        char[] chars = new char[]{'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'};
+
+        for(int i = 0; i < 64; i++) {
+            completeID.append(chars[ThreadLocalRandom.current().nextInt(0, chars.length)]);
+        }
+
+        return completeID.toString();
+    }
+
+    /*public static String getNewIDString() {
         long id1 = ThreadLocalRandom.current().nextLong();
         long id2 = ThreadLocalRandom.current().nextLong();
         long id3 = ThreadLocalRandom.current().nextLong();
@@ -20,7 +31,7 @@ public class IDStringGenerator {
         }
 
         return completeID;
-    }
+    }*/
 
     // Verifies if the id generated in getNewIDString is already in use (= if it already exists in the database)
     private static boolean isUnused(String id) {

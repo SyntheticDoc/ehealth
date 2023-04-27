@@ -1,21 +1,27 @@
 package ehealth.group1.backend.entity;
 
-// Holds data about the users frontend (smartphone)
-public class FrontendDevice {
+import java.io.Serializable;
+
+public class ECGDeviceComponent implements Serializable {
     // Internal database id for device
     private Long id;
 
     // Device self-identification string
     private String selfID;
 
-    // Unique identifier for the device
+    // Unique identifier for the device, internal
     private String identifier;
 
-    // Display name for the device, for example "Android Smartphone XYZ"
+    // Display name for the device, for example "Custom Arduino ECG"
     private String name;
 
-    public FrontendDevice(Long id, String identifier, String name) {
+    public ECGDeviceComponent() {
+
+    }
+
+    public ECGDeviceComponent(Long id, String selfID, String identifier, String name) {
         this.id = id;
+        this.selfID = selfID;
         this.identifier = identifier;
         this.name = name;
     }
@@ -24,28 +30,28 @@ public class FrontendDevice {
         return id;
     }
 
-    public String getSelfID() {
-        return selfID;
-    }
-
-    public String getIdentifier() {
-        return identifier;
-    }
-
-    public String getName() {
-        return name;
-    }
-
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getSelfID() {
+        return selfID;
     }
 
     public void setSelfID(String selfID) {
         this.selfID = selfID;
     }
 
+    public String getIdentifier() {
+        return identifier;
+    }
+
     public void setIdentifier(String identifier) {
         this.identifier = identifier;
+    }
+
+    public String getName() {
+        return name;
     }
 
     public void setName(String name) {
@@ -54,9 +60,9 @@ public class FrontendDevice {
 
     @Override
     public String toString() {
-        return "FrontendDevice[" +
+        return "ECGDeviceComponent[" +
                 "id=" + id +
-                "selfID='" + selfID + "'" +
+                ",selfID='" + selfID + "'" +
                 ",identifier='" + identifier + "'" +
                 ",name='" + name + "'" +
                 ']';

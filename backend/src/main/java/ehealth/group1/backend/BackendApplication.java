@@ -60,7 +60,8 @@ public class BackendApplication {
 
   private void execHexIDTests() {
     for(int i = 0; i < 5; i++) {
-      LOGGER.warn("Generated hex id: " + IDStringGenerator.getNewIDString());
+      String hexString = IDStringGenerator.getNewIDString();
+      LOGGER.warn("Generated hex id: " + hexString);
     }
   }
 

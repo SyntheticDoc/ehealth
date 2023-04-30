@@ -1,13 +1,15 @@
-import { View, Text, Switch, StyleSheet, TextInput, TouchableOpacity, Alert } from 'react-native';
-import React, { useEffect, useState } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, Alert } from 'react-native';
+import React, { useEffect, useState, useRef } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faHeartPulse } from '@fortawesome/free-solid-svg-icons/faHeartPulse';
 import { faGear } from '@fortawesome/free-solid-svg-icons/faGear';
 import { faUser } from '@fortawesome/free-solid-svg-icons/faUser';
+import { getData, castEmergencyCall } from './NetworkFunctions';
 
 const HomeScreen = ({ navigation }) => {
-	const [data, setData] = useState('');
-	const [healthStatus, setHealthStatus] = useState(2);
+	const [healthStatus, setHealthStatus] = useState(1);
+	const [countdown, setCountdown] = useState(30);
+	var timer = useRef();
 
 	useEffect(() => {
 		clearInterval(x);
@@ -20,25 +22,27 @@ const HomeScreen = ({ navigation }) => {
 	useEffect(() => {
 		if (healthStatus == 0) {
 			Alert.alert('Making Phone API Call now, EMERGENCY');
+			clearInterval(timer.current);
 		}
 		if (healthStatus == 1) {
 			Alert.alert('Starting Alarm and Waiting for user input!');
+			// if (timer.current) return;
+			timer.current = setInterval(() => {
+				setCountdown((previous) => {
+					if (previous == 1) {
+						setHealthStatus(0);
+						castEmergencyCall();
+						clearInterval(timer.current);
+					}
+					return previous - 1;
+				});
+			}, 1000);
+		}
+		if (healthStatus == 2) {
+			clearInterval(timer.current);
 		}
 	}, [healthStatus]);
 
-	const getData = () => {
-		fetch('http://catfact.ninja/fact', { method: 'GET' })
-			.then((response) => response.json())
-			.then((responseJson) => {
-				setData(JSON.stringify(responseJson));
-				setHealthStatus(JSON.stringify(responseJson));
-			})
-			.catch((error) => {
-				//Error
-				// Alert.alert(JSON.stringify(error));
-				console.error(error);
-			});
-	};
 	return (
 		<View style={styles.container}>
 			<View style={styles.headerContainer}>
@@ -51,32 +55,40 @@ const HomeScreen = ({ navigation }) => {
 					size={50}
 				/>
 			</View>
-			<View
-				style={[
-					styles.statusCircle,
-					{
-						backgroundColor:
-							healthStatus == 2
-								? '#419a49'
-								: healthStatus == 1
-								? '#ffb347'
-								: '#d01818',
-					},
-				]}
+			<TouchableOpacity
+				onPress={() => {
+					clearInterval(timer.current);
+					setHealthStatus(2);
+					setCountdown(30);
+				}}
 			>
-				<Text
-					style={{
-						fontSize: 30,
-						color: '#fff',
-					}}
+				<View
+					style={[
+						styles.statusCircle,
+						{
+							backgroundColor:
+								healthStatus == 2
+									? '#419a49'
+									: healthStatus == 1
+									? '#ffb347'
+									: '#d01818',
+						},
+					]}
 				>
-					{healthStatus == 2 ? 'OK' : healthStatus == 1 ? 'WARN' : 'SOS'}
-				</Text>
-			</View>
-			<View style={styles.apiResponse}>
-				<Text style={{ color: 'white', fontSize: 20 }}>{data}</Text>
-			</View>
+					<Text
+						style={{
+							fontSize: 30,
+							color: '#fff',
+						}}
+					>
+						{healthStatus == 2 ? 'OK' : healthStatus == 1 ? 'WARN' : 'SOS'}
+					</Text>
+				</View>
+			</TouchableOpacity>
 
+			<View style={styles.apiResponse}>
+				<Text style={{ color: 'white', fontSize: 20 }}>{countdown}</Text>
+			</View>
 
 			<TouchableOpacity
 				style={styles.gear}
@@ -90,8 +102,7 @@ const HomeScreen = ({ navigation }) => {
 					size={50}
 				></FontAwesomeIcon>
 			</TouchableOpacity>
-			
-			
+
 			<TouchableOpacity
 				style={styles.user}
 				onPress={() => {
@@ -104,7 +115,6 @@ const HomeScreen = ({ navigation }) => {
 					size={50}
 				></FontAwesomeIcon>
 			</TouchableOpacity>
-			
 		</View>
 	);
 };

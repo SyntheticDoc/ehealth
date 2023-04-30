@@ -1,7 +1,5 @@
 package ehealth.group1.backend.entity;
 
-import jakarta.persistence.Entity;
-
 public class User {
     private Long id;
     private String name;
@@ -11,8 +9,6 @@ public class User {
     private boolean emergency;
 
     private String password;
-
-
 
     public User(Long id, String name) {
         this.id = id;

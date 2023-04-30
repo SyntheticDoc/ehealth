@@ -20,6 +20,9 @@ public class ECGDevice {
     // Number of leads (ecg electrodes) of device
     private int leads;
 
+    // Pin for registering device to user
+    private String pin;
+
     // Lead info
     private ECGDeviceComponent[] components;
 
@@ -27,13 +30,14 @@ public class ECGDevice {
 
     }
 
-    public ECGDevice(Long id, String selfID, String identifier, String name, int leads, ECGDeviceComponent[] components)
+    public ECGDevice(Long id, String selfID, String identifier, String name, int leads, String pin, ECGDeviceComponent[] components)
             throws IllegalStateException {
         this.id = id;
         this.selfID = selfID;
         this.identifier = identifier;
         this.name = name;
         this.leads = leads;
+        this.pin = pin;
         this.components = components;
 
         if(leads != components.length) {
@@ -62,6 +66,10 @@ public class ECGDevice {
         return leads;
     }
 
+    public String getPin() {
+        return pin;
+    }
+
     public void setId(Long id) {
         this.id = id;
     }
@@ -82,6 +90,10 @@ public class ECGDevice {
         this.leads = leads;
     }
 
+    public void setPin(String pin) {
+        this.pin = pin;
+    }
+
     public ECGDeviceComponent[] getComponents() {
         return components;
     }
@@ -97,7 +109,8 @@ public class ECGDevice {
                 ",selfID='" + selfID + "'" +
                 ",identifier='" + identifier + "'" +
                 ",name='" + name + "'" +
-                ",leads='" + leads + "'" +
+                ",leads=" + leads +
+                ",pin='" + pin + "'" +
                 ",components=" + Arrays.toString(components) +
                 ']';
     }

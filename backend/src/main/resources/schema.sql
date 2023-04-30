@@ -44,13 +44,24 @@ CREATE TABLE IF NOT EXISTS settings
 CREATE TABLE IF NOT EXISTS ECGComponent
 (
     id          BIGINT AUTO_INCREMENT PRIMARY KEY,
-    test        VARCHAR(100)
+    identifier  VARCHAR(64),
+    name        VARCHAR(1000)
 );
 
 CREATE TABLE IF NOT EXISTS ECGComponentData
 (
     id          BIGINT AUTO_INCREMENT PRIMARY KEY,
     test        VARCHAR(100)
+);
+
+CREATE TABLE IF NOT EXISTS ECGDevice
+(
+    id          BIGINT AUTO_INCREMENT PRIMARY KEY,
+    identifier  VARCHAR(64),
+    name        VARCHAR(1000),
+    leads       TINYINT,
+    pin         VARCHAR(15),
+    components  BIGINT ARRAY
 );
 
 CREATE TABLE IF NOT EXISTS ECGData

@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import java.lang.invoke.MethodHandles;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @SuppressWarnings("EnhancedSwitchMigration")
@@ -48,6 +49,8 @@ public class ECGService {
 
     LOGGER.info("currentState of stateHolder: " + currentState.toString());
 
+    dataDao.createECGData(observation, 123, LocalDateTime.now());
+
     switch(ecgStateHolder.getCurrent()) {
       case WARNING:
         LOGGER.warn("ECGSTATE is WARNING in currently analysed data!");
@@ -67,6 +70,29 @@ public class ECGService {
     LOGGER.warn("ECG emergency call aborted by user!");
     ecgStateHolder = new ECGStateHolder(settings.ecgStateHolderSettings());
   }
+
+  /*public ECGData convertToEntity(String data) {
+    long idCounter = 0;
+    Observation o = dataService.getObservation(data);
+    ArrayList<ECGDataComponent> components = new ArrayList<>();
+
+    for(Observation.ObservationComponentComponent comp : o.getComponent()) {
+      SampledData sDat = comp.getValueSampledData();
+      ECGDataComponent c = new ECGDataComponent(idCounter++, comp.getCode().getCoding().get(0).getDisplay(), sDat.getData());
+
+      c.setOriginValue(sDat.getOrigin().getValue().doubleValue());
+      c.setInterval(sDat.getInterval().doubleValue());
+      c.setIntervalUnit(sDat.getIntervalUnit());
+      c.setFactor(sDat.getFactor().doubleValue());
+      c.setLowerLimit(sDat.getLowerLimit().doubleValue());
+      c.setUpperLimit(sDat.getUpperLimit().doubleValue());
+      c.setDimensions(sDat.getDimensions());
+
+      components.add(c);
+    }
+
+    return new ECGData(idCounter, LocalDateTime.now(), o.getDevice().getDisplay(), components);
+  }*/
 
   public String getData(int component) {
     return ecgStateHolder.getCurrentObservation().getComponent().get(component).getValueSampledData().getData();

@@ -40,3 +40,26 @@ CREATE TABLE IF NOT EXISTS settings
     FOREIGN KEY (ecganalysis_settings) REFERENCES settings_ecganalysis ON DELETE SET NULL ON UPDATE CASCADE,
     ecganalysis_settings BIGINT
 );
+
+CREATE TABLE IF NOT EXISTS ECGComponent
+(
+    id          BIGINT AUTO_INCREMENT PRIMARY KEY,
+    test        VARCHAR(100)
+);
+
+CREATE TABLE IF NOT EXISTS ECGComponentData
+(
+    id          BIGINT AUTO_INCREMENT PRIMARY KEY,
+    test        VARCHAR(100)
+);
+
+CREATE TABLE IF NOT EXISTS ECGData
+(
+    id          BIGINT AUTO_INCREMENT PRIMARY KEY,
+    timestamp   TIMESTAMP NOT NULL,
+    deviceName  VARCHAR(5000),
+    -- FOREIGN KEY (componentIds) REFERENCES ECGComponent(id) ON DELETE SET NULL ON UPDATE CASCADE,
+    componentIds    BIGINT ARRAY,
+    -- FOREIGN KEY (dataIds) REFERENCES ECGComponentData(id) ON DELETE SET NULL ON UPDATE CASCADE,
+    dataIds    BIGINT ARRAY
+);

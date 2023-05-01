@@ -1,5 +1,7 @@
 package ehealth.group1.backend.entity;
 
+import jakarta.persistence.Entity;
+
 public class User {
     private Long id;
     private String name;

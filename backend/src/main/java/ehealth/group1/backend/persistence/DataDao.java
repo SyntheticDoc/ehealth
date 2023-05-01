@@ -2,12 +2,14 @@ package ehealth.group1.backend.persistence;
 import ehealth.group1.backend.entity.User;
 import ehealth.group1.backend.exception.PersistenceException;
 import ehealth.group1.backend.helper.ErrorHandler;
+import org.hl7.fhir.r5.model.Observation;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,14 +18,16 @@ public class DataDao {
   private final JdbcTemplate jdbcTemplate;
   private final ErrorHandler errorHandler;
   private final UserDao userDao;
+  private final ECGDao ecgDao;
 
   private static final String TABLE_NAME_TEST = "test";
   private static final String SQL_SELECT_ALL_TEST = "SELECT DISTINCT * FROM " + TABLE_NAME_TEST;
 
-  public DataDao(JdbcTemplate jdbcTemplate, ErrorHandler errorHandler, UserDao userDao){
+  public DataDao(JdbcTemplate jdbcTemplate, ErrorHandler errorHandler, UserDao userDao, ECGDao ecgDao){
     this.jdbcTemplate = jdbcTemplate;
     this.errorHandler = errorHandler;
     this.userDao = userDao;
+    this.ecgDao = ecgDao;
   }
 
   public List<User> getAllUsers(Long maxRows) {
@@ -62,6 +66,10 @@ public class DataDao {
       result.add("Fehler mit Datenbankverbindung");
     }
     return result;
+  }
+
+  public void createECGData(Observation o, int checksum, LocalDateTime timestamp) {
+    ecgDao.createECGData(o, checksum, timestamp);
   }
 
   private String mapRow_test(ResultSet result, int rownum) throws SQLException {

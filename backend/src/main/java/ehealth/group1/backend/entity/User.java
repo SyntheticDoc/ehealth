@@ -1,6 +1,12 @@
 package ehealth.group1.backend.entity;
 
+import jakarta.persistence.*;
+
+@Entity
+@Table(name = "users")
 public class User {
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private String name;
 
@@ -15,13 +21,16 @@ public class User {
         this.name = name;
     }
 
-    public User(Long id, String name, String address, Long phone, boolean emergency, String password) {
-        this.id = id;
+    public User(String name, String address, Long phone, boolean emergency, String password) {
         this.name = name;
         this.address = address;
         this.phone = phone;
         this.emergency = emergency;
         this.password = password;
+    }
+
+    public User() {
+
     }
 
     public Long getId() {

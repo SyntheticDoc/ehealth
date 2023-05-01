@@ -1,25 +1,37 @@
 package ehealth.group1.backend.entity;
 
+import jakarta.persistence.*;
+
 import java.util.ArrayList;
 
+@Entity
 public class ECGDataComponent {
-    private final Long id;
-    private final String displayName;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
+
+    private String displayName;
 
     // SampledData
     private Double originValue;
-    private Double interval;
+    private Double intervalValue;
     private String intervalUnit;
     private Double factor;
     private Double lowerLimit;
     private Double upperLimit;
     private Integer dimensions;
-    private final String data;
+
+    @Transient
+    private String data;
 
     public ECGDataComponent(Long id, String displayName, String data) {
         this.id = id;
         this.displayName = displayName;
         this.data = data;
+    }
+
+    public ECGDataComponent() {
+
     }
 
     public void setOriginValue(Double originValue) {
@@ -31,12 +43,12 @@ public class ECGDataComponent {
         }
     }
 
-    public void setInterval(Double interval) {
-        if (this.interval != null) {
+    public void setIntervalValue(Double interval) {
+        if (this.intervalValue != null) {
             throw new IllegalStateException("ECGDataComponent.setInterval(): interval is not null, can't set new " +
                     "new interval value, possible illegal access?");
         } else {
-            this.interval = interval;
+            this.intervalValue = interval;
         }
     }
 
@@ -97,8 +109,8 @@ public class ECGDataComponent {
         return originValue;
     }
 
-    public Double getInterval() {
-        return interval;
+    public Double getIntervalValue() {
+        return intervalValue;
     }
 
     public String getIntervalUnit() {
@@ -139,7 +151,7 @@ public class ECGDataComponent {
         result.add(spacer + spacer + "\"origin\" : {");
         result.add(spacer + spacer + spacer + "\"value\" : " + originValue);
         result.add(spacer + spacer + "},");
-        result.add(spacer + spacer + "\"interval\" : " + interval + ",");
+        result.add(spacer + spacer + "\"interval\" : " + intervalValue + ",");
         result.add(spacer + spacer + "\"intervalUnit\" : \"" + intervalUnit + "\",");
         result.add(spacer + spacer + "\"factor\" : " + factor + ",");
         result.add(spacer + spacer + "\"lowerLimit\" : " + lowerLimit + ",");
@@ -162,7 +174,7 @@ public class ECGDataComponent {
                 "id=" + id +
                 ", displayName='" + displayName +
                 ", originValue=" + originValue +
-                ", interval=" + interval +
+                ", interval=" + intervalValue +
                 ", intervalUnit='" + intervalUnit +
                 ", factor=" + factor +
                 ", lowerLimit=" + lowerLimit +

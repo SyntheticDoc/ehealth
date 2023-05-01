@@ -1,8 +1,7 @@
 package ehealth.group1.backend.service;
 
-import ehealth.group1.backend.dto.ECGAnalysisSettings;
+import ehealth.group1.backend.entity.ECGAnalysisSettings;
 import ehealth.group1.backend.enums.ECGSTATE;
-import ehealth.group1.backend.exception.InvalidIntervalUnitException;
 import ehealth.group1.backend.helper.ErrorHandler;
 import org.hl7.fhir.r5.model.Observation;
 import org.hl7.fhir.r5.model.SampledData;
@@ -11,7 +10,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import java.lang.invoke.MethodHandles;
-import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
@@ -83,11 +81,11 @@ public class AnalyserService {
         int largeDeviationCount = 0;
 
         for(int i = 0; i < (data.length - 1); i++) {
-            if(Math.abs(data[i] - data[i+1]) > ecgAnalysisSettings.maxDeviation()) {
+            if (Math.abs(data[i] - data[i + 1]) > ecgAnalysisSettings.getMaxDeviation()) {
                 largeDeviationCount++;
             }
 
-            if(largeDeviationCount > ecgAnalysisSettings.maxDeviationNum()) {
+            if (largeDeviationCount > ecgAnalysisSettings.getMaxDeviationNum()) {
                 LOGGER.info("Result OK");
                 return ECGSTATE.OK;
             }

@@ -2,8 +2,9 @@ package ehealth.group1.backend.service;
 
 import ehealth.group1.backend.entity.*;
 import ehealth.group1.backend.generators.IDStringGenerator;
-import ehealth.group1.backend.persistence.DataDao;
-import ehealth.group1.backend.persistence.DeviceDao;
+import ehealth.group1.backend.repositories.DataRepository;
+import ehealth.group1.backend.repositories.DeviceRepository;
+import ehealth.group1.backend.repositories.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -13,22 +14,24 @@ import java.lang.invoke.MethodHandles;
 @Component
 public class ConnectionService {
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
-    DataDao dataDao;
-    DeviceDao deviceDao;
+    DataRepository dataRepository;
+    DeviceRepository deviceRepository;
+    UserRepository userRepository;
 
-    public ConnectionService(DataDao dataDao, DeviceDao deviceDao) {
-        this.dataDao = dataDao;
-        this.deviceDao = deviceDao;
+    public ConnectionService(DataRepository dataRepository, DeviceRepository deviceRepository, UserRepository userRepository) {
+        this.dataRepository = dataRepository;
+        this.deviceRepository = deviceRepository;
+        this.userRepository = userRepository;
     }
 
     public ECGDevice registerECGDevice(ECGDevice ecgDevice) {
         ecgDevice.setIdentifier(IDStringGenerator.getNewIDString());
 
-        for(ECGDeviceComponent c : ecgDevice.getComponents()) {
+        for (ECGDeviceComponent c : ecgDevice.getComponents()) {
             c.setIdentifier(IDStringGenerator.getNewIDString());
         }
 
-        deviceDao.createECGDevice(ecgDevice);
+        deviceRepository.save(ecgDevice);
 
         System.out.println("\n\nMock registering: " + ecgDevice + "\n");
         return ecgDevice;
@@ -42,11 +45,11 @@ public class ConnectionService {
     }
 
     public void registerUser(User user) {
-        dataDao.createUser(user);
+        userRepository.save(user);
     }
 
     public void connectECGDeviceToUser(ConnectDeviceData data) {
-        ECGDevice device = deviceDao.getDeviceByNameAndPin(data.getRegDeviceName(), data.getRegDevicePin()).get(0);
+        ECGDevice device = deviceRepository.findECGDeviceByNameAndPin(data.getRegDeviceName(), data.getRegDevicePin());
         LOGGER.warn("ConnectionService.connectECGDeviceToUser(): " + device);
     }
 }

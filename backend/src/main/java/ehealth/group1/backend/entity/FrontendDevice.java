@@ -1,8 +1,16 @@
 package ehealth.group1.backend.entity;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+
 // Holds data about the users frontend (smartphone)
+@Entity
 public class FrontendDevice {
     // Internal database id for device
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     // Device self-identification string
@@ -18,6 +26,10 @@ public class FrontendDevice {
         this.id = id;
         this.identifier = identifier;
         this.name = name;
+    }
+
+    public FrontendDevice() {
+
     }
 
     public Long getId() {

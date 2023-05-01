@@ -1,6 +1,6 @@
 package ehealth.group1.backend.helper;
 
-import ehealth.group1.backend.dto.ECGStateHolderSettings;
+import ehealth.group1.backend.entity.ECGStateHolderSettings;
 import ehealth.group1.backend.enums.ECGSTATE;
 import org.hl7.fhir.r5.model.Observation;
 import org.slf4j.Logger;
@@ -86,7 +86,7 @@ public class ECGStateHolder {
     }
 
     private void resetTimers() {
-        iterationsToStateTransitionLeft = ecgStateHolderSettings.iterationsToStateTransition();
-        iterationsToEmergencyCallLeft = ecgStateHolderSettings.iterationsToEmergencyCall();
+        iterationsToStateTransitionLeft = ecgStateHolderSettings.getIterationsToStateTransition();
+        iterationsToEmergencyCallLeft = ecgStateHolderSettings.getIterationsToEmergencyCall();
     }
 }

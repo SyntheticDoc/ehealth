@@ -1,11 +1,15 @@
 package ehealth.group1.backend.entity;
 
-import com.fasterxml.jackson.annotation.JsonSetter;
+import jakarta.persistence.*;
 
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.List;
 
+@Entity
 public class ECGDevice {
     // Internal database id for device
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     // Device self-identification string
@@ -24,13 +28,14 @@ public class ECGDevice {
     private String pin;
 
     // Lead info
-    private ECGDeviceComponent[] components;
+    @OneToMany(cascade = CascadeType.ALL)
+    private List<ECGDeviceComponent> components = new ArrayList<>();
 
     public ECGDevice() {
 
     }
 
-    public ECGDevice(Long id, String selfID, String identifier, String name, int leads, String pin, ECGDeviceComponent[] components)
+    public ECGDevice(Long id, String selfID, String identifier, String name, int leads, String pin, List<ECGDeviceComponent> components)
             throws IllegalStateException {
         this.id = id;
         this.selfID = selfID;
@@ -40,9 +45,9 @@ public class ECGDevice {
         this.pin = pin;
         this.components = components;
 
-        if(leads != components.length) {
+        if (leads != components.size()) {
             throw new IllegalStateException("ECGDevice(): Leads argument and internal count of leads is not equal [Leads: " +
-                    leads + ", component count: " + components.length + "]. Can't construct Object ECGDevice!");
+                    leads + ", component count: " + components.size() + "]. Can't construct Object ECGDevice!");
         }
     }
 
@@ -94,11 +99,11 @@ public class ECGDevice {
         this.pin = pin;
     }
 
-    public ECGDeviceComponent[] getComponents() {
+    public List<ECGDeviceComponent> getComponents() {
         return components;
     }
 
-    public void setComponents(ECGDeviceComponent[] components) {
+    public void setComponents(List<ECGDeviceComponent> components) {
         this.components = components;
     }
 
@@ -111,7 +116,7 @@ public class ECGDevice {
                 ",name='" + name + "'" +
                 ",leads=" + leads +
                 ",pin='" + pin + "'" +
-                ",components=" + Arrays.toString(components) +
+                ",components=" + components.toString() +
                 ']';
     }
 }

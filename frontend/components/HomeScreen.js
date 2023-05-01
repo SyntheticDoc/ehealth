@@ -7,7 +7,7 @@ import { faUser } from '@fortawesome/free-solid-svg-icons/faUser';
 import { getData, castEmergencyCall } from './NetworkFunctions';
 
 const HomeScreen = ({ navigation }) => {
-	const [healthStatus, setHealthStatus] = useState(2);
+	const [healthStatus, setHealthStatus] = useState(1);
 	const [countdown, setCountdown] = useState(30);
 	var timer = useRef();
 
@@ -59,9 +59,13 @@ const HomeScreen = ({ navigation }) => {
 			</View>
 			<TouchableOpacity
 				onPress={() => {
+					if(healthStatus==2){
+						setHealthStatus(1);
+
+					}else{
 					clearInterval(timer.current);
 					setHealthStatus(2);
-					setCountdown(30);
+					setCountdown(30);}
 				}}
 			>
 				<View
@@ -88,9 +92,15 @@ const HomeScreen = ({ navigation }) => {
 				</View>
 			</TouchableOpacity>
 
+
 			<View style={styles.apiResponse}>
 				<Text style={{ color: 'white', fontSize: 20 }}>{countdown}</Text>
 			</View>
+			{healthStatus==1?(
+			<View style={styles.apiResponse}>
+				<Text style={{ color: 'white', fontSize: 20 }}>If it's a false alarm, please press the "Warn" button.</Text>
+			</View>):(<View></View>)}
+			
 
 			<TouchableOpacity
 				style={styles.gear}

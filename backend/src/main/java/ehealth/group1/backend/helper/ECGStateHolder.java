@@ -1,8 +1,8 @@
 package ehealth.group1.backend.helper;
 
+import ehealth.group1.backend.customfhirstructures.CustomObservation;
 import ehealth.group1.backend.entity.ECGStateHolderSettings;
 import ehealth.group1.backend.enums.ECGSTATE;
-import org.hl7.fhir.r5.model.Observation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -11,7 +11,7 @@ import java.lang.invoke.MethodHandles;
 public class ECGStateHolder {
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     ECGSTATE current, last;
-    Observation currentObservation;
+    CustomObservation currentObservation;
 
     private ECGStateHolderSettings ecgStateHolderSettings;
 
@@ -25,7 +25,7 @@ public class ECGStateHolder {
         last = ECGSTATE.OK;
     }
 
-    public void update(ECGSTATE analysisResult, Observation observation) {
+    public void update(ECGSTATE analysisResult, CustomObservation observation) {
         currentObservation = observation;
         last = current;
         current = analysisResult;
@@ -81,7 +81,7 @@ public class ECGStateHolder {
         return current;
     }
 
-    public Observation getCurrentObservation() {
+    public CustomObservation getCurrentObservation() {
         return currentObservation;
     }
 

@@ -3,6 +3,8 @@ package ehealth.group1.backend.rest;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import ehealth.group1.backend.config.FhirHapiDeserializer;
 import ehealth.group1.backend.customfhirstructures.CustomObservation;
+import ehealth.group1.backend.entity.ECGHealthStatus;
+import ehealth.group1.backend.entity.User;
 import ehealth.group1.backend.service.ECGService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,6 +49,12 @@ public class DataEndpoint {
   public String reflect(@RequestBody String data) {
     LOGGER.info("Reflected data:\n\n" + data + "\n");
     return data;
+  }
+
+  @PostMapping("/lastHealthStatus")
+  @ResponseStatus(HttpStatus.OK)
+  public ECGHealthStatus reportLastHealthStatus(@RequestBody User user) {
+    return ecgService.getLastHealthStatus(user);
   }
 
   /*@PostMapping("/entityTest")

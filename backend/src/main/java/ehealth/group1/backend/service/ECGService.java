@@ -1,7 +1,10 @@
 package ehealth.group1.backend.service;
 
 import ehealth.group1.backend.customfhirstructures.CustomObservation;
+import ehealth.group1.backend.entity.ECGAnalysisResult;
+import ehealth.group1.backend.entity.ECGHealthStatus;
 import ehealth.group1.backend.entity.Settings;
+import ehealth.group1.backend.entity.User;
 import ehealth.group1.backend.enums.ECGSTATE;
 import ehealth.group1.backend.helper.ECGStateHolder;
 import ehealth.group1.backend.repositories.DataRepository;
@@ -73,6 +76,23 @@ public class ECGService {
         // TODO: Start emergency call
         break;
     }
+  }
+
+  public ECGHealthStatus getLastHealthStatus(User user) {
+    // TODO: Check user authorization
+    CustomObservation obs = ecgStateHolder.getCurrentObservation();
+    ECGSTATE ecgState = ecgStateHolder.getCurrent();
+    ECGAnalysisResult analysisResult = new ECGAnalysisResult();
+    ECGHealthStatus result = new ECGHealthStatus();
+
+    analysisResult.setEcgstate(ecgState);
+    analysisResult.setTimestamp(obs.getTimestampAsLocalDateTime());
+    analysisResult.setComment("No comment");
+
+    result.setAssociatedUserName(user.getName());
+    result.setLastAnalysisResult(analysisResult);
+
+    return result;
   }
 
   public ECGSTATE getCurrentState() {

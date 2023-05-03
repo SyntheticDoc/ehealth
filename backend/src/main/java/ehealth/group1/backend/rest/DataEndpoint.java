@@ -5,6 +5,7 @@ import ehealth.group1.backend.config.FhirHapiDeserializer;
 import ehealth.group1.backend.customfhirstructures.CustomObservation;
 import ehealth.group1.backend.entity.ECGHealthStatus;
 import ehealth.group1.backend.entity.User;
+import ehealth.group1.backend.repositories.DeviceRepository;
 import ehealth.group1.backend.service.ECGService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,6 +44,14 @@ public class DataEndpoint {
     ecgService.processECG(data);
   }
 
+  // Method for processing incoming reduced dataset explicitly from our custom esp32-device
+  @PostMapping("/receive/esp32_custom")
+  @ResponseStatus(HttpStatus.OK)
+  public void receiveJson_fromCustomEsp32(@RequestBody String data) {
+    LOGGER.info("Received ecg data from custom ecp 32");
+    ecgService.processECG_customEsp32(data);
+  }
+
   // For testing purposes, reflects the body of the incoming post message back to the sender
   @PostMapping("/reflect")
   @ResponseStatus(HttpStatus.OK)
@@ -56,11 +65,4 @@ public class DataEndpoint {
   public ECGHealthStatus reportLastHealthStatus(@RequestBody User user) {
     return ecgService.getLastHealthStatus(user);
   }
-
-  /*@PostMapping("/entityTest")
-  @ResponseStatus(HttpStatus.OK)
-  public String testEntityConversion(@RequestBody String data) {
-    LOGGER.info("Received ecg data from client");
-    return ecgService.convertToEntity(data).getJSONRepresentation();
-  }*/
 }

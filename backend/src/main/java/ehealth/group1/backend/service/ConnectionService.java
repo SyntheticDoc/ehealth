@@ -33,7 +33,6 @@ public class ConnectionService {
 
         deviceRepository.save(ecgDevice);
 
-        System.out.println("\n\nMock registering: " + ecgDevice + "\n");
         return ecgDevice;
     }
 

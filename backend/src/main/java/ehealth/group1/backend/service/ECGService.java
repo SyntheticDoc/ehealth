@@ -39,6 +39,7 @@ public class ECGService {
     ecgStateHolder = new ECGStateHolder(settings.getEcgStateHolderSettings());
   }
 
+  @Deprecated
   public List<String> getThing() {
     String[] arr = new String[]{"Accessing dataDao.getThing() is not supported anymore"};
     return Arrays.asList(arr);
@@ -51,6 +52,10 @@ public class ECGService {
 
   public void processECG(CustomObservation data) {
     processECGObservation(dataService.getObservation(data));
+  }
+
+  public void processECG_customEsp32(String data) {
+    processECGObservation(dataService.getObservation_fromCustomEsp32(data));
   }
 
   private void processECGObservation(CustomObservation obs) {

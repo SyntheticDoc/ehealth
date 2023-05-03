@@ -6,4 +6,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface DeviceRepository extends JpaRepository<ECGDevice, Long> {
 
     ECGDevice findECGDeviceByNameAndPin(String name, String pin);
+
+    ECGDevice findECGDeviceByIdentifier(String identifier);
 }

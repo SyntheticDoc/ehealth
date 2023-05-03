@@ -14,6 +14,13 @@ public class SecurityData {
     private String type;
     private String val;
 
+    public SecurityData() {}
+
+    public SecurityData(String type, String val) {
+        this.type = type;
+        this.val = val;
+    }
+
     public Long getId() {
         return id;
     }

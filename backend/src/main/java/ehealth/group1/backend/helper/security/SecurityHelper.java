@@ -43,8 +43,44 @@ public class SecurityHelper {
             return;
         }
 
+        if(false) {
+            securityDataRepository.deleteAll();
+        }
+
+        // Check if the parameters of the current machine have changed or are not yet created
+        MachineParameters mParamsFromRepo = new MachineParameters(securityDataRepository);
+        MachineParameters mParamsFromSystem = new MachineParameters(securityDataRepository, true);
+        boolean hasNewMachineParams = false;
+
+        if(!mParamsFromRepo.hasDBInfo()) {
+            LOGGER.debug("No machine parameters found in database, saving current parameters.");
+            mParamsFromSystem.saveToRepo();
+            hasNewMachineParams = true;
+        } else {
+            // Check if system changed since parameters were last saved
+            if(!mParamsFromSystem.matches(mParamsFromRepo)) {
+                LOGGER.warn("Machine parameters seem to have changed! Saving new machine parameters...");
+
+                // Delete old machineParams
+                securityDataRepository.deleteByType("SYS_availableMem");
+                securityDataRepository.deleteByType("SYS_osVersion");
+                securityDataRepository.deleteByType("SYS_hardwareUUID");
+                securityDataRepository.deleteByType("SYS_cpuIdentifier");
+                securityDataRepository.deleteByType("SYS_cpuLogicalThreads");
+
+                mParamsFromSystem.saveToRepo();
+                hasNewMachineParams = true;
+            } else {
+                LOGGER.debug("Machine parameters in database match current machine parameters, no change needed.");
+                hasNewMachineParams = false;
+            }
+        }
+
         if (argon2ParametersRepository.count() != 2) {
             LOGGER.info("Required parameters do not exist");
+            getNewArgon2Parameters();
+        } else if (hasNewMachineParams) {
+            LOGGER.info("Generating new parameters for changed machine parameters");
             getNewArgon2Parameters();
         } else {
             LOGGER.info("Argon2 fast parameters found: " + argon2ParametersRepository.findByType("fast"));
@@ -58,7 +94,7 @@ public class SecurityHelper {
                     + "shut down the server immediately and call your server administrator!");
             generateNewSalt("saltFast");
         } else {
-            LOGGER.info("\n\nSALT VALUE: " + securityDataRepository.findByType("saltFast").getVal() + "\n\n");
+            LOGGER.debug("\n\nSALT VALUE (fast): " + securityDataRepository.findByType("saltFast").getVal() + "\n");
         }
 
         if (securityDataRepository.findByType("saltDefault") == null) {
@@ -66,7 +102,7 @@ public class SecurityHelper {
                     + "shut down the server immediately and call your server administrator!");
             generateNewSalt("saltDefault");
         } else {
-            LOGGER.info("\n\nSALT VALUE: " + securityDataRepository.findByType("saltDefault").getVal() + "\n\n");
+            LOGGER.debug("\n\nSALT VALUE (default): " + securityDataRepository.findByType("saltDefault").getVal() + "\n");
         }
     }
 
@@ -129,7 +165,7 @@ public class SecurityHelper {
         }
 
         if (defaultParams != null) {
-            defaultParams.setType("mapping");
+            defaultParams.setType("default");
             argon2ParametersRepository.save(defaultParams);
         } else {
             LOGGER.error("Could not get new default argon2 parameters! Setting standard parameters. WARNING: This is unsafe, "

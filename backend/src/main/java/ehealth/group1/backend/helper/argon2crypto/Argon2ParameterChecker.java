@@ -1,13 +1,12 @@
 package ehealth.group1.backend.helper.argon2crypto;
 
 import ehealth.group1.backend.entity.Argon2Parameters;
+import ehealth.group1.backend.helper.security.MachineParameters;
+import ehealth.group1.backend.repositories.SecurityDataRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.crypto.argon2.Argon2PasswordEncoder;
 import org.springframework.stereotype.Component;
-import oshi.SystemInfo;
-import oshi.hardware.CentralProcessor;
-import oshi.hardware.HardwareAbstractionLayer;
 
 import java.lang.invoke.MethodHandles;
 import java.security.SecureRandom;
@@ -18,16 +17,25 @@ import java.time.temporal.ChronoUnit;
 public class Argon2ParameterChecker {
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
+    private final SecurityDataRepository securityDataRepository;
+
+    public Argon2ParameterChecker(SecurityDataRepository securityDataRepository) {
+        this.securityDataRepository = securityDataRepository;
+    }
+
     public Argon2Parameters getParametersForExecutionTime(int maxMilliseconds, int saltLength, int hashLength,
                                                           int parallelismDivider, int curMemDivider, int startIterCount) {
-        LOGGER.info("Starting search for Argon2 parameters for the current machine.");
-        LOGGER.info("Current maximum working memory available: " + getAvailableMemoryInKibi());
-        LOGGER.info("Current maximum logical threads available: " + getLogicalThreads());
+        // Get new machine parameters from system, even if they are already persisted
+        MachineParameters mParams = new MachineParameters(securityDataRepository, true);
 
-        long maxMem = getAvailableMemoryInKibi() / curMemDivider;
+        LOGGER.info("Starting search for Argon2 parameters for the current machine.");
+        LOGGER.info("Current maximum working memory available: " + mParams.getAvailableMem());
+        LOGGER.info("Current maximum logical threads available: " + mParams.getCpuLogicalThreads());
+
+        long maxMem = mParams.getAvailableMem() / curMemDivider;
 
         int curIterations = startIterCount;
-        int parallelism = getLogicalThreads() / parallelismDivider;
+        int parallelism = mParams.getCpuLogicalThreads() / parallelismDivider;
         long memoryIncreaseStep = maxMem / 2;
 
         long loopTimeElapsed = 0;
@@ -81,7 +89,7 @@ public class Argon2ParameterChecker {
                     curParams.getIterations()
             );
 
-            LOGGER.debug("Trying to find Argon2 parameters, current iteration: " + loopCount);
+            LOGGER.info("Trying to find Argon2 parameters, current iteration: " + loopCount);
             LOGGER.debug("curMem: " + curParams.getMemoryCost() + ", curIter: " + curParams.getIterations());
 
             startIter = Instant.now();
@@ -137,27 +145,10 @@ public class Argon2ParameterChecker {
         }
     }
 
-    public void printMachineStats() {
-        String s = "SYSTEM STATS\n\tAvailable Memory in Kibi: " + getAvailableMemoryInKibi() + "\n\tAvailable logical cores: " + getLogicalThreads();
-        LOGGER.info("\n\n###################################\n\t" + s + "\n###################################\n");
-    }
-
     public byte[] getNewSalt(int length) {
         SecureRandom secureRandom = new SecureRandom();
         byte[] salt = new byte[length];
         secureRandom.nextBytes(salt);
         return salt;
-    }
-
-    private long getAvailableMemoryInKibi() {
-        return (long) (Runtime.getRuntime().maxMemory() * 0.001);
-    }
-
-    private int getLogicalThreads() {
-        SystemInfo systemInfo = new SystemInfo();
-        HardwareAbstractionLayer hal = systemInfo.getHardware();
-        CentralProcessor cpu = hal.getProcessor();
-
-        return cpu.getLogicalProcessorCount();
     }
 }

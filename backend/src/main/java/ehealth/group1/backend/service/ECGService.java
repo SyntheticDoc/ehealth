@@ -35,8 +35,8 @@ public class ECGService {
     this.dataService = dataService;
     this.analyserService = analyserService;
     // TODO: Use production settings
-    //settings = settingsRepository.getReferenceById(0L);
-    //ecgStateHolder = new ECGStateHolder(settings.getEcgStateHolderSettings());
+    settings = settingsRepository.findByUserId(0L);
+    ecgStateHolder = new ECGStateHolder(settings.getEcgStateHolderSettings());
   }
 
   public List<String> getThing() {

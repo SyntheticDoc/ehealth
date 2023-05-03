@@ -13,4 +13,12 @@ public interface SecurityDataRepository extends JpaRepository<SecurityData, Long
      */
     @Query("SELECT s FROM SecurityData s WHERE s.type = ?1")
     SecurityData findByType(String type);
+
+    /**
+     * Deletes all SecurityData-Entities with the corresponding type.
+     *
+     * @param type string describing the type to delete
+     * @return long value of number of records deleted
+     */
+    long deleteByType(String type);
 }

@@ -2,7 +2,7 @@ package ehealth.group1.backend;
 
 import ca.uhn.fhir.context.FhirContext;
 import ehealth.group1.backend.generators.IDStringGenerator;
-import ehealth.group1.backend.helper.TestDataLoader;
+import ehealth.group1.backend.helper.dataloaders.TestDataLoader;
 import ehealth.group1.backend.repositories.DataRepository;
 import ehealth.group1.backend.repositories.SettingsRepository;
 import ehealth.group1.backend.repositories.UserRepository;

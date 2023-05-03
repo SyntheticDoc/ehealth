@@ -112,6 +112,7 @@ public class SecurityHelper {
                     + "shut down the server immediately and call your server administrator!");
             generateNewSalt("saltFast");
         } else {
+            // TODO: Remove in production code!
             LOGGER.debug("\n\nSALT VALUE (fast): " + securityDataRepository.findByType("saltFast").getVal() + "\n");
         }
 
@@ -120,6 +121,7 @@ public class SecurityHelper {
                     + "shut down the server immediately and call your server administrator!");
             generateNewSalt("saltDefault");
         } else {
+            // TODO: Remove in production code!
             LOGGER.debug("\n\nSALT VALUE (default): " + securityDataRepository.findByType("saltDefault").getVal() + "\n");
         }
     }

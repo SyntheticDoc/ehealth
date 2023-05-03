@@ -10,30 +10,39 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.support.TransactionCallback;
+import org.springframework.transaction.support.TransactionTemplate;
 
 import java.lang.invoke.MethodHandles;
 import java.util.Arrays;
 import java.util.Base64;
 
 @Component
+@Transactional
 public class SecurityHelper {
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final Argon2ParameterChecker argon2ParameterChecker;
     private final Argon2ParametersRepository argon2ParametersRepository;
     private final SecurityDataRepository securityDataRepository;
     private final Environment env;
+    private PlatformTransactionManager transactionManager;
 
     private final int saltLength = 128;
 
     public SecurityHelper(Argon2ParameterChecker argon2ParameterChecker, Argon2ParametersRepository argon2ParametersRepository,
-                          SecurityDataRepository securityDataRepository, Environment env) {
+                          SecurityDataRepository securityDataRepository, Environment env, PlatformTransactionManager transactionManager) {
         this.argon2ParameterChecker = argon2ParameterChecker;
         this.argon2ParametersRepository = argon2ParametersRepository;
         this.securityDataRepository = securityDataRepository;
         this.env = env;
+        this.transactionManager = transactionManager;
     }
 
+    @SuppressWarnings("unchecked")
     @PostConstruct
+    @Transactional
     public void checkArgon2Parameters() {
         LOGGER.info("Checking Argon2 parameters...");
 
@@ -61,12 +70,24 @@ public class SecurityHelper {
             if(!mParamsFromSystem.matches(mParamsFromRepo)) {
                 LOGGER.warn("Machine parameters seem to have changed! Saving new machine parameters...");
 
+                // Delete old machineParams, need TransactionManager to open new hibernate session, devil knows why...
+                new TransactionTemplate(transactionManager).execute((TransactionCallback) transactionStatus -> {
+
+                    securityDataRepository.deleteByType("SYS_availableMem");
+                    securityDataRepository.deleteByType("SYS_osVersion");
+                    securityDataRepository.deleteByType("SYS_hardwareUUID");
+                    securityDataRepository.deleteByType("SYS_cpuIdentifier");
+                    securityDataRepository.deleteByType("SYS_cpuLogicalThreads");
+
+                    return null;
+                });
+
                 // Delete old machineParams
-                securityDataRepository.deleteByType("SYS_availableMem");
+                /*securityDataRepository.deleteByType("SYS_availableMem");
                 securityDataRepository.deleteByType("SYS_osVersion");
                 securityDataRepository.deleteByType("SYS_hardwareUUID");
                 securityDataRepository.deleteByType("SYS_cpuIdentifier");
-                securityDataRepository.deleteByType("SYS_cpuLogicalThreads");
+                securityDataRepository.deleteByType("SYS_cpuLogicalThreads");*/
 
                 mParamsFromSystem.saveToRepo();
                 hasNewMachineParams = true;

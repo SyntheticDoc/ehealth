@@ -11,7 +11,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.PlatformTransactionManager;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.TransactionCallback;
 import org.springframework.transaction.support.TransactionTemplate;
 
@@ -20,7 +19,6 @@ import java.util.Arrays;
 import java.util.Base64;
 
 @Component
-@Transactional
 public class SecurityHelper {
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final Argon2ParameterChecker argon2ParameterChecker;
@@ -42,7 +40,6 @@ public class SecurityHelper {
 
     @SuppressWarnings("unchecked")
     @PostConstruct
-    @Transactional
     public void checkArgon2Parameters() {
         LOGGER.info("Checking Argon2 parameters...");
 

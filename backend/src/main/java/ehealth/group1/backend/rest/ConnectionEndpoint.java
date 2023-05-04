@@ -22,15 +22,31 @@ public class ConnectionEndpoint {
         this.connectionService = connectionService;
     }
 
+    /**
+     * Endpoint to register a ECGDevice and save all important device data in the database. Generates an identifier-string
+     * to uniquely identify the device which has to be attached to all future incoming data from the registered device to
+     * know to which device the data belongs.
+     *
+     * @param ecgDevice The device data
+     * @return A unique device identifier as String
+     */
     @PostMapping("/registerECGDevice")
     @ResponseStatus(HttpStatus.CREATED)
-    public ECGDevice registerECGDevice(@RequestBody ECGDevice ecgDevice) {
+    public String registerECGDevice(@RequestBody ECGDevice ecgDevice) {
         return connectionService.registerECGDevice(ecgDevice);
     }
 
+    /**
+     * Endpoint to register a FrontendDevice and save all important device data in the database. Generates an identifier-string
+     * to uniquely identify the device which has to be attached to all future incoming requests from the registered device to
+     * know to which device the requests belongs.
+     *
+     * @param frontendDevice The device data
+     * @return A unique device identifier as String
+     */
     @PostMapping("/registerFrontendDevice")
     @ResponseStatus(HttpStatus.CREATED)
-    public FrontendDevice registerECGDevice(@RequestBody FrontendDevice frontendDevice) {
+    public String registerECGDevice(@RequestBody FrontendDevice frontendDevice) {
         return connectionService.registerFrontendDevice(frontendDevice);
     }
 

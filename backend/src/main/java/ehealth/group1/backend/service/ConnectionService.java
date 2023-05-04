@@ -24,7 +24,7 @@ public class ConnectionService {
         this.userRepository = userRepository;
     }
 
-    public ECGDevice registerECGDevice(ECGDevice ecgDevice) {
+    public String registerECGDevice(ECGDevice ecgDevice) {
         ecgDevice.setIdentifier(IDStringGenerator.getNewIDString());
 
         for (ECGDeviceComponent c : ecgDevice.getComponents()) {
@@ -33,14 +33,14 @@ public class ConnectionService {
 
         deviceRepository.save(ecgDevice);
 
-        return ecgDevice;
+        return "{\"identifier\" : \"" + ecgDevice.getIdentifier() + "\"}";
     }
 
-    public FrontendDevice registerFrontendDevice(FrontendDevice frontendDevice) {
+    public String registerFrontendDevice(FrontendDevice frontendDevice) {
         frontendDevice.setIdentifier(IDStringGenerator.getNewIDString());
 
         System.out.println("\n\nMock registering: " + frontendDevice + "\n");
-        return frontendDevice;
+        return "{\"identifier\" : \"" + frontendDevice.getIdentifier() + "\"}";
     }
 
     public void registerUser(User user) {

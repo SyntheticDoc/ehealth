@@ -1,11 +1,16 @@
 package ehealth.group1.backend.entity;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
+@NoArgsConstructor
+@Getter @Setter
 public class ECGDevice {
     // Internal database id for device
     @Id
@@ -31,10 +36,6 @@ public class ECGDevice {
     @OneToMany(cascade = CascadeType.ALL)
     private List<ECGDeviceComponent> components = new ArrayList<>();
 
-    public ECGDevice() {
-
-    }
-
     public ECGDevice(Long id, String selfID, String identifier, String name, int leads, String pin, List<ECGDeviceComponent> components)
             throws IllegalStateException {
         this.id = id;
@@ -49,62 +50,6 @@ public class ECGDevice {
             throw new IllegalStateException("ECGDevice(): Leads argument and internal count of leads is not equal [Leads: " +
                     leads + ", component count: " + components.size() + "]. Can't construct Object ECGDevice!");
         }
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public String getSelfID() {
-        return selfID;
-    }
-
-    public String getIdentifier() {
-        return identifier;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public int getLeads() {
-        return leads;
-    }
-
-    public String getPin() {
-        return pin;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public void setSelfID(String selfID) {
-        this.selfID = selfID;
-    }
-
-    public void setIdentifier(String identifier) {
-        this.identifier = identifier;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setLeads(int leads) {
-        this.leads = leads;
-    }
-
-    public void setPin(String pin) {
-        this.pin = pin;
-    }
-
-    public List<ECGDeviceComponent> getComponents() {
-        return components;
-    }
-
-    public void setComponents(List<ECGDeviceComponent> components) {
-        this.components = components;
     }
 
     @Override

@@ -1,9 +1,14 @@
 package ehealth.group1.backend.entity;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Table(name = "users")
+@NoArgsConstructor
+@Getter @Setter
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -27,34 +32,6 @@ public class User {
         this.phone = phone;
         this.emergency = emergency;
         this.password = password;
-    }
-
-    public User() {
-
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public Long getPhone() {
-        return phone;
-    }
-
-    public boolean getEmergency() {
-        return emergency;
-    }
-
-    public String getPassword() {
-        return password;
     }
 
     @Override

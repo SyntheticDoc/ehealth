@@ -1,6 +1,10 @@
 package ehealth.group1.backend.entity;
 
 import jakarta.persistence.*;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -8,6 +12,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
+@NoArgsConstructor
+@Getter @Setter
 public class ECGData {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -15,6 +21,8 @@ public class ECGData {
     private LocalDateTime timestamp;
 
     @Transient
+    @Getter(AccessLevel.NONE)
+    @Setter(AccessLevel.NONE)
     private final DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd.MM.uuuu HH:mm:ss:SSS");
 
     private String deviceName;
@@ -27,26 +35,6 @@ public class ECGData {
         this.timestamp = timestamp;
         this.deviceName = deviceName;
         this.components = components;
-    }
-
-    public ECGData() {
-
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public LocalDateTime getTimestamp() {
-        return timestamp;
-    }
-
-    public String getDeviceName() {
-        return deviceName;
-    }
-
-    public List<ECGDataComponent> getComponents() {
-        return components;
     }
 
     public String getJSONRepresentation(int startSpacerNum) {

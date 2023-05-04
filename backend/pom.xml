@@ -69,6 +69,15 @@
             <version>1.70</version>
         </dependency>
 
+        <!-- Lombok-ize everything! Gets rid of LOTS of java boilerplate code. Scope provided means that the dependency
+            will not be included in a generated artifact of the application, since Lombok is only needed at build time -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.18.26</version>
+            <scope>provided</scope>
+        </dependency>
+
     </dependencies>
 
     <build>

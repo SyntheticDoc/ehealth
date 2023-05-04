@@ -1,10 +1,15 @@
 package ehealth.group1.backend.entity;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.ArrayList;
 
 @Entity
+@NoArgsConstructor
+@Getter @Setter
 public class ECGDataComponent {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -28,113 +33,6 @@ public class ECGDataComponent {
         this.id = id;
         this.displayName = displayName;
         this.data = data;
-    }
-
-    public ECGDataComponent() {
-
-    }
-
-    public void setOriginValue(Double originValue) {
-        if (this.originValue != null) {
-            throw new IllegalStateException("ECGDataComponent.setOriginValue(): originValue is not null, can't set new " +
-                    "new origin value, possible illegal access?");
-        } else {
-            this.originValue = originValue;
-        }
-    }
-
-    public void setIntervalValue(Double interval) {
-        if (this.intervalValue != null) {
-            throw new IllegalStateException("ECGDataComponent.setInterval(): interval is not null, can't set new " +
-                    "new interval value, possible illegal access?");
-        } else {
-            this.intervalValue = interval;
-        }
-    }
-
-    public void setIntervalUnit(String intervalUnit) {
-        if (this.intervalUnit != null) {
-            throw new IllegalStateException("ECGDataComponent.setIntervalUnit(): intervalUnit is not null, can't set new " +
-                    "new intervalUnit value, possible illegal access?");
-        } else {
-            this.intervalUnit = intervalUnit;
-        }
-    }
-
-    public void setFactor(Double factor) {
-        if (this.factor != null) {
-            throw new IllegalStateException("ECGDataComponent.setFactor(): factor is not null, can't set new " +
-                    "new factor value, possible illegal access?");
-        } else {
-            this.factor = factor;
-        }
-    }
-
-    public void setLowerLimit(Double lowerLimit) {
-        if (this.lowerLimit != null) {
-            throw new IllegalStateException("ECGDataComponent.setLowerLimit(): lowerLimit is not null, can't set new " +
-                    "new lowerLimit value, possible illegal access?");
-        } else {
-            this.lowerLimit = lowerLimit;
-        }
-    }
-
-    public void setUpperLimit(Double upperLimit) {
-        if (this.upperLimit != null) {
-            throw new IllegalStateException("ECGDataComponent.setUpperLimit(): upperLimit is not null, can't set new " +
-                    "new upperLimit value, possible illegal access?");
-        } else {
-            this.upperLimit = upperLimit;
-        }
-    }
-
-    public void setDimensions(Integer dimensions) {
-        if (this.dimensions != null) {
-            throw new IllegalStateException("ECGDataComponent.setDimensions(): dimensions is not null, can't set new " +
-                    "new dimensions value, possible illegal access?");
-        } else {
-            this.dimensions = dimensions;
-        }
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public String getDisplayName() {
-        return displayName;
-    }
-
-    public Double getOriginValue() {
-        return originValue;
-    }
-
-    public Double getIntervalValue() {
-        return intervalValue;
-    }
-
-    public String getIntervalUnit() {
-        return intervalUnit;
-    }
-
-    public Double getFactor() {
-        return factor;
-    }
-
-    public Double getLowerLimit() {
-        return lowerLimit;
-    }
-
-    public Double getUpperLimit() {
-        return upperLimit;
-    }
-
-    public Integer getDimensions() {
-        return dimensions;
-    }
-
-    public String getData() {
-        return data;
     }
 
     public ArrayList<String> getJSONRepresentation() {

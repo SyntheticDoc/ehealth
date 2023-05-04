@@ -5,10 +5,17 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 import java.time.LocalDateTime;
 
 @Entity
+@NoArgsConstructor
+@Getter @Setter
+@ToString
 public class ECGAnalysisResult {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -21,46 +28,10 @@ public class ECGAnalysisResult {
 
     private String comment;
 
-    public ECGAnalysisResult(Long id, ECGSTATE ecgstate, LocalDateTime timestamp, String comment) {
+    public ECGAnalysisResult(ECGSTATE ecgstate, LocalDateTime timestamp, String comment) {
         this.id = id;
         this.ecgstate = ecgstate;
         this.timestamp = timestamp;
-        this.comment = comment;
-    }
-
-    public ECGAnalysisResult() {
-
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public ECGSTATE getEcgstate() {
-        return ecgstate;
-    }
-
-    public void setEcgstate(ECGSTATE ecgstate) {
-        this.ecgstate = ecgstate;
-    }
-
-    public LocalDateTime getTimestamp() {
-        return timestamp;
-    }
-
-    public void setTimestamp(LocalDateTime timestamp) {
-        this.timestamp = timestamp;
-    }
-
-    public String getComment() {
-        return comment;
-    }
-
-    public void setComment(String comment) {
         this.comment = comment;
     }
 }

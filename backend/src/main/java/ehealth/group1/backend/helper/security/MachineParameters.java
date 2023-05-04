@@ -2,6 +2,8 @@ package ehealth.group1.backend.helper.security;
 
 import ehealth.group1.backend.entity.SecurityData;
 import ehealth.group1.backend.repositories.SecurityDataRepository;
+import lombok.AccessLevel;
+import lombok.Getter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import oshi.SystemInfo;
@@ -10,6 +12,7 @@ import oshi.hardware.HardwareAbstractionLayer;
 
 import java.lang.invoke.MethodHandles;
 
+@Getter
 public class MachineParameters {
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
@@ -19,8 +22,11 @@ public class MachineParameters {
     private String cpuIdentifier;
     private Integer cpuLogicalThreads;
 
+    // Set Getter access level to none for this to prevent auto-generation of isHasDbInfo() and use own Getter instead
+    @Getter(AccessLevel.NONE)
     private boolean hasDBInfo;
 
+    @Getter(AccessLevel.NONE)
     private final SecurityDataRepository dataRepository;
 
     public MachineParameters(SecurityDataRepository dataRepository) {
@@ -108,26 +114,6 @@ public class MachineParameters {
 
     public boolean isEmpty() {
         return availableMem == null || osVersion == null || hwUUID == null || cpuIdentifier == null || cpuLogicalThreads == null;
-    }
-
-    public Long getAvailableMem() {
-        return availableMem;
-    }
-
-    public String getOsVersion() {
-        return osVersion;
-    }
-
-    public String getHwUUID() {
-        return hwUUID;
-    }
-
-    public String getCpuIdentifier() {
-        return cpuIdentifier;
-    }
-
-    public Integer getCpuLogicalThreads() {
-        return cpuLogicalThreads;
     }
 
     public boolean hasDBInfo() {

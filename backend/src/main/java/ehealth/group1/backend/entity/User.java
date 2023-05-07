@@ -50,6 +50,10 @@ public class User {
         this.devices = devices;
     }
 
+    public void addECGDevice(ECGDevice device) {
+        devices.add(device);
+    }
+
     @Override
     public String toString() {
         return "User[id=" + id + ",name=" + name + ",address=" + address + ",phone=" + phone + ",emergency=" + emergency +

@@ -1,19 +1,20 @@
 package ehealth.group1.backend.service;
 
 import ehealth.group1.backend.customfhirstructures.CustomObservation;
-import ehealth.group1.backend.entity.ECGAnalysisResult;
-import ehealth.group1.backend.entity.ECGHealthStatus;
-import ehealth.group1.backend.entity.Settings;
-import ehealth.group1.backend.entity.User;
+import ehealth.group1.backend.entity.*;
 import ehealth.group1.backend.enums.ECGSTATE;
 import ehealth.group1.backend.helper.ECGStateHolder;
 import ehealth.group1.backend.repositories.DataRepository;
+import ehealth.group1.backend.repositories.DeviceRepository;
 import ehealth.group1.backend.repositories.SettingsRepository;
+import ehealth.group1.backend.repositories.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import java.lang.invoke.MethodHandles;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.List;
 
@@ -23,17 +24,22 @@ public class ECGService {
   private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
   DataRepository dataRepository;
   SettingsRepository settingsRepository;
+  UserRepository userRepository;
+  DeviceRepository deviceRepository;
 
   private Settings settings;
   private final DataService dataService;
   private final AnalyserService analyserService;
   private ECGStateHolder ecgStateHolder;
 
-  public ECGService(DataRepository dataRepository, SettingsRepository settingsRepository, DataService dataService, AnalyserService analyserService) {
+  public ECGService(DataRepository dataRepository, SettingsRepository settingsRepository, DataService dataService,
+                    AnalyserService analyserService, UserRepository userRepository, DeviceRepository deviceRepository) {
     this.dataRepository = dataRepository;
     this.settingsRepository = settingsRepository;
     this.dataService = dataService;
     this.analyserService = analyserService;
+    this.userRepository = userRepository;
+    this.deviceRepository = deviceRepository;
     // TODO: Use production settings
     settings = settingsRepository.findByUserId(0L);
     ecgStateHolder = new ECGStateHolder(settings.getEcgStateHolderSettings());
@@ -83,7 +89,25 @@ public class ECGService {
     }
   }
 
-  public ECGHealthStatus getLastHealthStatus(User user) {
+  public ECGHealthStatus getLastHealthStatus(RequestLastHealthStatus request) {
+    // Mock status:
+    User user = userRepository.findByNameAndPassword(request.getUserName(), request.getPassword());
+    ECGDevice device = deviceRepository.findECGDeviceByIdentifier(request.getDeviceIdentifier());
+
+    ECGSTATE ecgState = ECGSTATE.OK;
+    ECGAnalysisResult analysisResult = new ECGAnalysisResult();
+    ECGHealthStatus result = new ECGHealthStatus();
+
+    DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd.MM.uuuu HH:mm:ss:SSS");
+
+    analysisResult.setEcgstate(ecgState);
+    analysisResult.setTimestamp(dtf.format(LocalDateTime.now()));
+    analysisResult.setComment("No comment");
+
+    result.setAssociatedUserName(user.getName());
+    result.setLastAnalysisResult(analysisResult);
+
+    /*
     // TODO: Check user authorization
     CustomObservation obs = ecgStateHolder.getCurrentObservation();
     ECGSTATE ecgState = ecgStateHolder.getCurrent();
@@ -94,8 +118,9 @@ public class ECGService {
     analysisResult.setTimestamp(obs.getTimestampAsLocalDateTime());
     analysisResult.setComment("No comment");
 
-    result.setAssociatedUserName(user.getName());
+    //result.setAssociatedUserName(user.getName());
     result.setLastAnalysisResult(analysisResult);
+    */
 
     return result;
   }

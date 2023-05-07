@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import ehealth.group1.backend.config.FhirHapiDeserializer;
 import ehealth.group1.backend.customfhirstructures.CustomObservation;
 import ehealth.group1.backend.entity.ECGHealthStatus;
+import ehealth.group1.backend.entity.RequestLastHealthStatus;
 import ehealth.group1.backend.entity.User;
 import ehealth.group1.backend.repositories.DeviceRepository;
 import ehealth.group1.backend.service.ECGService;
@@ -62,7 +63,7 @@ public class DataEndpoint {
 
   @PostMapping("/lastHealthStatus")
   @ResponseStatus(HttpStatus.OK)
-  public ECGHealthStatus reportLastHealthStatus(@RequestBody User user) {
-    return ecgService.getLastHealthStatus(user);
+  public ECGHealthStatus reportLastHealthStatus(@RequestBody RequestLastHealthStatus request) {
+    return ecgService.getLastHealthStatus(request);
   }
 }

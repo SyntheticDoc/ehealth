@@ -1,13 +1,16 @@
 package ehealth.group1.backend.rest;
 
 import ehealth.group1.backend.entity.User;
+import ehealth.group1.backend.helper.ErrorHandler;
 import ehealth.group1.backend.service.ECGService;
 import ehealth.group1.backend.service.MessagingService;
 import ehealth.group1.backend.service.UserService;
+import jakarta.persistence.PersistenceException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
 import java.lang.invoke.MethodHandles;
@@ -21,11 +24,13 @@ public class UserEndpoint {
     ECGService ecgService;
     MessagingService msgService;
     UserService userService;
+    ErrorHandler errorHandler;
 
-    public UserEndpoint(ECGService ecgService,MessagingService msgService, UserService userService){
+    public UserEndpoint(ECGService ecgService,MessagingService msgService, UserService userService, ErrorHandler errorHandler){
         this.ecgService = ecgService;
         this.msgService = msgService;
         this.userService = userService;
+        this.errorHandler = errorHandler;
     }
 
     @PostMapping("/test")
@@ -68,15 +73,22 @@ public class UserEndpoint {
 
     @PostMapping("/post-user")
     public User postUser(@RequestParam String name, @RequestParam String address, @RequestParam Long phone,@RequestParam boolean emergency,@RequestParam String password){
-        try{
+        try {
             return userService.postUser(new User(name, address, phone, emergency, password));
-        }catch(Error e){
-            return null;
-
+        } catch(PersistenceException e) {
+            errorHandler.handleCustomException("userService.postUser()", "Could not create new user", e);
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Could not create new user", e);
         }
     }
 
-
-    //update USer
+    @PostMapping("/update-user")
+    public User updateUser(@RequestParam String name, @RequestParam String address, @RequestParam Long phone,@RequestParam boolean emergency,@RequestParam String password){
+        try {
+            return userService.updateUser(new User(name, address, phone, emergency, password));
+        } catch(PersistenceException e) {
+            errorHandler.handleCustomException("userService.updateUser()", "Could not update user", e);
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Could not update user", e);
+        }
+    }
 
 }

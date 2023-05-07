@@ -60,18 +60,17 @@ public class UserEndpoint {
     public User getUser(@RequestParam Long id){
         List<User> userList = null;
         try {
-            userList = userService.getUser(id);
-            return userList.get(0);
+            return userService.getUser(id);
         } catch (IndexOutOfBoundsException e) {
             e.printStackTrace();
             return null;
         }
-
     }
+
     @PostMapping("/post-user")
     public User postUser(@RequestParam String name, @RequestParam String address, @RequestParam Long phone,@RequestParam boolean emergency,@RequestParam String password){
         try{
-            return userService.postUser(name, address, phone, emergency, password);
+            return userService.postUser(new User(name, address, phone, emergency, password));
         }catch(Error e){
             return null;
 

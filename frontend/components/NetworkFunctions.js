@@ -29,52 +29,8 @@ const castEmergencyCall = () => {
       console.error(error);
     });
 };
-const getUserbyId = () => {
-  fetch("http://" + IPLarissa + ":8080/user/get-user?id=" + 1, {
-    method: "GET",
-  })
-    .then((response) => {
-      console.log(response);
-      return response.json;
-    })
-    .catch((error) => {
-      //Error
-      console.error(error);
-    });
-};
 
-const postUser = (name, address, phone, emergency, password) => {
-  console.log("postUser");
-  fetch(
-    "http://" +
-      IPLarissa +
-      ":8080/user/post-user?name=" +
-      name +
-      "&address=" +
-      address +
-      "&phone=" +
-      phone +
-      "&emergency=" +
-      emergency +
-      "&password=" +
-      password,
-    {
-      method: "POST",
-    }
-  )
-    .then((response) => {
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
-      }
-      return response;
-    })
-    .then((data) => {
-      console.log(data);
-      return data;
-    })
-    .catch((error) => {
-      console.error("Error sending data to backend:", error);
-    });
-};
 
-export { getData, castEmergencyCall, getUserbyId, postUser };
+
+
+export { getData, castEmergencyCall };

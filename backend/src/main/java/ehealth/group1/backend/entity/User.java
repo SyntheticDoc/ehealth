@@ -18,7 +18,6 @@ public class User {
     private String address;
     private Long phone;
     private boolean emergency;
-
     private String password;
 
     public User(Long id, String name) {

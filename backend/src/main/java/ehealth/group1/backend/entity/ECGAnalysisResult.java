@@ -24,12 +24,11 @@ public class ECGAnalysisResult {
     // Global result state of the ecg analysed
     private ECGSTATE ecgstate;
 
-    private LocalDateTime timestamp;
+    private String timestamp;
 
     private String comment;
 
-    public ECGAnalysisResult(ECGSTATE ecgstate, LocalDateTime timestamp, String comment) {
-        this.id = id;
+    public ECGAnalysisResult(ECGSTATE ecgstate, String timestamp, String comment) {
         this.ecgstate = ecgstate;
         this.timestamp = timestamp;
         this.comment = comment;

@@ -5,11 +5,13 @@ import ehealth.group1.backend.generators.IDStringGenerator;
 import ehealth.group1.backend.repositories.DataRepository;
 import ehealth.group1.backend.repositories.DeviceRepository;
 import ehealth.group1.backend.repositories.UserRepository;
+import jakarta.persistence.PersistenceException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import java.lang.invoke.MethodHandles;
+import java.text.ParseException;
 
 @Component
 public class ConnectionService {
@@ -47,8 +49,32 @@ public class ConnectionService {
         userRepository.save(user);
     }
 
-    public void connectECGDeviceToUser(ConnectDeviceData data) {
+    public String connectECGDeviceToUser(ConnectDeviceData data) throws PersistenceException {
+        LOGGER.info("Trying to connect ECGDevice to user...");
+
         ECGDevice device = deviceRepository.findECGDeviceByNameAndPin(data.getRegDeviceName(), data.getRegDevicePin());
-        LOGGER.warn("ConnectionService.connectECGDeviceToUser(): " + device);
+        User user = userRepository.findByNameAndPassword(data.getUserName(), data.getPassword());
+
+        if(device == null) {
+            throw new PersistenceException("Can't find ECGDevice \"" + data.getRegDeviceName() + "\", check name and pin!");
+        }
+
+        if(user == null) {
+            throw new PersistenceException("Can't find User \"" + data.getUserName() + "\", check user name and password!");
+        }
+
+        if(user.getDevices().contains(device)) {
+            throw new PersistenceException("Can't add ECGDevice to user, ECGDevice is already registered for this user!");
+        }
+
+        user.addECGDevice(device);
+        userRepository.save(user);
+
+        LOGGER.info("Successfully added ECGDevice to user.");
+
+        // TODO: Remove
+        LOGGER.info("Saved user: " + user);
+
+        return "{\"identifier\" : \"" + device.getIdentifier() + "\"}";
     }
 }

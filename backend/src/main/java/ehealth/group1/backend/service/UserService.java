@@ -2,7 +2,6 @@ package ehealth.group1.backend.service;
 
 
 import ehealth.group1.backend.entity.User;
-import ehealth.group1.backend.helper.ErrorHandler;
 import ehealth.group1.backend.repositories.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,6 +28,7 @@ public class UserService {
 
     public User postUser(User user){
         try{
+            LOGGER.info("Saving user: " + user.toString());
             return userRepository.save(user);
         }catch(Error e){
             return null;

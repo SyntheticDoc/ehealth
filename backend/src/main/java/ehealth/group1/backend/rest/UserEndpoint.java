@@ -58,7 +58,6 @@ public class UserEndpoint {
 
     @GetMapping("/get-user")
     public User getUser(@RequestParam Long id){
-        List<User> userList = null;
         try {
             return userService.getUser(id);
         } catch (IndexOutOfBoundsException e) {

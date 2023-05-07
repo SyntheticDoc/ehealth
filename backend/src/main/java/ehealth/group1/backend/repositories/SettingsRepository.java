@@ -8,4 +8,6 @@ import org.springframework.stereotype.Repository;
 public interface SettingsRepository extends JpaRepository<Settings, Long> {
 
     Settings findByUserId(long userId);
+
+    Settings deleteByUserId(long userId);
 }

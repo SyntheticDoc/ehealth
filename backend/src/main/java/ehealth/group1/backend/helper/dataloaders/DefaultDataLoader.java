@@ -2,6 +2,7 @@ package ehealth.group1.backend.helper.dataloaders;
 
 import ehealth.group1.backend.entity.ECGAnalysisSettings;
 import ehealth.group1.backend.entity.ECGStateHolderSettings;
+import ehealth.group1.backend.entity.GraphicsSettings;
 import ehealth.group1.backend.entity.Settings;
 import ehealth.group1.backend.repositories.SettingsRepository;
 import org.slf4j.Logger;
@@ -27,11 +28,18 @@ public class DefaultDataLoader {
 
     public void defaultSettings() {
         LOGGER.info("Loading default ECG stateholder- and analysis-settings.");
-        settingsRepository.deleteAll();
+        settingsRepository.deleteByUserId(0L);
 
         ECGAnalysisSettings analysisSettings = new ECGAnalysisSettings(0L, maxDeviation, maxDeviationNum);
         ECGStateHolderSettings stateHolderSettings = new ECGStateHolderSettings(0L, iterations_transition, iterations_emergency);
         Settings s = new Settings(0L, stateHolderSettings, analysisSettings);
         settingsRepository.save(s);
+    }
+
+    public GraphicsSettings getGraphicsSettings() {
+        int canvas_x_size = 800;
+        int canvas_y_size = 1600;
+
+        return new GraphicsSettings(canvas_x_size, canvas_y_size);
     }
 }

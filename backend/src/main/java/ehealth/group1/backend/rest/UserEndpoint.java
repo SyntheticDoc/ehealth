@@ -62,7 +62,7 @@ public class UserEndpoint {
         try {
             userList = userService.getUser(id);
             return userList.get(0);
-        } catch (NullPointerException e) {
+        } catch (IndexOutOfBoundsException e) {
             e.printStackTrace();
             return null;
         }

@@ -68,9 +68,9 @@ public class ConnectionEndpoint {
 
     @PostMapping("/connectECGDeviceToUser")
     @ResponseStatus(HttpStatus.CREATED)
-    public void connectECGDeviceToUser(@RequestBody ConnectDeviceData data) {
+    public String connectECGDeviceToUser(@RequestBody ConnectDeviceData data) {
         try {
-            connectionService.connectECGDeviceToUser(data);
+            return connectionService.connectECGDeviceToUser(data);
         } catch(PersistenceException e) {
             errorHandler.handleCustomException("connectionService.connectECGDeviceToUser()", "Could not connect ECGDevice to user", e);
             throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Could not connect ECGDevice to user", e);

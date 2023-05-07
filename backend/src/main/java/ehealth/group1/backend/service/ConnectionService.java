@@ -49,7 +49,7 @@ public class ConnectionService {
         userRepository.save(user);
     }
 
-    public void connectECGDeviceToUser(ConnectDeviceData data) throws PersistenceException {
+    public String connectECGDeviceToUser(ConnectDeviceData data) throws PersistenceException {
         LOGGER.info("Trying to connect ECGDevice to user...");
 
         ECGDevice device = deviceRepository.findECGDeviceByNameAndPin(data.getRegDeviceName(), data.getRegDevicePin());
@@ -74,5 +74,7 @@ public class ConnectionService {
 
         // TODO: Remove
         LOGGER.info("Saved user: " + user);
+
+        return "{\"identifier\" : \"" + device.getIdentifier() + "\"}";
     }
 }

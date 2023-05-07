@@ -23,6 +23,33 @@ const RegisterScreen = ({ navigation }) => {
 
   const { generaluser, setGeneraluser } = useContext(AppContext);
 
+
+  const postUser = async () => {
+    
+    const response = await fetch(
+      "http://" +
+                "10.0.0.58" +
+                ":8080/user/post-user?name=" +
+                name +
+                "&address=" +
+                address +
+                "&phone=" +
+                phoneNumber +
+                "&emergency=" +
+                true +
+                "&password=" +
+                password,
+      {
+        method: 'Post',
+      }
+
+    );
+    const json = await response.json();
+    setGeneraluser(json); 
+  
+  }
+
+
   const handleRegister = () => {
     // Hier kannst du den Code schreiben, um die Registrierung durchzuführen
     console.log(name, email, address, phoneNumber);
@@ -47,13 +74,7 @@ const RegisterScreen = ({ navigation }) => {
         onChangeText={setName}
         value={name}
       />
-      <TextInput
-        style={styles.input}
-        placeholder="E-Mail-Adresse"
-        onChangeText={setEmail}
-        value={email}
-        keyboardType="email-address"
-      />
+      
       <TextInput
         style={styles.input}
         placeholder="Adresse"
@@ -89,34 +110,8 @@ const RegisterScreen = ({ navigation }) => {
       <TouchableOpacity
         style={styles.button}
         onPress={() => {
-          setGeneraluser(
-            fetch(
-              "http://" +
-                "10.0.0.58" +
-                ":8080/user/post-user?name=" +
-                name +
-                "&address=" +
-                address +
-                "&phone=" +
-                phoneNumber +
-                "&emergency=" +
-                true +
-                "&password=" +
-                password,
-              {
-                method: "POST",
-              }
-            )
-              .then((response) => {
-                return response.json();
-              })
-              .catch((error) => console.error(error))
-          );
-          setTimeout(function () {
-            console.log(generaluser)
-            setGeneraluser(generaluser._j);
-            navigation.navigate("Home");
-          }, 1500);
+         postUser(); 
+          navigation.navigate("Home");
         }}
       >
         <Text style={styles.buttonText}>Registrieren</Text>

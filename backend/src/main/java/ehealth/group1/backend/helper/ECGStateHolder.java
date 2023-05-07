@@ -1,8 +1,8 @@
 package ehealth.group1.backend.helper;
 
-import ehealth.group1.backend.dto.ECGStateHolderSettings;
+import ehealth.group1.backend.customfhirstructures.CustomObservation;
+import ehealth.group1.backend.entity.ECGStateHolderSettings;
 import ehealth.group1.backend.enums.ECGSTATE;
-import org.hl7.fhir.r5.model.Observation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -11,7 +11,7 @@ import java.lang.invoke.MethodHandles;
 public class ECGStateHolder {
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     ECGSTATE current, last;
-    Observation currentObservation;
+    CustomObservation currentObservation;
 
     private ECGStateHolderSettings ecgStateHolderSettings;
 
@@ -25,10 +25,26 @@ public class ECGStateHolder {
         last = ECGSTATE.OK;
     }
 
-    public void update(ECGSTATE analysisResult, Observation observation) {
+    public void update(ECGSTATE analysisResult, CustomObservation observation) {
         currentObservation = observation;
         last = current;
         current = analysisResult;
+
+        //LOGGER.warn("STATE OLD - AnalysisResult: " + analysisResult + ", current: " + current + ", last: " + last);
+
+        if(current == ECGSTATE.OK) {
+            resetTimers();
+            return;
+        }
+
+        if(current == ECGSTATE.WARNING && last == ECGSTATE.CRITICAL) {
+            current = ECGSTATE.CRITICAL;
+        }
+
+        if(current == ECGSTATE.WARNING && last == ECGSTATE.CALLEMERGENCY) {
+            current = ECGSTATE.CALLEMERGENCY;
+            return;
+        }
 
         if(current == ECGSTATE.WARNING && last == ECGSTATE.WARNING) {
             iterationsToStateTransitionLeft--;
@@ -45,6 +61,8 @@ public class ECGStateHolder {
                 current = ECGSTATE.CALLEMERGENCY;
             }
         }
+
+        //LOGGER.warn("STATE NEW - AnalysisResult: " + analysisResult + ", current: " + current + ", last: " + last);
     }
 
     public void abortEmergency() {
@@ -63,12 +81,12 @@ public class ECGStateHolder {
         return current;
     }
 
-    public Observation getCurrentObservation() {
+    public CustomObservation getCurrentObservation() {
         return currentObservation;
     }
 
     private void resetTimers() {
-        iterationsToStateTransitionLeft = ecgStateHolderSettings.iterationsToStateTransition();
-        iterationsToEmergencyCallLeft = ecgStateHolderSettings.iterationsToEmergencyCall();
+        iterationsToStateTransitionLeft = ecgStateHolderSettings.getIterationsToStateTransition();
+        iterationsToEmergencyCallLeft = ecgStateHolderSettings.getIterationsToEmergencyCall();
     }
 }

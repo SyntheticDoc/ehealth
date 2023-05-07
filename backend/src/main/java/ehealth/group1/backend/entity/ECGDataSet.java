@@ -1,7 +1,12 @@
 package ehealth.group1.backend.entity;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
 import java.util.ArrayList;
 
+@NoArgsConstructor
+@Getter
 public class ECGDataSet {
     ArrayList<ECGData> datasets = new ArrayList<>();
 

@@ -4,15 +4,17 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-// Holds data about the users frontend (smartphone)
+import java.io.Serializable;
+
 @Entity
-@NoArgsConstructor
+@NoArgsConstructor @AllArgsConstructor
 @Getter @Setter
-public class FrontendDevice {
+public class ECGDeviceComponent implements Serializable {
     // Internal database id for device
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -21,23 +23,17 @@ public class FrontendDevice {
     // Device self-identification string
     private String selfID;
 
-    // Unique identifier for the device
+    // Unique identifier for the device, internal
     private String identifier;
 
-    // Display name for the device, for example "Android Smartphone XYZ"
+    // Display name for the device, for example "Custom Arduino ECG"
     private String name;
-
-    public FrontendDevice(Long id, String identifier, String name) {
-        this.id = id;
-        this.identifier = identifier;
-        this.name = name;
-    }
 
     @Override
     public String toString() {
-        return "FrontendDevice[" +
+        return "ECGDeviceComponent[" +
                 "id=" + id +
-                "selfID='" + selfID + "'" +
+                ",selfID='" + selfID + "'" +
                 ",identifier='" + identifier + "'" +
                 ",name='" + name + "'" +
                 ']';

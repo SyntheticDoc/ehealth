@@ -1,38 +1,40 @@
 package ehealth.group1.backend.entity;
 
+import jakarta.persistence.*;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.List;
 
+@Entity
+@NoArgsConstructor
+@Getter @Setter
 public class ECGData {
-    private final Long id;
-    private final LocalDateTime timestamp;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
+    private LocalDateTime timestamp;
+
+    @Transient
+    @Getter(AccessLevel.NONE)
+    @Setter(AccessLevel.NONE)
     private final DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd.MM.uuuu HH:mm:ss:SSS");
 
-    private final String deviceName;
-    private final ArrayList<ECGDataComponent> components;
+    private String deviceName;
 
-    public ECGData(Long id, LocalDateTime timestamp, String deviceName, ArrayList<ECGDataComponent> components) {
+    @OneToMany(cascade = CascadeType.ALL)
+    private List<ECGDataComponent> components = new ArrayList<>();
+
+    public ECGData(Long id, LocalDateTime timestamp, String deviceName, List<ECGDataComponent> components) {
         this.id = id;
         this.timestamp = timestamp;
         this.deviceName = deviceName;
         this.components = components;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public LocalDateTime getTimestamp() {
-        return timestamp;
-    }
-
-    public String getDeviceName() {
-        return deviceName;
-    }
-
-    public ArrayList<ECGDataComponent> getComponents() {
-        return components;
     }
 
     public String getJSONRepresentation(int startSpacerNum) {

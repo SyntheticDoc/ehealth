@@ -6,6 +6,7 @@ import java.awt.*;
 
 @NoArgsConstructor
 @Getter @Setter
+@ToString
 public class GraphicsSettings {
     private int canvas_x_size, canvas_y_size;
     private int titleBarSize;
@@ -13,6 +14,7 @@ public class GraphicsSettings {
     private double lineThickness_ecgGraph;
     private Color background;
     private Color base;
+    private Color titleBar;
     private Color ecgGraph;
     private Color text;
     private Font font_leadName;

@@ -169,4 +169,8 @@ public class ECGService {
     return data;
   }
 
+  public void reloadSettings() {
+    settings = settingsRepository.findByUserId(0L);
+  }
+
 }

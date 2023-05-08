@@ -45,6 +45,7 @@ public class DefaultDataLoader {
         double lineThickness_dividerLines = 0.005;
         double lineThickness_ecgGraph = 0.005;
         Color background = Color.WHITE;
+        Color titleBar = Color.LIGHT_GRAY;
         Color base = Color.BLACK;
         Color ecgGraph = Color.RED;
         Color text = Color.BLACK;
@@ -61,6 +62,7 @@ public class DefaultDataLoader {
         settings.setLineThickness_dividerLines(lineThickness_dividerLines);
         settings.setLineThickness_ecgGraph(lineThickness_ecgGraph);
         settings.setBackground(background);
+        settings.setTitleBar(titleBar);
         settings.setBase(base);
         settings.setEcgGraph(ecgGraph);
         settings.setText(text);

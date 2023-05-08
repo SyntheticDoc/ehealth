@@ -24,6 +24,10 @@ public class Settings {
     @ColumnDefault("false")
     private boolean writeDataToDisk;
 
+    @Getter(AccessLevel.NONE)
+    @ColumnDefault("false")
+    private boolean drawEcgData;
+
     @OneToOne(cascade = CascadeType.ALL)
     private ECGStateHolderSettings ecgStateHolderSettings;
 
@@ -38,5 +42,9 @@ public class Settings {
 
     public boolean writeDataToDisk() {
         return writeDataToDisk;
+    }
+
+    public boolean drawEcgData() {
+        return drawEcgData;
     }
 }

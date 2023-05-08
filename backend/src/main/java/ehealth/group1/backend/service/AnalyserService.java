@@ -1,10 +1,12 @@
 package ehealth.group1.backend.service;
 
+import ehealth.group1.backend.customfhirstructures.CustomObservation;
 import ehealth.group1.backend.entity.ECGAnalysisSettings;
 import ehealth.group1.backend.entity.Settings;
 import ehealth.group1.backend.enums.ECGSTATE;
 import ehealth.group1.backend.helper.ErrorHandler;
 import ehealth.group1.backend.helper.datawriter.Datawriter;
+import ehealth.group1.backend.helper.graphics.GraphicsModule;
 import org.hl7.fhir.r5.model.Observation;
 import org.hl7.fhir.r5.model.SampledData;
 import org.slf4j.Logger;
@@ -22,10 +24,12 @@ public class AnalyserService {
 
     private final ErrorHandler errorHandler;
     private final Datawriter datawriter;
+    private final GraphicsModule graphicsModule;
 
-    public AnalyserService(ErrorHandler errorHandler, Datawriter datawriter) {
+    public AnalyserService(ErrorHandler errorHandler, Datawriter datawriter, GraphicsModule graphicsModule) {
         this.errorHandler = errorHandler;
         this.datawriter = datawriter;
+        this.graphicsModule = graphicsModule;
     }
 
     /**
@@ -35,13 +39,17 @@ public class AnalyserService {
      * @param obs The observation containing all ecg electrode components to be analysed
      * @return The ECGSTATE of the analysed observation
      */
-    public ECGSTATE analyse(Observation obs, Settings settings) {
+    public ECGSTATE analyse(CustomObservation obs, Settings settings) {
         Instant start = Instant.now();
 
         ECGSTATE[] stateList = new ECGSTATE[obs.getComponent().size()];
 
         if(settings.writeDataToDisk()) {
             datawriter.writeData(obs);
+        }
+
+        if(settings.drawEcgData()) {
+            graphicsModule.drawECG(obs.getComponent(), obs.getTimestampAsLocalDateTime());
         }
 
         for(int i = 0; i < obs.getComponent().size(); i++) {

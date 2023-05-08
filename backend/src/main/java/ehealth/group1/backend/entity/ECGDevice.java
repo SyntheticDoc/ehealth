@@ -36,7 +36,6 @@ public class ECGDevice {
 
     // Lead info
     @OneToMany(cascade = CascadeType.ALL)
-    @OnDelete(action = OnDeleteAction.CASCADE)
     private List<ECGDeviceComponent> components = new ArrayList<>();
 
     public ECGDevice(Long id, String selfID, String identifier, String name, int leads, String pin, List<ECGDeviceComponent> components)

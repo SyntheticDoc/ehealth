@@ -16,8 +16,8 @@ import java.lang.invoke.MethodHandles;
 public class DefaultDataLoader {
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-    private final int maxDeviation = 5;
-    private final int maxDeviationNum = 10;
+    private final double maxDeviation = 0.2;
+    private final double maxDeviationNum = 5.0;
     private final int iterations_transition = 3;
     private final int iterations_emergency = 5;
 
@@ -49,10 +49,10 @@ public class DefaultDataLoader {
         Color base = Color.BLACK;
         Color ecgGraph = Color.RED;
         Color text = Color.BLACK;
-        Font leadName = new Font("Arial", Font.BOLD, 14);
+        Font leadName = new Font("Arial", Font.BOLD, 18);
         Font timestamp = new Font("Arial", Font.BOLD, 14);
 
-        boolean useDoubleBuffering = false;
+        boolean useDoubleBuffering = true;
 
         GraphicsSettings settings = new GraphicsSettings();
 

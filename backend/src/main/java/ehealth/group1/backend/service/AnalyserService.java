@@ -81,7 +81,8 @@ public class AnalyserService {
 
     private ECGSTATE analyseComponent(Observation.ObservationComponentComponent c, ECGAnalysisSettings ecgAnalysisSettings) {
         SampledData rawData = c.getValueSampledData();
-        int[] data = Arrays.stream(rawData.getData().split(" ")).mapToInt(Integer::parseInt).toArray();
+        //int[] data = Arrays.stream(rawData.getData().split(" ")).mapToInt(Integer::parseInt).toArray();
+        double[] data = Arrays.stream(rawData.getData().split(" ")).mapToDouble(Double::parseDouble).toArray();
 //        BigDecimal interval = rawData.getInterval();
 //        String intervalUnit = rawData.getIntervalUnit();
 

@@ -1,28 +1,43 @@
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import HomeScreen from './components/HomeScreen';
 import SettingsScreen from './components/SettingsScreen';
 import LoginScreen from './components/LoginScreen';
 import RegisterScreen from './components/RegisterScreen';
+import { createStackNavigator } from '@react-navigation/stack';
+import React from 'react'
 
-const Stack = createNativeStackNavigator();
+import User from "./type/User"
+import { useState } from 'react';
+
+
+
+//const [user, setUser] = useState(''); 
+
+export const AppContext = React.createContext(null);
 
 export default function App() {
+
+	const Stack = createStackNavigator();
+	const [generaluser, setGeneraluser] = useState(null); 
 	return (
-		<NavigationContainer>
+		<AppContext.Provider value={{generaluser, setGeneraluser}}>
+			<NavigationContainer>
 			<Stack.Navigator
 				screenOptions={{
 					headerShown: false,
 				}}
 			>
+				<Stack.Screen name='Register' component={RegisterScreen} />
 				<Stack.Screen name='Home' component={HomeScreen} />
 				<Stack.Screen name='Settings' component={SettingsScreen} />
 				<Stack.Screen name='Login' component={LoginScreen} />
-				<Stack.Screen name='Register' component={RegisterScreen} />
+				
 			</Stack.Navigator>
 		</NavigationContainer>
+		</AppContext.Provider>
+		
 	);
 }
 

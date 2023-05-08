@@ -43,15 +43,14 @@ public class GraphicsModule {
         titleBar_centerY = gSettings.getCanvas_y_size() - (0.5 * gSettings.getTitleBarSize());
         titleBar_halfWidth = 0.5 * gSettings.getCanvas_x_size();
         titleBar_halfHeight = 0.5 * gSettings.getTitleBarSize();
-    }
-
-    public void drawECG(List<Observation.ObservationComponentComponent> comps, LocalDateTime timestamp) {
         if(gSettings.useDoubleBuffering()) {
             StdDraw.enableDoubleBuffering();
         } else {
             StdDraw.disableDoubleBuffering();
         }
+    }
 
+    public void drawECG(List<Observation.ObservationComponentComponent> comps, LocalDateTime timestamp) {
         // Draw background
         StdDraw.clear(gSettings.getBackground());
 

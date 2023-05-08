@@ -20,11 +20,11 @@ public class ECGAnalysisSettings {
 
     Long user_id;
 
-    int maxDeviation;
+    double maxDeviation;
 
-    int maxDeviationNum;
+    double maxDeviationNum;
 
-    public ECGAnalysisSettings(Long user_id, int maxDeviation, int maxDeviationNum) {
+    public ECGAnalysisSettings(Long user_id, double maxDeviation, double maxDeviationNum) {
         this.user_id = user_id;
         this.maxDeviation = maxDeviation;
         this.maxDeviationNum = maxDeviationNum;

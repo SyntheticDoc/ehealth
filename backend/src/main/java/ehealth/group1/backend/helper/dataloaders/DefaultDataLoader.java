@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
+import java.awt.*;
 import java.lang.invoke.MethodHandles;
 
 @Component
@@ -37,9 +38,35 @@ public class DefaultDataLoader {
     }
 
     public GraphicsSettings getGraphicsSettings() {
-        int canvas_x_size = 800;
-        int canvas_y_size = 1600;
+        int titleBarSize = 30;
+        int canvas_x_size = 1600;
+        int canvas_y_size = 800;
+        double lineThickness_dividerLines = 0.005;
+        double lineThickness_ecgGraph = 0.005;
+        Color background = Color.WHITE;
+        Color base = Color.BLACK;
+        Color ecgGraph = Color.RED;
+        Color text = Color.BLACK;
+        Font leadName = new Font("Arial", Font.BOLD, 14);
+        Font timestamp = new Font("Arial", Font.BOLD, 14);
 
-        return new GraphicsSettings(canvas_x_size, canvas_y_size);
+        boolean useDoubleBuffering = false;
+
+        GraphicsSettings settings = new GraphicsSettings();
+
+        settings.setTitleBarSize(titleBarSize);
+        settings.setCanvas_x_size(canvas_x_size);
+        settings.setCanvas_y_size(canvas_y_size);
+        settings.setLineThickness_dividerLines(lineThickness_dividerLines);
+        settings.setLineThickness_ecgGraph(lineThickness_ecgGraph);
+        settings.setBackground(background);
+        settings.setBase(base);
+        settings.setEcgGraph(ecgGraph);
+        settings.setText(text);
+        settings.setFont_leadName(leadName);
+        settings.setFont_timestamp(timestamp);
+        settings.setUseDoubleBuffering(useDoubleBuffering);
+
+        return settings;
     }
 }

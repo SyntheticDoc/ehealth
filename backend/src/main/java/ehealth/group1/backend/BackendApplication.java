@@ -1,6 +1,7 @@
 package ehealth.group1.backend;
 
 import ca.uhn.fhir.context.FhirContext;
+import ehealth.group1.backend.entity.Settings;
 import ehealth.group1.backend.generators.IDStringGenerator;
 import ehealth.group1.backend.helper.dataloaders.TestDataLoader;
 import ehealth.group1.backend.repositories.DataRepository;
@@ -49,6 +50,7 @@ public class BackendApplication {
 
       if(args.length > 0) {
         LOGGER.info("Starting server with command line arguments: " + Arrays.toString(args));
+        boolean writeDataToDisk = false;
 
         for (String arg : args) {
           // Code to execute if argument is present
@@ -56,8 +58,16 @@ public class BackendApplication {
             case "test":
               testDataLoader.exec();
               //execHexIDTests();
+            case "writeDataToDisk":
+              writeDataToDisk = true;
           }
         }
+
+        LOGGER.info("CommandLineRunner: writeDataToDisk is " + String.valueOf(writeDataToDisk).toUpperCase());
+
+        Settings settings = settingsRepository.findByUserId(0L);
+        settings.setWriteDataToDisk(writeDataToDisk);
+        settingsRepository.save(settings);
       }
     };
   }

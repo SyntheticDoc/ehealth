@@ -29,9 +29,9 @@ public class TestDataLoader {
         LOGGER.warn("Executing the TestDataLoader will delete all prior data in the database!");
 
         dataRepository.deleteAll();
+        userRepository.deleteAll();
         deviceRepository.deleteAll();
         ecgDataRepository.deleteAll();
-        userRepository.deleteAll();
 
         User u = userRepository.save(new User("TestUser", "Example Street 54/Stiege 300/top 0, 1010 Wien", 6500123456L, true, "VeryUnsafePWD"));
 

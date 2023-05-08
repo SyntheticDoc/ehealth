@@ -49,7 +49,7 @@ public class DefaultDataLoader {
         Color base = Color.BLACK;
         Color ecgGraph = Color.RED;
         Color text = Color.BLACK;
-        Font leadName = new Font("Arial", Font.BOLD, 14);
+        Font leadName = new Font("Arial", Font.BOLD, 18);
         Font timestamp = new Font("Arial", Font.BOLD, 14);
 
         boolean useDoubleBuffering = false;

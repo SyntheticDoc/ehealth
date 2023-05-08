@@ -80,7 +80,7 @@ void loop() {
   //Send an HTTP POST request every 10 minutes
   //if ((millis() - lastTime) > timerDelay) {
     //Check WiFi connection status
-    unsigned long currenttime = millis()-milliseconds;  //gets miliseconds (this is only a temporary estimate)
+    unsigned long currenttime = millis()-milliseconds;  
 
   if(WiFi.status()== WL_CONNECTED){
 

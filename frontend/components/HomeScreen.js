@@ -65,7 +65,7 @@ const HomeScreen = ({ navigation }) => {
 
         <Text style={styles.heading}>Guard</Text>
       </View>
-      {generaluser !== undefined ? (
+      {generaluser!==null ? (
         <View>
           <Text style={styles.heading}>{generaluser.name} </Text>
         </View>

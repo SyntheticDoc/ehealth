@@ -22,26 +22,27 @@ const SettingsScreen = ({ navigation }) => {
   const [password, setPassword] = useState(generaluser.password)
 
 
+
   const updateUser = async () => {
-    const response = await fetch(
+    const putBody ={
+		id:null, 
+		name: name,
+		address: address,
+		phone: phoneNumber,
+		emergency: emergency,
+		password: password
+
+	};
+	const response = await fetch(
       "http://" +
         "10.0.0.58" +
-        ":8080/user/update-user/"+
-        generaluser.id +
-        "?name=" +
-        name +
-        "&address=" +
-        address +
-        "&phone=" +
-        phoneNumber +
-        "&emergency=" +
-        true +
-        "&password=" +
-        password,
-      {
-        method: "Put",
-      }
-    );
+        ":8080/user/update-user",{
+      
+        method: "Post",
+      
+	  body: JSON.stringify(putBody)
+
+    });
     const json = await response.json();
     setGeneraluser(json);
   };

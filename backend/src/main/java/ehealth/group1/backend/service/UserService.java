@@ -20,11 +20,14 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public User getUser(Long id ) {
-        try {
-            return userRepository.getReferenceById(id);
-        }catch (Error e){
-            return null;
+    public User getUser(String name, String password) {
+
+        User userToUpdate = userRepository.findByNameAndPassword(name, password);
+
+        if(!userToUpdate.getPassword().matches(password)) {
+            throw new UserPasswordMismatchException("Can't update user \"" + name + "\", passwords are not matching!");
+        } else {
+            return userToUpdate;
         }
     }
 

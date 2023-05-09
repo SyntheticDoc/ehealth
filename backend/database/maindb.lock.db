@@ -1,6 +1,6 @@
 #FileLock
-#Mon May 08 21:49:45 CEST 2023
-server=192.168.0.234\:62274
-hostName=192.168.0.234
+#Tue May 09 19:01:05 CEST 2023
+hostName=DESKTOP-MTMJ7TP.home
+id=18801759f92ab29074660332f691c3a9f11ad9dbbb3
 method=file
-id=187fce9a3f0c38743f09670e1c2f23ab9975d908ab8
+server=10.0.0.58\:54946

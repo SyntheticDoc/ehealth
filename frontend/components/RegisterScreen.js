@@ -13,16 +13,30 @@ import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faHeartPulse } from "@fortawesome/free-solid-svg-icons/faHeartPulse";
 import { castEmergencyCall, postUser } from "./NetworkFunctions";
 import { AppContext } from "../App";
+import Toast from 'react-native-toast-message';
+
 
 const RegisterScreen = ({ navigation }) => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [address, setAddress] = useState("");
+  const [street, setStreet] = useState("");
+  const [number, setNumber] = useState("");
+  const[zip, setZip]= useState("");
+  const[city, setCity]= useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [password, setPassword] = useState("");
 
   const { generaluser, setGeneraluser } = useContext(AppContext);
 
+  const handleToast = ()  => {
+    Toast.show({
+      type: 'error',
+      text1: 'Error',
+      style:{backgroundColor: "red"}
+
+    });
+  };
 
   const postUser = async () => {
     
@@ -32,7 +46,7 @@ const RegisterScreen = ({ navigation }) => {
                 ":8080/user/post-user?name=" +
                 name +
                 "&address=" +
-                address +
+                street +" "+number+", "+zip+" "+city+
                 "&phone=" +
                 phoneNumber +
                 "&emergency=" +
@@ -45,14 +59,26 @@ const RegisterScreen = ({ navigation }) => {
 
     );
     const json = await response.json();
-    setGeneraluser(json); 
+    if(json.error!==undefined){
+      handleToast();
+      console.log("FAIL")
+    }else{
+      setGeneraluser(json); 
+      Toast.show({
+        type: 'success',
+        text1: 'REGISTRATION Successful',
+        
+
+      });
+      navigation.navigate('Home');
   
+    }
   }
 
 
   const handleRegister = () => {
     // Hier kannst du den Code schreiben, um die Registrierung durchzuführen
-    console.log(name, email, address, phoneNumber);
+    console.log(name, address, phoneNumber);
   };
 
   return (
@@ -70,16 +96,34 @@ const RegisterScreen = ({ navigation }) => {
       <Text style={styles.subtitle}>Bitte registriere dich:</Text>
       <TextInput
         style={styles.input}
-        placeholder="Name"
+        placeholder="Vorname und Nachname"
         onChangeText={setName}
         value={name}
       />
       
       <TextInput
         style={styles.input}
-        placeholder="Adresse"
-        onChangeText={setAddress}
-        value={address}
+        placeholder="Straße"
+        onChangeText={setStreet}
+        value={street}
+      />
+      <TextInput
+        style={styles.input}
+        placeholder="Hausnummer"
+        onChangeText={setNumber}
+        value={number}
+      />
+      <TextInput
+        style={styles.input}
+        placeholder="Postleitzahl"
+        onChangeText={setZip}
+        value={zip}
+      />
+      <TextInput
+        style={styles.input}
+        placeholder="Ort"
+        onChangeText={setCity}
+        value={city}
       />
       <TextInput
         style={styles.input}
@@ -111,7 +155,7 @@ const RegisterScreen = ({ navigation }) => {
         style={styles.button}
         onPress={() => {
          postUser(); 
-          navigation.navigate("Home");
+          
         }}
       >
         <Text style={styles.buttonText}>Registrieren</Text>

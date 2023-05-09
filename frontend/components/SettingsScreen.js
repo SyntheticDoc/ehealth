@@ -10,6 +10,8 @@ import React, { useEffect, useState, useContext } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faArrowLeft } from "@fortawesome/free-solid-svg-icons/faArrowLeft";
 import { AppContext } from "../App";
+import Toast from 'react-native-toast-message';
+
 
 const textSize = 30;
 const SettingsScreen = ({ navigation }) => {
@@ -22,43 +24,74 @@ const SettingsScreen = ({ navigation }) => {
   const [password, setPassword] = useState(generaluser.password)
 
 
-
   const updateUser = async () => {
-    const putBody ={
-		id:null, 
-		name: name,
-		address: address,
-		phone: phoneNumber,
-		emergency: emergency,
-		password: password
-
-	};
-	const response = await fetch(
+    const response = await fetch(
       "http://" +
         "10.0.0.58" +
-        ":8080/user/update-user",{
-      
+        ":8080/user/update-user"+
+        "?name=" +
+        name +
+        "&address=" +
+        address +
+        "&phone=" +
+        phoneNumber +
+        "&emergency=" +
+        true +
+        "&password=" +
+        password,
+      {
         method: "Post",
-      
-	  body: JSON.stringify(putBody)
-
-    });
+		headers: {
+			"Content-Type": "application/json",
+		  },
+      }
+    );
     const json = await response.json();
+
+
+
+	if(json.error!==undefined){
+        Toast.show({
+			type: 'error',
+			text1: 'ERROR: Kontrolliere deine Handynummer!',
+			style:{backgroundColor: "red"}
+	
+		  });
+        console.log("FAIL")
+      }else{
+        setGeneraluser(json); 
+        Toast.show({
+          type: 'success',
+          text1: 'SAVED Successful',
+          
+  
+        });
+        navigation.navigate('Home');
+    
+      }
+
+
+	console.log(json)
     setGeneraluser(json);
   };
 
   const handleSaveChanges = () => {    
-    console.log(name, address, phoneNumber, email, emergency);
+    console.log(name, address, phoneNumber, emergency);
     updateUser();
   };
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Einstellungen {generaluser.id}</Text>
+      <Text style={styles.title}>Einstellungen </Text>
 
       <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Name</Text>
-        <TextInput style={styles.input} value={name} onChangeText={setName} />
+	  {generaluser!==null ? (
+        <Text style={styles.name}>Name: {generaluser.name}</Text>
+      ) : (
+        <Text style={styles.sectionTitle}></Text>
+      )}
+        
+    
       </View>
 
       <View style={styles.section}>
@@ -71,7 +104,7 @@ const SettingsScreen = ({ navigation }) => {
       </View>
 
       <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Handynummer</Text>
+        <Text style={styles.sectionTitle}>Handynummer (nur Zahlen)</Text>
         <TextInput
           style={styles.input}
           value={phoneNumber.toString()}
@@ -79,7 +112,7 @@ const SettingsScreen = ({ navigation }) => {
           keyboardType="phone-pad"
         />
       </View>
-
+{/* 
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>E-Mail-Adresse</Text>
         <TextInput
@@ -89,7 +122,7 @@ const SettingsScreen = ({ navigation }) => {
           keyboardType="email-address"
         />
       </View>
-
+	
 	  <View style={styles.section}>
         <Text style={styles.sectionTitle}>Passwort</Text>
         <TextInput
@@ -98,7 +131,7 @@ const SettingsScreen = ({ navigation }) => {
           onChangeText={setPassword}
         />
       </View>
-
+*/}
       <View style={styles.checkbox}>
         <Switch value={emergency} onValueChange={setEmergency} />
 
@@ -153,6 +186,12 @@ const styles = StyleSheet.create({
   },
   sectionTitle: {
     fontSize: 16,
+    fontWeight: "bold",
+    marginBottom: 10,
+    color: "#454545",
+  },
+  name: {
+    fontSize: 18,
     fontWeight: "bold",
     marginBottom: 10,
     color: "#454545",

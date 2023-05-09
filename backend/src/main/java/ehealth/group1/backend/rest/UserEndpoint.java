@@ -62,9 +62,9 @@ public class UserEndpoint {
     }
 
     @GetMapping("/get-user")
-    public User getUser(@RequestParam Long id){
+    public User getUser(@RequestParam String name, @RequestParam String password){
         try {
-            return userService.getUser(id);
+            return userService.getUser(name,password);
         } catch (IndexOutOfBoundsException e) {
             e.printStackTrace();
             return null;

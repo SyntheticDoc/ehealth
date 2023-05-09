@@ -7,13 +7,25 @@ import { faUser } from "@fortawesome/free-solid-svg-icons/faUser";
 import { getData, castEmergencyCall, getUserbyId } from "./NetworkFunctions";
 import { AppContext } from "../App";
 
+
+
 const HomeScreen = ({ navigation }) => {
-  const [healthStatus, setHealthStatus] = useState(1);
+  const [healthStatus, setHealthStatus] = useState(2);
   const [countdown, setCountdown] = useState(30);
   const [name, setName] = useState("");
 
   const { generaluser, setGeneraluser } = useContext(AppContext);
   var timer = useRef();
+
+ //SOUND
+
+ 
+
+
+ //SOUND
+
+
+
 
   useEffect(() => {
     clearInterval(x);
@@ -29,6 +41,7 @@ const HomeScreen = ({ navigation }) => {
   }, [generaluser]);
 
   useEffect(() => {
+    
     if (healthStatus == 0) {
       Alert.alert("Making Phone API Call now, EMERGENCY");
       clearInterval(timer.current);
@@ -54,6 +67,7 @@ const HomeScreen = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
+      
       <View style={styles.headerContainer}>
         <FontAwesomeIcon
           style={{
@@ -65,7 +79,7 @@ const HomeScreen = ({ navigation }) => {
 
         <Text style={styles.heading}>Guard</Text>
       </View>
-      {generaluser!==null ? (
+      {generaluser !== null ? (
         <View>
           <Text style={styles.heading}>{generaluser.name} </Text>
         </View>
@@ -109,11 +123,17 @@ const HomeScreen = ({ navigation }) => {
       </TouchableOpacity>
 
       <View style={styles.apiResponse}>
-        <Text style={{ color: "white", fontSize: 20 }}>{countdown}</Text>
+        <Text style={{ color: "white", fontSize: 20 }}>
+          {healthStatus == 2
+            ? "Your Heart seems alright! :)"
+            : healthStatus == 1
+            ? "In " + countdown + " seconds we will notify the authorities!"
+            : "SOS: The authorities have been notified "}
+        </Text>
       </View>
       {healthStatus == 1 ? (
         <View style={styles.apiResponse}>
-          <Text style={{ color: "white", fontSize: 20 }}>
+          <Text style={{ color: "white", fontSize: 18 }}>
             If it's a false alarm, please press the "Warn" button.
           </Text>
         </View>
@@ -146,6 +166,9 @@ const HomeScreen = ({ navigation }) => {
           size={50}
         ></FontAwesomeIcon>
       </TouchableOpacity>
+      
+
+      
     </View>
   );
 };
@@ -184,6 +207,8 @@ const styles = StyleSheet.create({
   },
   apiResponse: {
     marginHorizontal: 60,
+    alignItems: "center",
+    justifyContent: "center",
   },
   statusCircle: {
     marginVertical: 60,

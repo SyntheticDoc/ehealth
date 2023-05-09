@@ -43,6 +43,7 @@ public class GraphicsModule {
         titleBar_centerY = gSettings.getCanvas_y_size() - (0.5 * gSettings.getTitleBarSize());
         titleBar_halfWidth = 0.5 * gSettings.getCanvas_x_size();
         titleBar_halfHeight = 0.5 * gSettings.getTitleBarSize();
+
         if(gSettings.useDoubleBuffering()) {
             StdDraw.enableDoubleBuffering();
         } else {

@@ -66,7 +66,7 @@ public class ECGService {
 
   private void processECGObservation(CustomObservation obs) {
     LOGGER.info("Starting analysis of ecg observation");
-    ECGSTATE currentState = analyserService.analyse(obs, settings.getEcgAnalysisSettings());
+    ECGSTATE currentState = analyserService.analyse(obs, settings);
 
     ecgStateHolder.update(currentState, obs);
 
@@ -167,6 +167,10 @@ public class ECGService {
 
   public String getData(String data) {
     return data;
+  }
+
+  public void reloadSettings() {
+    settings = settingsRepository.findByUserId(0L);
   }
 
 }

@@ -24,7 +24,7 @@ const LoginScreen = ({ navigation }) => {
 					icon={faHeartPulse}
 					size={50}
 				/>
-                <Text style={styles.heading}> - monitor </Text>
+                <Text style={styles.heading}>Guard </Text>
 				
 			</View>
         <Text style={styles.subtitle}>Bitte melde dich an:</Text>
@@ -64,18 +64,7 @@ const LoginScreen = ({ navigation }) => {
 				 <Text style={styles.buttonText}>Anmelden</Text>
         
 			</TouchableOpacity>
-        <TouchableOpacity
-				style={styles.arrow}
-				onPress={() => {
-					navigation.navigate('Home');
-				}}
-			>
-				<FontAwesomeIcon
-					icon={faArrowLeft}
-					style={{ color: '#454545' }}
-					size={50}
-				></FontAwesomeIcon>
-			</TouchableOpacity>
+
       </View>);
 };
 

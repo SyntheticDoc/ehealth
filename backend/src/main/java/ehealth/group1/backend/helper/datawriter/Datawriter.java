@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.invoke.MethodHandles;
@@ -34,7 +35,14 @@ public class Datawriter {
     }
 
     public void writeData(Observation obs) {
-        String filename = getNextFilename();
+        String filename;
+        File file;
+
+        do {
+            filename = getNextFilename();
+            file = new File(filename);
+        } while(file.exists());
+
         LOGGER.info("Writing ecg data to " + filename + "...");
 
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(filename))) {

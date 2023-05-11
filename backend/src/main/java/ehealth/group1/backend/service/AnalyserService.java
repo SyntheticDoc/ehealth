@@ -89,7 +89,7 @@ public class AnalyserService {
 
         jelyAnalyzer.analyze(data);
 
-        LOGGER.info("Analyzing data:\n" + Arrays.toString(rawData.getData().split(" ")) + "\n");
+        //LOGGER.info("Analyzing data:\n" + Arrays.toString(rawData.getData().split(" ")) + "\n");
 
         int largeDeviationCount = 0;
 

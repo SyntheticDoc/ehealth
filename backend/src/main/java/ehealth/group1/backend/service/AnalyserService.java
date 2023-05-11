@@ -7,6 +7,7 @@ import ehealth.group1.backend.enums.ECGSTATE;
 import ehealth.group1.backend.helper.ErrorHandler;
 import ehealth.group1.backend.helper.datawriter.Datawriter;
 import ehealth.group1.backend.helper.graphics.GraphicsModule;
+import ehealth.group1.backend.helper.jely.JelyAnalyzer;
 import org.hl7.fhir.r5.model.Observation;
 import org.hl7.fhir.r5.model.SampledData;
 import org.slf4j.Logger;
@@ -22,14 +23,16 @@ import java.util.Arrays;
 public class AnalyserService {
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
+    private final JelyAnalyzer jelyAnalyzer;
     private final ErrorHandler errorHandler;
     private final Datawriter datawriter;
     private final GraphicsModule graphicsModule;
 
-    public AnalyserService(ErrorHandler errorHandler, Datawriter datawriter, GraphicsModule graphicsModule) {
+    public AnalyserService(ErrorHandler errorHandler, Datawriter datawriter, GraphicsModule graphicsModule, JelyAnalyzer jelyAnalyzer) {
         this.errorHandler = errorHandler;
         this.datawriter = datawriter;
         this.graphicsModule = graphicsModule;
+        this.jelyAnalyzer = jelyAnalyzer;
     }
 
     /**
@@ -83,15 +86,8 @@ public class AnalyserService {
         SampledData rawData = c.getValueSampledData();
         //int[] data = Arrays.stream(rawData.getData().split(" ")).mapToInt(Integer::parseInt).toArray();
         double[] data = Arrays.stream(rawData.getData().split(" ")).mapToDouble(Double::parseDouble).toArray();
-//        BigDecimal interval = rawData.getInterval();
-//        String intervalUnit = rawData.getIntervalUnit();
 
-//        if(!intervalUnit.equals("ms")) {
-//            InvalidIntervalUnitException e = new InvalidIntervalUnitException("In component " + c.getCode().getCoding().get(0).getDisplay() +
-//                    ": Unknown interval unit \"" + intervalUnit + "\". Can't process this component.");
-//            errorHandler.handleCustomException("AnalyserService.analyseComponent()", "Unknown interval unit", e);
-//            return ECGSTATE.INVALID;
-//        }
+        jelyAnalyzer.analyze(data);
 
         LOGGER.info("Analyzing data:\n" + Arrays.toString(rawData.getData().split(" ")) + "\n");
 

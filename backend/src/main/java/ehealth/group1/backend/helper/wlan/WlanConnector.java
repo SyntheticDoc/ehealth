@@ -10,6 +10,7 @@ import java.lang.invoke.MethodHandles;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
+import java.util.Arrays;
 import java.util.Enumeration;
 
 @Component
@@ -28,7 +29,7 @@ public class WlanConnector {
         InetAddress wlanIp = getWlanIpAddress();
 
         if(wlanIp != null) {
-            LOGGER.info("Wlan address found: " + getWlanIpAddress());
+            LOGGER.info("Wlan address found: " + wlanIp.getHostAddress());
         } else {
             LOGGER.info("Could not find valid wlan address!");
             return;
@@ -45,8 +46,13 @@ public class WlanConnector {
                 LOGGER.info("Address changed successfully to " + wlanIp);
             } catch(Exception ex) {
                 ex.printStackTrace();
+                return;
             }
         }
+
+        serverProperties.setPort(8080);
+
+        LOGGER.info("New server address: " + serverProperties.getAddress() + ":" + serverProperties.getPort());
     }
 
     private InetAddress getWlanIpAddress() {

@@ -42,7 +42,9 @@ public class ECGService {
     this.deviceRepository = deviceRepository;
     // TODO: Use production settings
     settings = settingsRepository.findByUserId(0L);
-    ecgStateHolder = new ECGStateHolder(settings.getEcgStateHolderSettings());
+    if(settings != null) {
+      ecgStateHolder = new ECGStateHolder(settings.getEcgStateHolderSettings());
+    }
   }
 
   @Deprecated

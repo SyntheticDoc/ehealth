@@ -79,6 +79,7 @@ public class BackendApplication {
 
         for (String arg : args) {
           // Code to execute if argument is present
+          LOGGER.warn("RUNNING SERVER WITH ARGUMENT " + arg);
           switch (arg) {
             case "test":
               testDataLoader.exec();

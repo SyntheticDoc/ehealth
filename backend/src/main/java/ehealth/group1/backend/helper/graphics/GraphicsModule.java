@@ -1,6 +1,7 @@
 package ehealth.group1.backend.helper.graphics;
 
 import ehealth.group1.backend.entity.GraphicsSettings;
+import ehealth.group1.backend.helper.TransientServerSettings;
 import ehealth.group1.backend.helper.dataloaders.DefaultDataLoader;
 import org.hl7.fhir.r5.model.Observation;
 import org.slf4j.Logger;
@@ -26,15 +27,22 @@ public class GraphicsModule {
 
     private DefaultDataLoader dataLoader;
     private GraphicsSettings gSettings;
+    private TransientServerSettings serverSettings;
 
     private double titleBar_centerX;
     private double titleBar_centerY;
     private double titleBar_halfWidth;
     private double titleBar_halfHeight;
 
-    public GraphicsModule(DefaultDataLoader dataLoader) {
+    public GraphicsModule(DefaultDataLoader dataLoader, TransientServerSettings serverSettings) {
         this.dataLoader = dataLoader;
         this.gSettings = dataLoader.getGraphicsSettings();
+
+        if(!serverSettings.drawEcgData()) {
+            lead_y_size = 0;
+            return;
+        }
+
         StdDraw.setCanvasSize(gSettings.getCanvas_x_size(), gSettings.getCanvas_y_size());
         StdDraw.setXscale(0, gSettings.getCanvas_x_size());
         StdDraw.setYscale(0, gSettings.getCanvas_y_size());
@@ -51,6 +59,10 @@ public class GraphicsModule {
     }
 
     public void drawECG(List<Observation.ObservationComponentComponent> comps, LocalDateTime timestamp) {
+        if(!serverSettings.drawEcgData()) {
+            return;
+        }
+
         // Draw background
         StdDraw.clear(gSettings.getBackground());
 

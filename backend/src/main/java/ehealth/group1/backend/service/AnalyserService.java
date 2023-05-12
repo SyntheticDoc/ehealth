@@ -5,6 +5,7 @@ import ehealth.group1.backend.entity.ECGAnalysisSettings;
 import ehealth.group1.backend.entity.Settings;
 import ehealth.group1.backend.enums.ECGSTATE;
 import ehealth.group1.backend.helper.ErrorHandler;
+import ehealth.group1.backend.helper.TransientServerSettings;
 import ehealth.group1.backend.helper.datawriter.Datawriter;
 import ehealth.group1.backend.helper.graphics.GraphicsModule;
 import org.hl7.fhir.r5.model.Observation;
@@ -25,11 +26,14 @@ public class AnalyserService {
     private final ErrorHandler errorHandler;
     private final Datawriter datawriter;
     private final GraphicsModule graphicsModule;
+    private final TransientServerSettings serverSettings;
 
-    public AnalyserService(ErrorHandler errorHandler, Datawriter datawriter, GraphicsModule graphicsModule) {
+    public AnalyserService(ErrorHandler errorHandler, Datawriter datawriter, GraphicsModule graphicsModule,
+                           TransientServerSettings serverSettings) {
         this.errorHandler = errorHandler;
         this.datawriter = datawriter;
         this.graphicsModule = graphicsModule;
+        this.serverSettings = serverSettings;
     }
 
     /**
@@ -44,11 +48,11 @@ public class AnalyserService {
 
         ECGSTATE[] stateList = new ECGSTATE[obs.getComponent().size()];
 
-        if(settings.writeDataToDisk()) {
+        if(serverSettings.writeDataToDisk()) {
             datawriter.writeData(obs);
         }
 
-        if(settings.drawEcgData()) {
+        if(serverSettings.drawEcgData()) {
             graphicsModule.drawECG(obs.getComponent(), obs.getTimestampAsLocalDateTime());
         }
 

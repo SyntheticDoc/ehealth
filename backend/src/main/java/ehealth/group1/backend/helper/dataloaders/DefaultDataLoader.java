@@ -34,7 +34,6 @@ public class DefaultDataLoader {
         ECGAnalysisSettings analysisSettings = new ECGAnalysisSettings(0L, maxDeviation, maxDeviationNum);
         ECGStateHolderSettings stateHolderSettings = new ECGStateHolderSettings(0L, iterations_transition, iterations_emergency);
         Settings s = new Settings(0L, stateHolderSettings, analysisSettings);
-        s.setWriteDataToDisk(true);
         settingsRepository.save(s);
     }
 

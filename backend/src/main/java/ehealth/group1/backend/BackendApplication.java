@@ -5,6 +5,7 @@ import ehealth.group1.backend.entity.Settings;
 import ehealth.group1.backend.generators.IDStringGenerator;
 import ehealth.group1.backend.helper.TransientServerSettings;
 import ehealth.group1.backend.helper.dataloaders.TestDataLoader;
+import ehealth.group1.backend.helper.wlan.WlanConnector;
 import ehealth.group1.backend.repositories.DataRepository;
 import ehealth.group1.backend.repositories.SettingsRepository;
 import ehealth.group1.backend.repositories.UserRepository;
@@ -36,12 +37,13 @@ public class BackendApplication {
   private final TestDataLoader testDataLoader;
   private final TransientServerSettings serverSettings;
   private ConfigurableEnvironment env;
+  private WlanConnector wlanConnector;
 
   private final ECGService ecgService;
 
   public BackendApplication(FhirContext fhirctx, SettingsRepository settingsRepository, DataRepository dataRepository,
                             UserRepository userRepository, TestDataLoader testDataLoader, ECGService ecgService,
-                            TransientServerSettings serverSettings, ConfigurableEnvironment env) {
+                            TransientServerSettings serverSettings, ConfigurableEnvironment env, WlanConnector wlanConnector) {
     this.fhirctx = fhirctx;
     this.settingsRepository = settingsRepository;
     this.dataRepository = dataRepository;
@@ -50,6 +52,7 @@ public class BackendApplication {
     this.ecgService = ecgService;
     this.serverSettings = serverSettings;
     this.env = env;
+    this.wlanConnector = wlanConnector;
   }
 
   public static void main(String[] args) {
@@ -90,6 +93,9 @@ public class BackendApplication {
             case "writeAndDrawEcg":
               writeDataToDisk = true;
               drawEcgData = true;
+              break;
+            case "wlan":
+              wlanConnector.changeAddressToWlan();
               break;
           }
         }

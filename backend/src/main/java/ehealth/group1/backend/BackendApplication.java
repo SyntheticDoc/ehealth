@@ -18,6 +18,7 @@ import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Bean;
+import org.springframework.core.env.ConfigurableEnvironment;
 import org.springframework.core.env.Environment;
 
 import java.lang.invoke.MethodHandles;
@@ -28,20 +29,20 @@ import java.util.Arrays;
 public class BackendApplication {
   private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-  private final FhirContext ctx;
+  private final FhirContext fhirctx;
   private final SettingsRepository settingsRepository;
   private final DataRepository dataRepository;
   private final UserRepository userRepository;
   private final TestDataLoader testDataLoader;
   private final TransientServerSettings serverSettings;
-  private Environment env;
+  private ConfigurableEnvironment env;
 
   private final ECGService ecgService;
 
-  public BackendApplication(FhirContext ctx, SettingsRepository settingsRepository, DataRepository dataRepository,
+  public BackendApplication(FhirContext fhirctx, SettingsRepository settingsRepository, DataRepository dataRepository,
                             UserRepository userRepository, TestDataLoader testDataLoader, ECGService ecgService,
-                            TransientServerSettings serverSettings, Environment env) {
-    this.ctx = ctx;
+                            TransientServerSettings serverSettings, ConfigurableEnvironment env) {
+    this.fhirctx = fhirctx;
     this.settingsRepository = settingsRepository;
     this.dataRepository = dataRepository;
     this.userRepository = userRepository;
@@ -64,6 +65,9 @@ public class BackendApplication {
   @Bean
   public CommandLineRunner commandLineRunnerBean() {
     return (args) -> {
+      // TODO: Change to PROFILE_PRODUCTION for a production-ready server
+      // env.setActiveProfiles(serverSettings.getPROFILE_PRODUCTION());
+      env.setActiveProfiles(serverSettings.getPROFILE_DEVELOPMENT());
 
       if(args.length > 0) {
         LOGGER.info("Starting server with command line arguments: " + Arrays.toString(args));
@@ -75,6 +79,7 @@ public class BackendApplication {
           switch (arg) {
             case "test":
               testDataLoader.exec();
+              env.setActiveProfiles(serverSettings.getPROFILE_TESTING());
               break;
             case "writeDataToDisk":
               writeDataToDisk = true;

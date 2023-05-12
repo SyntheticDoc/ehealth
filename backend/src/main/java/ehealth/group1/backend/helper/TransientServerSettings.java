@@ -15,6 +15,12 @@ public class TransientServerSettings {
     @Getter(AccessLevel.NONE)
     private boolean drawEcgData;
 
+    // constant strings for spring profiles, for easy and safe profile switching
+    private final String PROFILE_PRODUCTION = "production";
+    private final String PROFILE_DEVELOPMENT = "dev";
+    private final String PROFILE_TESTING = "test";
+    private final String PROFILE_NOSEC = "nosec";
+
     public boolean writeDataToDisk() {
         return writeDataToDisk;
     }

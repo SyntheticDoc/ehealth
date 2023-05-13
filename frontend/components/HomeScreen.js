@@ -29,7 +29,7 @@ const HomeScreen = ({ navigation }) => {
 		};
 
 		const response = await fetch(
-			'http://10.0.0.74:8080/data/lastHealthStatus/',
+			'http://10.0.0.74:8080/data/lastHealthStatus',
 			{
 				method: 'Post',
 				headers: {
@@ -46,7 +46,11 @@ const HomeScreen = ({ navigation }) => {
 			});
 			console.log('FAIL to fetch ECG DATA');
 		} else {
-			console.log(json);
+      const state = json.lastAnalysisResult.ecgstate
+			console.log(state);
+      if(state =="OK"){
+        //setHealthStatus(2);
+      }
 			Toast.show({
 				type: 'success',
 				text1: 'ECG Successful',
@@ -83,14 +87,14 @@ const HomeScreen = ({ navigation }) => {
 			: undefined;
 	}, [sound]);
 
-	//uncomment
-	// useEffect(() => {
-	//   clearInterval(x);
-	//   getECGdata();
-	//   var x = setInterval(() => {
-	//     getECGdata();
-	//   }, 10000);
-	// }, []);
+	
+ useEffect(() => {
+	   clearInterval(x);
+	   getECGdata();
+	   var x = setInterval(() => {
+	     getECGdata();
+	   }, 10000);
+	 }, []);
 
 	/*useEffect(() => {
     clearInterval(x);

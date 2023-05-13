@@ -5,7 +5,11 @@ const IPLarissa = "10.0.0.58";
 const IPM = "10.0.0.74"
 
 
+
 const getData = () => {
+
+  
+
   fetch(":8080/data/lasthealthstatus?userName="+"&password="+"&deviceIdentifier", { method: "GET" })
     .then((response) => response.json())
     .then((responseJson) => {

@@ -1,19 +1,64 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { View, Text,TouchableOpacity, TextInput, Switch, Button, StyleSheet } from 'react-native';
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons/faArrowLeft';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faHeartPulse } from '@fortawesome/free-solid-svg-icons/faHeartPulse';
+import { AppContext } from "../App";
+import Toast from 'react-native-toast-message';
+
+
 
 
 const LoginScreen = ({ navigation }) => {
 
     const [name, setName] = useState('');
     const [password, setPassword] = useState('');
+
+    const { generaluser, setGeneraluser } = useContext(AppContext);
   
     const handleRegister = () => {
       // Hier kannst du den Code schreiben, um die Registrierung durchzuführen
       console.log(name, password);
     };
+    const handleToast = ()  => {
+      Toast.show({
+        type: 'error',
+        text1: 'USER NOT FOUND',
+        style:{backgroundColor: "red"}
+
+      });
+    };
+    const getuser = async () => {
+    
+      const response = await fetch(
+        "http://" +
+                  "10.0.0.74" +
+                  ":8080/user/get-user?name=" +
+                  name +
+                  "&password=" +
+                  password, 
+        {
+          method: 'Get',
+        }
+  
+      );
+      const json = await response.json();
+      if(json.error!==undefined){
+        handleToast();
+        console.log("FAIL")
+      }else{
+        setGeneraluser(json); 
+        Toast.show({
+          type: 'success',
+          text1: 'LOGIN Successful',
+          
+  
+        });
+        navigation.navigate('Home');
+    
+      }
+      
+    }
   
     return(<View style={styles.container}>
         <View style={styles.headerContainer}>
@@ -46,7 +91,7 @@ const LoginScreen = ({ navigation }) => {
         style={{ color: 'blue', textDecorationLine: 'underline' }}
         onPress={() => {
 					navigation.navigate('Register');
-                    handleRegister;
+                  
 				}}
       >
         hier
@@ -57,8 +102,8 @@ const LoginScreen = ({ navigation }) => {
         <TouchableOpacity
 				style={styles.button}
 				onPress={() => {
-					navigation.navigate('Home');
-                    handleRegister;
+					//navigation.navigate('Home');
+           getuser();
 				}}
 			>
 				 <Text style={styles.buttonText}>Anmelden</Text>

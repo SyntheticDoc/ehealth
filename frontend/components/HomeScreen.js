@@ -13,13 +13,19 @@ const HomeScreen = ({ navigation }) => {
 	const [healthStatus, setHealthStatus] = useState(2);
 	const [countdown, setCountdown] = useState(30);
 	const [name, setName] = useState('');
+  const[activated,setActivated]=useState(false)
 
 	const { generaluser, setGeneraluser } = useContext(AppContext);
 	var timer = useRef();
 
-	//SOUND
+	
+  const handlePress = () => {
+    setActivated(!activated);
+    console.log(activated)
+    
+  };
 
-	//SOUND
+  
 
 	const getECGdata = async () => {
 		const postData = {
@@ -28,6 +34,7 @@ const HomeScreen = ({ navigation }) => {
 			deviceIdentifier: '123',
 		};
 
+    if(healthStatus ==2 && activated==true){
 		const response = await fetch(
 			'http://10.0.0.74:8080/data/lastHealthStatus',
 			{
@@ -49,13 +56,16 @@ const HomeScreen = ({ navigation }) => {
       const state = json.lastAnalysisResult.ecgstate
 			console.log(state);
       if(state =="OK"){
-        //setHealthStatus(2);
+        setHealthStatus(2);
+      }else if(state =="WARNING"){
+        setHealthStatus(1);
       }
 			Toast.show({
 				type: 'success',
 				text1: 'ECG Successful',
 			});
 		}
+  }
 	};
 
 	const [sound, setSound] = React.useState();
@@ -154,6 +164,10 @@ const HomeScreen = ({ navigation }) => {
 			) : (
 				<View></View>
 			)}
+
+      <View><TouchableOpacity onPress={handlePress}>
+        <Text>{activated ? 'Deaktiviert' : 'Aktiviert'}</Text>
+      </TouchableOpacity></View>
 
 			<TouchableOpacity
 				onPress={() => {

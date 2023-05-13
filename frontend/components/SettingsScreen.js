@@ -27,7 +27,7 @@ const SettingsScreen = ({ navigation }) => {
   const updateUser = async () => {
     const response = await fetch(
       "http://" +
-        "10.0.0.58" +
+        "10.0.0.74" +
         ":8080/user/update-user"+
         "?name=" +
         name +

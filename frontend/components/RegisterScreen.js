@@ -26,6 +26,7 @@ const RegisterScreen = ({ navigation }) => {
   const[city, setCity]= useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [password, setPassword] = useState("");
+  const [device, setDevice] = useState("");
 
   const { generaluser, setGeneraluser } = useContext(AppContext);
 
@@ -42,7 +43,7 @@ const RegisterScreen = ({ navigation }) => {
     
     const response = await fetch(
       "http://" +
-                "10.0.0.58" +
+                "10.0.0.74" +
                 ":8080/user/post-user?name=" +
                 name +
                 "&address=" +

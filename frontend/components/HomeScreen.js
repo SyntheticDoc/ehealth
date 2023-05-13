@@ -5,6 +5,7 @@ import { faHeartPulse } from "@fortawesome/free-solid-svg-icons/faHeartPulse";
 import { faGear } from "@fortawesome/free-solid-svg-icons/faGear";
 import { faUser } from "@fortawesome/free-solid-svg-icons/faUser";
 import { getData, castEmergencyCall, getUserbyId } from "./NetworkFunctions";
+import Toast from 'react-native-toast-message';
 import { AppContext } from "../App";
 
 
@@ -26,14 +27,62 @@ const HomeScreen = ({ navigation }) => {
 
 
 
+ const getECGdata = async () => {
+    
 
-  useEffect(() => {
+  const postData = {
+    userName: "test",
+    password: "test",
+    deviceIdentifier: "123"
+
+  };
+
+
+  const response = await fetch(
+    "http://10.0.0.74:8080/data/lastHealthStatus/",
+    {
+      method: 'Post',
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(postData),
+    }
+
+  );
+  const json = await response.json();
+  if(json.error!==undefined){
+    Toast.show({
+      type: 'error',
+      text1: 'FAIL to fetch ECG DATA',
+    });
+    console.log("FAIL to fetch ECG DATA")
+  }else{
+    console.log(json); 
+    Toast.show({
+      type: 'success',
+      text1: 'ECG Successful',
+    });
+
+  }
+}
+
+
+useEffect(() => {
+  clearInterval(x);
+  getECGdata(); 
+  var x = setInterval(() => {
+    getECGdata();
+  }, 10000);
+}, []);
+
+  /*useEffect(() => {
     clearInterval(x);
     getData();
     var x = setInterval(() => {
       getData();
     }, 10000);
   }, []);
+  */
   useEffect(() => {
     if (generaluser) {
       setName(generaluser.name);

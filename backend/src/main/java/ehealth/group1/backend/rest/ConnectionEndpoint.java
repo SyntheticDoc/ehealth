@@ -55,10 +55,15 @@ public class ConnectionEndpoint {
      */
     @PostMapping("/registerFrontendDevice")
     @ResponseStatus(HttpStatus.CREATED)
-    public String registerECGDevice(@RequestBody FrontendDevice frontendDevice) {
+    public String registerFrontendDevice(@RequestBody FrontendDevice frontendDevice) {
         return connectionService.registerFrontendDevice(frontendDevice);
     }
 
+    /**
+     * Registers a user in the database.
+     *
+     * @param user
+     */
     @PostMapping("/registerUser")
     @ResponseStatus(HttpStatus.CREATED)
     public void registerUser(@RequestBody User user) {
@@ -70,6 +75,12 @@ public class ConnectionEndpoint {
         }
     }
 
+    /**
+     * Connects an ECGDevice to a specific user.
+     *
+     * @param data Provides data about the user and a pin to identify the ECGDevice to connect to.
+     * @return Returns a JSON containing the generated identifier for the connected ECGDevice.
+     */
     @PostMapping("/connectECGDeviceToUser")
     @ResponseStatus(HttpStatus.CREATED)
     public String connectECGDeviceToUser(@RequestBody ConnectDeviceData data) {

@@ -9,6 +9,12 @@ import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 
+/**
+ * This method defines a bean for the `InMemoryUserDetailsManager`, which is an implementation of the
+ * `UserDetailsService` interface. It creates an in-memory user with the username "admin" and a hashed password
+ * using a password encoder. The user is assigned the "USER" role. The method returns an instance of the
+ * `InMemoryUserDetailsManager` populated with the created user.
+ */
 @Configuration
 public class InMemoryAuthWebSecurityConfigurer {
 

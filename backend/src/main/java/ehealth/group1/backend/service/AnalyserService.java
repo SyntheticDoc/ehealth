@@ -19,6 +19,9 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
 
+/**
+ * Service to analyse ecg data.
+ */
 @Component
 public class AnalyserService {
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
@@ -83,9 +86,24 @@ public class AnalyserService {
         LOGGER.info("Analysis of ecg data needed " + millisecondsNeeded + " ms");
     }
 
+    /**
+     * Analyses the ecg data of a specific component and returns the result as ECGSTATE.
+     *
+     * @param c The component (ecg lead) holding the data to be analysed
+     * @param ecgAnalysisSettings The settings object holding settings for the analyser
+     * @return ECGSTATE.OK if no ecg abnormalities were detected, ECGSTATE.INVALID if the data could not be analysed,
+     * possibly due to some data format error, ECGSTATE.WARNING if the analysed data looks like an asystole.
+     */
     private ECGSTATE analyseComponent(Observation.ObservationComponentComponent c, ECGAnalysisSettings ecgAnalysisSettings) {
         SampledData rawData = c.getValueSampledData();
-        double[] data = Arrays.stream(rawData.getData().trim().split(" ")).mapToDouble(Double::parseDouble).toArray();
+        double[] data;
+
+        try {
+            data = Arrays.stream(rawData.getData().trim().split(" ")).mapToDouble(Double::parseDouble).toArray();
+        } catch(NumberFormatException e) {
+            errorHandler.handleCustomException("AnalyserService.analyseComponent()", "SampledData contained invalid data", e);
+            return ECGSTATE.INVALID;
+        }
 
         LOGGER.info("Analyzing data:\n" + Arrays.toString(rawData.getData().split(" ")) + "\n");
 

@@ -62,6 +62,11 @@ public class BackendApplication {
     this.graphicsModule = graphicsModule;
   }
 
+  /**
+   * The main entry point of the application. It initializes the Spring application context using the
+   * `SpringApplicationBuilder` and runs the application with the specified arguments. The application context is
+   * configured to be non-headless, allowing for graphical user interface components to be used.
+   */
   public static void main(String[] args) {
     //SpringApplication.run(BackendApplication.class, args);
     SpringApplicationBuilder builder = new SpringApplicationBuilder(BackendApplication.class);
@@ -69,7 +74,7 @@ public class BackendApplication {
     ConfigurableApplicationContext ctx = builder.run(args);
   }
 
-  /*
+  /**
     Bean for getting and interpreting command line arguments handed via -Dspring-boot.run.arguments="##ARGUMENT##"
   */
   @Bean
@@ -94,25 +99,31 @@ public class BackendApplication {
                 return;
               }
 
+              // Execute testDataLoader and set active profiles to testing
               testDataLoader.exec();
               env.setActiveProfiles(serverSettings.getPROFILE_TESTING());
               break;
             case "writeDataToDisk":
+              // Enable writing data to disk
               writeDataToDisk = true;
               break;
             case "drawEcgData":
+              // Enable drawing ECG data
               drawEcgData = true;
               break;
             case "writeAndDrawEcg":
+              // Enable both writing data to disk and drawing ECG data
               writeDataToDisk = true;
               drawEcgData = true;
               break;
             case "wlan":
+              // Get the address of the active Wlan-device of the current machine and switch server IP to this address
               wlanConnector.changeAddressToWlan();
               break;
           }
         }
 
+        // Update the server settings based on the command line arguments
         serverSettings.setWriteDataToDisk(writeDataToDisk);
         serverSettings.setDrawEcgData(drawEcgData);
 
@@ -122,6 +133,7 @@ public class BackendApplication {
         }
       }
 
+      // Get the currently active profiles
       StringBuilder curProfiles = new StringBuilder();
       String[] activeProfiles = env.getActiveProfiles();
 
@@ -133,6 +145,7 @@ public class BackendApplication {
         curProfiles.append(String.format("%20s\n", "none"));
       }
 
+      // Log the server settings and current active profiles
       LOGGER.info("CommandLineRunner executed.\n" + serverSettings + "\nCURRENT ACTIVE PROFILES:\n" + curProfiles);
       LOGGER.info("All done, HeartGuard is online and listening to the world!");
     };

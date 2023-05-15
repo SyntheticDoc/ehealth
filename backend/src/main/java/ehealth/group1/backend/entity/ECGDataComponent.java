@@ -7,6 +7,9 @@ import lombok.Setter;
 
 import java.util.ArrayList;
 
+/**
+ * Represents an ecg component (lead) of ECGData. This class contains the real ecg data.
+ */
 @Entity
 @NoArgsConstructor
 @Getter @Setter

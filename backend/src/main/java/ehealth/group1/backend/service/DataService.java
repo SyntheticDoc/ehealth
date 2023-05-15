@@ -3,7 +3,6 @@ package ehealth.group1.backend.service;
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.parser.IParser;
 import ehealth.group1.backend.customfhirstructures.CustomObservation;
-import ehealth.group1.backend.exception.HeaderParseException;
 import ehealth.group1.backend.helper.ErrorHandler;
 import ehealth.group1.backend.helper.PathFinder;
 import ehealth.group1.backend.repositories.DeviceRepository;

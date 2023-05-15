@@ -21,7 +21,7 @@ public class GraphicsModule {
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     private final int lead_num = 1;
-    private final int lead_y_size;
+    private int lead_y_size;
 
     private final DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd.MM.uuuu HH:mm:ss:SSS");
 
@@ -39,12 +39,12 @@ public class GraphicsModule {
         this.gSettings = dataLoader.getGraphicsSettings();
         this.serverSettings = serverSettings;
 
-        // TODO: Rework constructor
-//        if(!serverSettings.drawEcgData()) {
-//            lead_y_size = 0;
-//            return;
-//        }
+        if(!serverSettings.drawEcgData()) {
+            lead_y_size = 0;
+        }
+    }
 
+    public void init() {
         LOGGER.warn("\n\nCreating graphics window: " + gSettings.getCanvas_x_size() + "x" + gSettings.getCanvas_y_size() + "\n\n");
 
         StdDraw.setCanvasSize(gSettings.getCanvas_x_size(), gSettings.getCanvas_y_size());

@@ -85,17 +85,7 @@ public class AnalyserService {
 
     private ECGSTATE analyseComponent(Observation.ObservationComponentComponent c, ECGAnalysisSettings ecgAnalysisSettings) {
         SampledData rawData = c.getValueSampledData();
-        //int[] data = Arrays.stream(rawData.getData().split(" ")).mapToInt(Integer::parseInt).toArray();
-        double[] data = Arrays.stream(rawData.getData().split(" ")).mapToDouble(Double::parseDouble).toArray();
-//        BigDecimal interval = rawData.getInterval();
-//        String intervalUnit = rawData.getIntervalUnit();
-
-//        if(!intervalUnit.equals("ms")) {
-//            InvalidIntervalUnitException e = new InvalidIntervalUnitException("In component " + c.getCode().getCoding().get(0).getDisplay() +
-//                    ": Unknown interval unit \"" + intervalUnit + "\". Can't process this component.");
-//            errorHandler.handleCustomException("AnalyserService.analyseComponent()", "Unknown interval unit", e);
-//            return ECGSTATE.INVALID;
-//        }
+        double[] data = Arrays.stream(rawData.getData().trim().split(" ")).mapToDouble(Double::parseDouble).toArray();
 
         LOGGER.info("Analyzing data:\n" + Arrays.toString(rawData.getData().split(" ")) + "\n");
 

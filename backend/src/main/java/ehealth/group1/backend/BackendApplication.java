@@ -3,8 +3,10 @@ package ehealth.group1.backend;
 import ca.uhn.fhir.context.FhirContext;
 import ehealth.group1.backend.entity.Settings;
 import ehealth.group1.backend.generators.IDStringGenerator;
+import ehealth.group1.backend.helper.PathFinder;
 import ehealth.group1.backend.helper.TransientServerSettings;
 import ehealth.group1.backend.helper.dataloaders.TestDataLoader;
+import ehealth.group1.backend.helper.graphics.GraphicsModule;
 import ehealth.group1.backend.helper.wlan.WlanConnector;
 import ehealth.group1.backend.repositories.DataRepository;
 import ehealth.group1.backend.repositories.SettingsRepository;
@@ -22,8 +24,10 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.core.env.ConfigurableEnvironment;
 import org.springframework.core.env.Environment;
 
+import java.io.File;
 import java.lang.invoke.MethodHandles;
 import java.util.Arrays;
+import java.util.Scanner;
 
 @SpringBootApplication
 @EntityScan("ehealth.group1.backend.*")
@@ -38,12 +42,14 @@ public class BackendApplication {
   private final TransientServerSettings serverSettings;
   private ConfigurableEnvironment env;
   private WlanConnector wlanConnector;
+  private final GraphicsModule graphicsModule;
 
   private final ECGService ecgService;
 
   public BackendApplication(FhirContext fhirctx, SettingsRepository settingsRepository, DataRepository dataRepository,
                             UserRepository userRepository, TestDataLoader testDataLoader, ECGService ecgService,
-                            TransientServerSettings serverSettings, ConfigurableEnvironment env, WlanConnector wlanConnector) {
+                            TransientServerSettings serverSettings, ConfigurableEnvironment env, WlanConnector wlanConnector,
+                            GraphicsModule graphicsModule) {
     this.fhirctx = fhirctx;
     this.settingsRepository = settingsRepository;
     this.dataRepository = dataRepository;
@@ -53,6 +59,7 @@ public class BackendApplication {
     this.serverSettings = serverSettings;
     this.env = env;
     this.wlanConnector = wlanConnector;
+    this.graphicsModule = graphicsModule;
   }
 
   public static void main(String[] args) {
@@ -82,6 +89,11 @@ public class BackendApplication {
           LOGGER.warn("RUNNING SERVER WITH ARGUMENT " + arg);
           switch (arg) {
             case "test":
+              if(false) {
+                pathTester();
+                return;
+              }
+
               testDataLoader.exec();
               env.setActiveProfiles(serverSettings.getPROFILE_TESTING());
               break;
@@ -103,6 +115,11 @@ public class BackendApplication {
 
         serverSettings.setWriteDataToDisk(writeDataToDisk);
         serverSettings.setDrawEcgData(drawEcgData);
+
+        // If drawEcgData is true, initialize graphics context
+        if(drawEcgData) {
+          graphicsModule.init();
+        }
       }
 
       StringBuilder curProfiles = new StringBuilder();
@@ -119,5 +136,23 @@ public class BackendApplication {
       LOGGER.info("CommandLineRunner executed.\n" + serverSettings + "\nCURRENT ACTIVE PROFILES:\n" + curProfiles);
       LOGGER.info("All done, HeartGuard is online and listening to the world!");
     };
+  }
+
+  private void pathTester() {
+    try {
+      File f = PathFinder.getPath("CustomObservationTemplate");
+      LOGGER.warn("pathTester path: " + f.getAbsolutePath());
+      LOGGER.warn("File exists? " + f.exists());
+
+      System.out.println("\n\n");
+
+      Scanner sc = new Scanner(f);
+
+      while(sc.hasNextLine()) {
+        System.out.println(sc.nextLine());
+      }
+    } catch(Exception e) {
+      e.printStackTrace();
+    }
   }
 }

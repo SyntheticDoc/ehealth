@@ -1,5 +1,7 @@
 package ehealth.group1.backend.rest;
 
+import com.fasterxml.jackson.databind.JsonDeserializer;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import ehealth.group1.backend.entity.ConnectDeviceData;
 import ehealth.group1.backend.entity.ECGDevice;
 import ehealth.group1.backend.entity.FrontendDevice;
@@ -36,8 +38,10 @@ public class ConnectionEndpoint {
      * @return A unique device identifier as String
      */
     @PostMapping("/registerECGDevice")
+    @JsonDeserialize(using = JsonDeserializer.class)
     @ResponseStatus(HttpStatus.CREATED)
     public String registerECGDevice(@RequestBody ECGDevice ecgDevice) {
+        LOGGER.info("ECGDevice: " + ecgDevice);
         return connectionService.registerECGDevice(ecgDevice);
     }
 

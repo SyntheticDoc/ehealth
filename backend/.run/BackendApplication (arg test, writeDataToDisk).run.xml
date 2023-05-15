@@ -1,11 +1,10 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="BackendApplication (arg test, writeDataToDisk)" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
-    <module name="backend" />
-    <option name="SPRING_BOOT_MAIN_CLASS" value="ehealth.group1.backend.BackendApplication" />
+    <option name="ACTIVE_PROFILES" />
     <option name="DEBUG_MODE" value="true" />
+    <module name="backend" />
     <option name="PROGRAM_PARAMETERS" value="test writeDataToDisk" />
-    <option name="ALTERNATIVE_JRE_PATH" />
-    <option name="SHORTEN_COMMAND_LINE" value="NONE" />
+    <option name="SPRING_BOOT_MAIN_CLASS" value="ehealth.group1.backend.BackendApplication" />
     <method v="2">
       <option name="Make" enabled="true" />
     </method>

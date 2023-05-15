@@ -37,11 +37,15 @@ public class GraphicsModule {
     public GraphicsModule(DefaultDataLoader dataLoader, TransientServerSettings serverSettings) {
         this.dataLoader = dataLoader;
         this.gSettings = dataLoader.getGraphicsSettings();
+        this.serverSettings = serverSettings;
 
-        if(!serverSettings.drawEcgData()) {
-            lead_y_size = 0;
-            return;
-        }
+        // TODO: Rework constructor
+//        if(!serverSettings.drawEcgData()) {
+//            lead_y_size = 0;
+//            return;
+//        }
+
+        LOGGER.warn("\n\nCreating graphics window: " + gSettings.getCanvas_x_size() + "x" + gSettings.getCanvas_y_size() + "\n\n");
 
         StdDraw.setCanvasSize(gSettings.getCanvas_x_size(), gSettings.getCanvas_y_size());
         StdDraw.setXscale(0, gSettings.getCanvas_x_size());

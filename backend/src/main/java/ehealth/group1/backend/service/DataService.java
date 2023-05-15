@@ -50,6 +50,8 @@ public class DataService {
         CustomObservation obs;
         ArrayList<String> template = getCustomObservationTemplate();
 
+        LOGGER.warn("OBS-JSON: " + JsonData);
+
         // Parse JsonData
         JsonParser springParser = JsonParserFactory.getJsonParser();
         Map<String, Object> parsedData = springParser.parseMap(JsonData);
@@ -60,6 +62,8 @@ public class DataService {
         for(Map.Entry<String, Object> e : parsedData.entrySet()) {
             p += e.getKey() + " : " + e.getValue() + "\n";
         }
+
+        LOGGER.warn(p);
 
         // Fill template with JsonData
         StringBuilder obsData = new StringBuilder();
@@ -159,7 +163,7 @@ public class DataService {
     }*/
 
     private ArrayList<String> getCustomObservationTemplate() {
-        String filename = ".\\src\\main\\resources\\JSONTemplates\\CustomObservationTemplate.json";
+        String filename = ".\\backend\\src\\main\\resources\\JSONTemplates\\CustomObservationTemplate.json";
         ArrayList<String> result = new ArrayList<>();
 
         // TODO: Remove following Logger-line

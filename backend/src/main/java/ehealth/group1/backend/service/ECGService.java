@@ -93,6 +93,23 @@ public class ECGService {
 
   public ECGHealthStatus getLastHealthStatus(RequestLastHealthStatus request) {
     // Mock status:
+    if(true) {
+      ECGSTATE ecgState = ECGSTATE.OK;
+      ECGAnalysisResult analysisResult = new ECGAnalysisResult();
+      ECGHealthStatus result = new ECGHealthStatus();
+
+      DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd.MM.uuuu HH:mm:ss:SSS");
+
+      analysisResult.setEcgstate(ecgState);
+      analysisResult.setTimestamp(dtf.format(LocalDateTime.now()));
+      analysisResult.setComment("No comment");
+
+      result.setAssociatedUserName(request.getUserName());
+      result.setLastAnalysisResult(analysisResult);
+
+      return result;
+    }
+
     User user = userRepository.findByNameAndPassword(request.getUserName(), request.getPassword());
     ECGDevice device = deviceRepository.findECGDeviceByIdentifier(request.getDeviceIdentifier());
 

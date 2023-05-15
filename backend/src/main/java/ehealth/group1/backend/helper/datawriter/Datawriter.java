@@ -24,7 +24,7 @@ public class Datawriter {
     ErrorHandler errorHandler;
 
     private final DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd.MM.uuuu HH:mm:ss:SSS");
-    private final String baseFilename = ".\\src\\main\\resources\\data.out\\ReceivedData";
+    private final String baseFilename = ".\\backend\\src\\main\\resources\\data.out\\ReceivedData";
     private final String fileExtension = ".txt";
 
     public Datawriter(SettingsRepository settingsRepository, ErrorHandler errorHandler) {

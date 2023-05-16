@@ -10,6 +10,10 @@ import org.hibernate.annotations.OnDeleteAction;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Contains all important information about the configuration, type and id of an ecg device.
+ * Uses ECGDeviceComponent to represent individual ecg components (leads) of the ECGDevice.
+ */
 @Entity
 @NoArgsConstructor
 @Getter @Setter

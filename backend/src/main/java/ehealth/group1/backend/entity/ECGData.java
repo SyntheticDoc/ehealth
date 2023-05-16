@@ -11,6 +11,10 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Class for transmitting ecg data to and from the database. Uses ECGDataComponent to represent each component (lead) of
+ * the ecg.
+ */
 @Entity
 @NoArgsConstructor
 @Getter @Setter

@@ -1,5 +1,7 @@
 package ehealth.group1.backend.rest;
 
+import com.fasterxml.jackson.databind.JsonDeserializer;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import ehealth.group1.backend.entity.ConnectDeviceData;
 import ehealth.group1.backend.entity.ECGDevice;
 import ehealth.group1.backend.entity.FrontendDevice;
@@ -36,8 +38,10 @@ public class ConnectionEndpoint {
      * @return A unique device identifier as String
      */
     @PostMapping("/registerECGDevice")
+    @JsonDeserialize(using = JsonDeserializer.class)
     @ResponseStatus(HttpStatus.CREATED)
     public String registerECGDevice(@RequestBody ECGDevice ecgDevice) {
+        LOGGER.info("ECGDevice: " + ecgDevice);
         return connectionService.registerECGDevice(ecgDevice);
     }
 
@@ -51,10 +55,15 @@ public class ConnectionEndpoint {
      */
     @PostMapping("/registerFrontendDevice")
     @ResponseStatus(HttpStatus.CREATED)
-    public String registerECGDevice(@RequestBody FrontendDevice frontendDevice) {
+    public String registerFrontendDevice(@RequestBody FrontendDevice frontendDevice) {
         return connectionService.registerFrontendDevice(frontendDevice);
     }
 
+    /**
+     * Registers a user in the database.
+     *
+     * @param user
+     */
     @PostMapping("/registerUser")
     @ResponseStatus(HttpStatus.CREATED)
     public void registerUser(@RequestBody User user) {
@@ -66,6 +75,12 @@ public class ConnectionEndpoint {
         }
     }
 
+    /**
+     * Connects an ECGDevice to a specific user.
+     *
+     * @param data Provides data about the user and a pin to identify the ECGDevice to connect to.
+     * @return Returns a JSON containing the generated identifier for the connected ECGDevice.
+     */
     @PostMapping("/connectECGDeviceToUser")
     @ResponseStatus(HttpStatus.CREATED)
     public String connectECGDeviceToUser(@RequestBody ConnectDeviceData data) {

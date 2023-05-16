@@ -5,6 +5,7 @@ import ehealth.group1.backend.entity.ECGAnalysisSettings;
 import ehealth.group1.backend.entity.Settings;
 import ehealth.group1.backend.enums.ECGSTATE;
 import ehealth.group1.backend.helper.ErrorHandler;
+import ehealth.group1.backend.helper.TransientServerSettings;
 import ehealth.group1.backend.helper.datawriter.Datawriter;
 import ehealth.group1.backend.helper.graphics.GraphicsModule;
 import org.hl7.fhir.r5.model.Observation;
@@ -18,6 +19,9 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
 
+/**
+ * Service to analyse ecg data.
+ */
 @Component
 public class AnalyserService {
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
@@ -25,11 +29,14 @@ public class AnalyserService {
     private final ErrorHandler errorHandler;
     private final Datawriter datawriter;
     private final GraphicsModule graphicsModule;
+    private final TransientServerSettings serverSettings;
 
-    public AnalyserService(ErrorHandler errorHandler, Datawriter datawriter, GraphicsModule graphicsModule) {
+    public AnalyserService(ErrorHandler errorHandler, Datawriter datawriter, GraphicsModule graphicsModule,
+                           TransientServerSettings serverSettings) {
         this.errorHandler = errorHandler;
         this.datawriter = datawriter;
         this.graphicsModule = graphicsModule;
+        this.serverSettings = serverSettings;
     }
 
     /**
@@ -44,11 +51,11 @@ public class AnalyserService {
 
         ECGSTATE[] stateList = new ECGSTATE[obs.getComponent().size()];
 
-        if(settings.writeDataToDisk()) {
+        if(serverSettings.writeDataToDisk()) {
             datawriter.writeData(obs);
         }
 
-        if(settings.drawEcgData()) {
+        if(serverSettings.drawEcgData()) {
             graphicsModule.drawECG(obs.getComponent(), obs.getTimestampAsLocalDateTime());
         }
 
@@ -79,19 +86,24 @@ public class AnalyserService {
         LOGGER.info("Analysis of ecg data needed " + millisecondsNeeded + " ms");
     }
 
+    /**
+     * Analyses the ecg data of a specific component and returns the result as ECGSTATE.
+     *
+     * @param c The component (ecg lead) holding the data to be analysed
+     * @param ecgAnalysisSettings The settings object holding settings for the analyser
+     * @return ECGSTATE.OK if no ecg abnormalities were detected, ECGSTATE.INVALID if the data could not be analysed,
+     * possibly due to some data format error, ECGSTATE.WARNING if the analysed data looks like an asystole.
+     */
     private ECGSTATE analyseComponent(Observation.ObservationComponentComponent c, ECGAnalysisSettings ecgAnalysisSettings) {
         SampledData rawData = c.getValueSampledData();
-        //int[] data = Arrays.stream(rawData.getData().split(" ")).mapToInt(Integer::parseInt).toArray();
-        double[] data = Arrays.stream(rawData.getData().split(" ")).mapToDouble(Double::parseDouble).toArray();
-//        BigDecimal interval = rawData.getInterval();
-//        String intervalUnit = rawData.getIntervalUnit();
+        double[] data;
 
-//        if(!intervalUnit.equals("ms")) {
-//            InvalidIntervalUnitException e = new InvalidIntervalUnitException("In component " + c.getCode().getCoding().get(0).getDisplay() +
-//                    ": Unknown interval unit \"" + intervalUnit + "\". Can't process this component.");
-//            errorHandler.handleCustomException("AnalyserService.analyseComponent()", "Unknown interval unit", e);
-//            return ECGSTATE.INVALID;
-//        }
+        try {
+            data = Arrays.stream(rawData.getData().trim().split(" ")).mapToDouble(Double::parseDouble).toArray();
+        } catch(NumberFormatException e) {
+            errorHandler.handleCustomException("AnalyserService.analyseComponent()", "SampledData contained invalid data", e);
+            return ECGSTATE.INVALID;
+        }
 
         LOGGER.info("Analyzing data:\n" + Arrays.toString(rawData.getData().split(" ")) + "\n");
 

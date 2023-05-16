@@ -5,6 +5,9 @@ import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 
+/**
+ * Represents a dataset of multiple ECGData objects. This class is used to send all ecg data requested to the frontend.
+ */
 @NoArgsConstructor
 @Getter
 public class ECGDataSet {

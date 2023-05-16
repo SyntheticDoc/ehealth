@@ -11,6 +11,15 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * Class to describe and persist a specific user.
+ *
+ * Contains important settings, like:
+ * password - the users password
+ * phone - the phone number to call in case of an emergency
+ * emergency - a boolean indicating if the users wishes to activate the call-emergency-feature
+ * devices - a list of all ECGDevices the user has registered for himself
+ */
 @Entity
 @Table(name = "users")
 @NoArgsConstructor

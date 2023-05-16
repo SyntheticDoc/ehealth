@@ -11,6 +11,13 @@ import org.springframework.context.annotation.Configuration;
 import java.io.IOException;
 import java.io.Serial;
 
+/**
+ * This method overrides the `deserialize` method of the `StdDeserializer` class to provide custom deserialization
+ * logic for FHIR (Fast Healthcare Interoperability Resources) resources using HAPI FHIR. It reads JSON data from
+ * the `JsonParser`, converts it into a FHIR resource tree, and parses it using the `FhirContext` to deserialize
+ * it into an instance of the specified resource type.
+ */
+
 @Configuration
 public class FhirHapiDeserializer<K extends IBaseResource> extends StdDeserializer<K> {
     @Serial

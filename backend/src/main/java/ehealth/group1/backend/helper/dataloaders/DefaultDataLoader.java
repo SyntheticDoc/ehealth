@@ -29,12 +29,13 @@ public class DefaultDataLoader {
 
     public void defaultSettings() {
         LOGGER.info("Loading default ECG stateholder- and analysis-settings.");
-        settingsRepository.deleteByUserId(0L);
+        if(settingsRepository.findByUserId(0L) != null) {
+            settingsRepository.deleteByUserId(0L);
+        }
 
         ECGAnalysisSettings analysisSettings = new ECGAnalysisSettings(0L, maxDeviation, maxDeviationNum);
         ECGStateHolderSettings stateHolderSettings = new ECGStateHolderSettings(0L, iterations_transition, iterations_emergency);
         Settings s = new Settings(0L, stateHolderSettings, analysisSettings);
-        s.setWriteDataToDisk(true);
         settingsRepository.save(s);
     }
 

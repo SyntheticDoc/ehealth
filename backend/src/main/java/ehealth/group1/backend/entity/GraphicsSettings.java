@@ -4,6 +4,9 @@ import lombok.*;
 
 import java.awt.*;
 
+/**
+ * This class holds all configuration data for drawing ECG data when the server is started with drawEcgData=true
+ */
 @NoArgsConstructor
 @Getter @Setter
 @ToString

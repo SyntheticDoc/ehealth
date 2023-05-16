@@ -1,12 +1,18 @@
 package ehealth.group1.backend.entity;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
 
+/**
+ * Container class for all important settings specific to a user. Contains settings for the ECGStateholder, for the analysis
+ * of the ecg and the last file number for writing ecg data to disk.
+ *
+ * If a user has no specific settings, default settings will be loaded for the default user (id: 0L), which is always present
+ * in the system.
+ */
 @Entity
 @NoArgsConstructor
 @Getter @Setter
@@ -20,14 +26,6 @@ public class Settings {
     @ColumnDefault("0")
     private int dataWriter_lastFileNum;
 
-    @Getter(AccessLevel.NONE)
-    @ColumnDefault("false")
-    private boolean writeDataToDisk;
-
-    @Getter(AccessLevel.NONE)
-    @ColumnDefault("false")
-    private boolean drawEcgData;
-
     @OneToOne(cascade = CascadeType.ALL)
     private ECGStateHolderSettings ecgStateHolderSettings;
 
@@ -38,13 +36,5 @@ public class Settings {
         this.userId = userId;
         this.ecgStateHolderSettings = ecgStateHolderSettings;
         this.ecgAnalysisSettings = ecgAnalysisSettings;
-    }
-
-    public boolean writeDataToDisk() {
-        return writeDataToDisk;
-    }
-
-    public boolean drawEcgData() {
-        return drawEcgData;
     }
 }

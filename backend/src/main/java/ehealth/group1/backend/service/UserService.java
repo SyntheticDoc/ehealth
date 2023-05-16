@@ -20,9 +20,9 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public User getUser(Long id ) {
+    public User getUser(String name, String password) {
         try {
-            return userRepository.getReferenceById(id);
+            return userRepository.findByNameAndPassword(name, password);
         }catch (Error e){
             return null;
         }

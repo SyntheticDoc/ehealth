@@ -5,6 +5,7 @@ import ehealth.group1.backend.entity.Settings;
 import ehealth.group1.backend.generators.IDStringGenerator;
 import ehealth.group1.backend.helper.PathFinder;
 import ehealth.group1.backend.helper.TransientServerSettings;
+import ehealth.group1.backend.helper.dataloaders.DefaultDataLoader;
 import ehealth.group1.backend.helper.dataloaders.TestDataLoader;
 import ehealth.group1.backend.helper.graphics.GraphicsModule;
 import ehealth.group1.backend.helper.wlan.WlanConnector;
@@ -43,13 +44,14 @@ public class BackendApplication {
   private ConfigurableEnvironment env;
   private WlanConnector wlanConnector;
   private final GraphicsModule graphicsModule;
+  private final DefaultDataLoader defaultDataLoader;
 
   private final ECGService ecgService;
 
   public BackendApplication(FhirContext fhirctx, SettingsRepository settingsRepository, DataRepository dataRepository,
                             UserRepository userRepository, TestDataLoader testDataLoader, ECGService ecgService,
                             TransientServerSettings serverSettings, ConfigurableEnvironment env, WlanConnector wlanConnector,
-                            GraphicsModule graphicsModule) {
+                            GraphicsModule graphicsModule, DefaultDataLoader defaultDataLoader) {
     this.fhirctx = fhirctx;
     this.settingsRepository = settingsRepository;
     this.dataRepository = dataRepository;
@@ -60,6 +62,7 @@ public class BackendApplication {
     this.env = env;
     this.wlanConnector = wlanConnector;
     this.graphicsModule = graphicsModule;
+    this.defaultDataLoader = defaultDataLoader;
   }
 
   /**

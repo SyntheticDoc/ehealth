@@ -6,6 +6,7 @@ import ehealth.group1.backend.customfhirstructures.CustomObservation;
 import ehealth.group1.backend.entity.ECGHealthStatus;
 import ehealth.group1.backend.entity.RequestLastHealthStatus;
 import ehealth.group1.backend.entity.User;
+import ehealth.group1.backend.helper.ErrorHandler;
 import ehealth.group1.backend.repositories.DeviceRepository;
 import ehealth.group1.backend.service.ECGService;
 import org.slf4j.Logger;
@@ -13,6 +14,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.lang.invoke.MethodHandles;
 
@@ -21,9 +23,11 @@ import java.lang.invoke.MethodHandles;
 public class DataEndpoint {
   private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
   ECGService ecgService;
+  ErrorHandler errorHandler;
 
-  public DataEndpoint(ECGService ecgService){
+  public DataEndpoint(ECGService ecgService, ErrorHandler errorHandler){
     this.ecgService = ecgService;
+    this.errorHandler = errorHandler;
   }
 
   // Method for letting spring boot deserialize the json immediately into a custom Observation, using a custom
@@ -50,7 +54,12 @@ public class DataEndpoint {
   @ResponseStatus(HttpStatus.OK)
   public void receiveJson_fromCustomEsp32(@RequestBody String data) {
     LOGGER.info("Received ecg data from custom ecp 32");
-    ecgService.processECG_customEsp32(data);
+    try {
+      ecgService.processECG_customEsp32(data);
+    } catch(Exception e) {
+      errorHandler.handleCustomException("ecgService.processECG_customEsp32()", "Could not process data", e);
+      throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Could not process data", e);
+    }
   }
 
   // For testing purposes, reflects the body of the incoming post message back to the sender

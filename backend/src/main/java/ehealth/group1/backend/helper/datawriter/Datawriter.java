@@ -4,6 +4,7 @@ import ehealth.group1.backend.entity.Settings;
 import ehealth.group1.backend.helper.ErrorHandler;
 import ehealth.group1.backend.helper.PathFinder;
 import ehealth.group1.backend.repositories.SettingsRepository;
+import jakarta.annotation.PostConstruct;
 import org.hl7.fhir.r5.model.Observation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,6 +34,7 @@ public class Datawriter {
     private final DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd.MM.uuuu HH:mm:ss:SSS");
     private final String baseFilename;
     private final String fileExtension = ".txt";
+    private boolean fetchedLastFileNumFromFileSystem = false;
 
     public Datawriter(SettingsRepository settingsRepository, ErrorHandler errorHandler) {
         this.settingsRepository = settingsRepository;
@@ -50,11 +52,13 @@ public class Datawriter {
         }
 
         baseFilename = base;
-
-        getLastFileNumInFileSystem();
     }
 
     public void writeData(Observation obs) {
+        if(!fetchedLastFileNumFromFileSystem) {
+            getLastFileNumInFileSystem();
+        }
+
         String filename = getNextFilename();
 
         if(Files.exists(Path.of(filename))) {
@@ -96,6 +100,10 @@ public class Datawriter {
     }
 
     private void getLastFileNumInFileSystem() {
+        if(settings == null) {
+            settings = settingsRepository.findByUserId(0L);
+        }
+
         try {
             String fileDirectory = PathFinder.getPath("data.out").getAbsolutePath();
             Stream<Path> stream = Files.list(Paths.get(fileDirectory));
@@ -120,6 +128,7 @@ public class Datawriter {
 
             LOGGER.debug("Datawriter.getLastFileNumInFileSystem(): Set lastFileNum to " + lastFileNum);
             settings.setDataWriter_lastFileNum(lastFileNum);
+            fetchedLastFileNumFromFileSystem = true;
         } catch(IOException | IllegalArgumentException e) {
             errorHandler.handleCriticalError("Datawriter.getLastFileNumInFileSystem()", "Error while getting last file num", e);
         }

@@ -7,13 +7,18 @@ import ehealth.group1.backend.entity.Settings;
 import ehealth.group1.backend.repositories.SettingsRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.support.TransactionCallback;
+import org.springframework.transaction.support.TransactionTemplate;
 
 import java.awt.*;
 import java.lang.invoke.MethodHandles;
 
 @Component
-public class DefaultDataLoader {
+public class DefaultDataLoader implements CommandLineRunner {
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     private final double maxDeviation = 0.1;
@@ -22,15 +27,37 @@ public class DefaultDataLoader {
     private final int iterations_emergency = 5;
 
     private final SettingsRepository settingsRepository;
+    private PlatformTransactionManager transactionManager;
 
-    public DefaultDataLoader(SettingsRepository settingsRepository) {
+    @Autowired
+    public DefaultDataLoader(SettingsRepository settingsRepository, PlatformTransactionManager transactionManager) {
         this.settingsRepository = settingsRepository;
+        this.transactionManager = transactionManager;
+    }
+
+    /**
+     * This code is executed when the Spring Boot application starts up. It ensures that default values are injected
+     * into the database before any other components are built.
+     *
+     * @param args Application arguments
+     * @throws Exception when some error happens
+     */
+    @Override
+    public void run(String... args) throws Exception {
+        LOGGER.debug("\n\nPre component initialization run() called!\n");
+        defaultSettings();
     }
 
     public void defaultSettings() {
         LOGGER.info("Loading default ECG stateholder- and analysis-settings.");
-        if(settingsRepository.findByUserId(0L) != null) {
-            settingsRepository.deleteByUserId(0L);
+        Settings settings = settingsRepository.findByUserId(0L);
+        if(settings != null) {
+            new TransactionTemplate(transactionManager).execute((TransactionCallback) transactionStatus -> {
+
+                settingsRepository.delete(settings);
+
+                return null;
+            });
         }
 
         ECGAnalysisSettings analysisSettings = new ECGAnalysisSettings(0L, maxDeviation, maxDeviationNum);

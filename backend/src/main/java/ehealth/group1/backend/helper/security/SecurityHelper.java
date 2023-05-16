@@ -146,8 +146,8 @@ public class SecurityHelper {
 
         LOGGER.info("Argon2 fast parameters found: " + argon2ParametersRepository.findByType(Argon2ParameterChecker.getParamNameFast()));
         LOGGER.info("Argon2 default parameters found: " + argon2ParametersRepository.findByType(Argon2ParameterChecker.getParamNameSlow()));
-        LOGGER.info("Fast salt: " + securityDataRepository.findByType("fast").getVal());
-        LOGGER.info("Default salt: " + securityDataRepository.findByType("default").getVal());
+        LOGGER.info("Fast salt: " + securityDataRepository.findByType("saltFast").getVal());
+        LOGGER.info("Default salt: " + securityDataRepository.findByType("saltDefault").getVal());
     }
 
     private void getNewArgon2Parameters() {

@@ -55,8 +55,8 @@ public class UserEndpoint {
         try {
             msgService.sendSMS(recipient,message);
         } catch (IOException e) {
-            e.printStackTrace();
-            return "OOOpsie";
+            errorHandler.handleCustomException("msgService.sendSMS()", "Could not send message", e);
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Could not send message: " + e.getMessage(), e);
         }
         return "Alrighty";
     }
@@ -65,9 +65,9 @@ public class UserEndpoint {
     public User getUser(@RequestParam String name, @RequestParam String password){
         try {
             return userService.getUser(name, password);
-        } catch (IndexOutOfBoundsException e) {
-            e.printStackTrace();
-            return null;
+        } catch (Exception e) {
+            errorHandler.handleCustomException("userService.getUser()", "Could not get user", e);
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Could not get user: " + e.getMessage(), e);
         }
     }
 
@@ -77,7 +77,7 @@ public class UserEndpoint {
             return userService.postUser(new User(name, address, phone, emergency, password));
         } catch(PersistenceException e) {
             errorHandler.handleCustomException("userService.postUser()", "Could not create new user", e);
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "Could not create new user", e);
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Could not create new user: " + e.getMessage(), e);
         }
     }
 
@@ -87,7 +87,7 @@ public class UserEndpoint {
             return userService.updateUser(new User(name, address, phone, emergency, password));
         } catch(PersistenceException e) {
             errorHandler.handleCustomException("userService.updateUser()", "Could not update user", e);
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Could not update user", e);
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Could not update user: " + e.getMessage(), e);
         }
     }
 

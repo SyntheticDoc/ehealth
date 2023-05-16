@@ -37,7 +37,12 @@ public class DataEndpoint {
   @ResponseStatus(HttpStatus.OK)
   public void receiveObservation(@RequestBody CustomObservation obs) {
     LOGGER.info("Received ecg data from client (obs)");
-    ecgService.processECG(obs);
+    try {
+      ecgService.processECG(obs);
+    } catch(Exception e) {
+      errorHandler.handleCustomException("ecgService.processECG_customEsp32()", "Could not process data", e);
+      throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Could not process data: " + e.getMessage(), e);
+    }
   }
 
   // Method for processing incoming data missing a "Content-Type: application/json"-header or otherwise not conforming
@@ -46,7 +51,12 @@ public class DataEndpoint {
   @ResponseStatus(HttpStatus.OK)
   public void receiveJson(@RequestBody String data) {
     LOGGER.info("Received ecg data from client");
-    ecgService.processECG(data);
+    try {
+      ecgService.processECG(data);
+    } catch(Exception e) {
+      errorHandler.handleCustomException("ecgService.processECG()", "Could not process data", e);
+      throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Could not process data: " + e.getMessage(), e);
+    }
   }
 
   // Method for processing incoming reduced dataset explicitly from our custom esp32-device
@@ -58,7 +68,7 @@ public class DataEndpoint {
       ecgService.processECG_customEsp32(data);
     } catch(Exception e) {
       errorHandler.handleCustomException("ecgService.processECG_customEsp32()", "Could not process data", e);
-      throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Could not process data", e);
+      throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Could not process data: " + e.getMessage(), e);
     }
   }
 
@@ -73,6 +83,11 @@ public class DataEndpoint {
   @PostMapping("/lastHealthStatus")
   @ResponseStatus(HttpStatus.OK)
   public ECGHealthStatus reportLastHealthStatus(@RequestBody RequestLastHealthStatus request) {
-    return ecgService.getLastHealthStatus(request);
+    try {
+      return ecgService.getLastHealthStatus(request);
+    } catch(Exception e) {
+      errorHandler.handleCustomException("ecgService.getLastHealthStatus()", "Could not process request", e);
+      throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Could not process request: " + e.getMessage(), e);
+    }
   }
 }

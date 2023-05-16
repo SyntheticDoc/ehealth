@@ -42,7 +42,12 @@ public class ConnectionEndpoint {
     @ResponseStatus(HttpStatus.CREATED)
     public String registerECGDevice(@RequestBody ECGDevice ecgDevice) {
         LOGGER.info("ECGDevice: " + ecgDevice);
-        return connectionService.registerECGDevice(ecgDevice);
+        try {
+            return connectionService.registerECGDevice(ecgDevice);
+        } catch(Exception e) {
+            errorHandler.handleCustomException("connectionService.registerECGDevice()", "Could not register device", e);
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Could not register device: " + e.getMessage(), e);
+        }
     }
 
     /**
@@ -56,7 +61,12 @@ public class ConnectionEndpoint {
     @PostMapping("/registerFrontendDevice")
     @ResponseStatus(HttpStatus.CREATED)
     public String registerFrontendDevice(@RequestBody FrontendDevice frontendDevice) {
-        return connectionService.registerFrontendDevice(frontendDevice);
+        try {
+            return connectionService.registerFrontendDevice(frontendDevice);
+        } catch(Exception e) {
+            errorHandler.handleCustomException("connectionService.registerFrontendDevice()", "Could not register device", e);
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Could not register device: " + e.getMessage(), e);
+        }
     }
 
     /**
@@ -71,7 +81,7 @@ public class ConnectionEndpoint {
             connectionService.registerUser(user);
         } catch(PersistenceException e) {
             errorHandler.handleCustomException("connectionService.registerUser()", "Could not register user", e);
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "Could not register user", e);
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Could not register user: " +  e.getMessage(), e);
         }
     }
 
@@ -88,7 +98,7 @@ public class ConnectionEndpoint {
             return connectionService.connectECGDeviceToUser(data);
         } catch(PersistenceException e) {
             errorHandler.handleCustomException("connectionService.connectECGDeviceToUser()", "Could not connect ECGDevice to user", e);
-            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Could not connect ECGDevice to user", e);
+            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Could not connect ECGDevice to user: " + e.getMessage(), e);
         }
     }
 }

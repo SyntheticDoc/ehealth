@@ -104,7 +104,7 @@ public class BackendApplication {
 
               // Execute testDataLoader and set active profiles to testing
               testDataLoader.exec();
-              env.setActiveProfiles(serverSettings.getPROFILE_TESTING());
+              env.setActiveProfiles(serverSettings.getPROFILE_TESTING(), serverSettings.getPROFILE_DEVELOPMENT());
               break;
             case "writeDataToDisk":
               // Enable writing data to disk

@@ -68,6 +68,15 @@ public class ECGService {
 
   private void processECGObservation(CustomObservation obs) {
     LOGGER.info("Starting analysis of ecg observation");
+
+    // TODO: Research if there is a better way to prevent "settings is null" errors
+    settings = settingsRepository.findByUserId(0L);
+    if(ecgStateHolder == null) {
+      ecgStateHolder = new ECGStateHolder(settings.getEcgStateHolderSettings());
+    } else {
+      ecgStateHolder.updateSettings(settings.getEcgStateHolderSettings());
+    }
+
     ECGSTATE currentState = analyserService.analyse(obs, settings);
 
     ecgStateHolder.update(currentState, obs);

@@ -1,6 +1,7 @@
 package ehealth.group1.backend.rest;
 
 import ehealth.group1.backend.entity.User;
+import ehealth.group1.backend.entity.UserUpdate;
 import ehealth.group1.backend.helper.ErrorHandler;
 import ehealth.group1.backend.service.ECGService;
 import ehealth.group1.backend.service.MessagingService;
@@ -72,9 +73,9 @@ public class UserEndpoint {
     }
 
     @PostMapping("/post-user")
-    public User postUser(@RequestParam String name, @RequestParam String address, @RequestParam Long phone,@RequestParam boolean emergency,@RequestParam String password){
+    public User postUser(@RequestBody User user){
         try {
-            return userService.postUser(new User(name, address, phone, emergency, password));
+            return userService.postUser(user);
         } catch(PersistenceException e) {
             errorHandler.handleCustomException("userService.postUser()", "Could not create new user", e);
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Could not create new user: " + e.getMessage(), e);
@@ -82,9 +83,9 @@ public class UserEndpoint {
     }
 
     @PostMapping("/update-user")
-    public User updateUser(@RequestParam String name, @RequestParam String address, @RequestParam Long phone,@RequestParam boolean emergency,@RequestParam String password){
+    public User updateUser(@RequestBody UserUpdate userUpdate){
         try {
-            return userService.updateUser(new User(name, address, phone, emergency, password));
+            return userService.updateUser(userUpdate);
         } catch(PersistenceException e) {
             errorHandler.handleCustomException("userService.updateUser()", "Could not update user", e);
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Could not update user: " + e.getMessage(), e);

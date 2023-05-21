@@ -8,7 +8,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
-import java.awt.Color;
 import java.lang.invoke.MethodHandles;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -101,7 +100,6 @@ public class GraphicsModule {
         StdDraw.setFont(gSettings.getFont_leadName());
         StdDraw.setPenColor(gSettings.getText());
 
-        String s = comp.getCode().getCoding().get(0).getDisplay();
         StdDraw.textLeft(10, (mod * lead_y_size) - 20, comp.getCode().getCoding().get(0).getDisplay());
 
         double[] data = transformData(

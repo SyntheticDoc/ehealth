@@ -49,10 +49,6 @@ public class SecurityHelper {
             return;
         }
 
-        if(false) {
-            securityDataRepository.deleteAll();
-        }
-
         // Check if the parameters of the current machine have changed or are not yet created
         MachineParameters mParamsFromRepo = new MachineParameters(securityDataRepository);
         MachineParameters mParamsFromSystem = new MachineParameters(securityDataRepository, true);

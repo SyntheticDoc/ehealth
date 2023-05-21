@@ -58,6 +58,21 @@ public class ECGDevice {
         }
     }
 
+    public ECGDevice(String selfID, String identifier, String name, int leads, String pin, List<ECGDeviceComponent> components)
+            throws IllegalStateException {
+        this.selfID = selfID;
+        this.identifier = identifier;
+        this.name = name;
+        this.leads = leads;
+        this.pin = pin;
+        this.components = components;
+
+        if (leads != components.size()) {
+            throw new IllegalStateException("ECGDevice(): Leads argument and internal count of leads is not equal [Leads: " +
+                    leads + ", component count: " + components.size() + "]. Can't construct Object ECGDevice!");
+        }
+    }
+
     @Override
     public String toString() {
         return "ECGDevice[" +

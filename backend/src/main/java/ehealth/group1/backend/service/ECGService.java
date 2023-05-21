@@ -26,6 +26,7 @@ public class ECGService {
   SettingsRepository settingsRepository;
   UserRepository userRepository;
   DeviceRepository deviceRepository;
+  UserService userService;
 
   private Settings settings;
   private final DataService dataService;
@@ -33,13 +34,15 @@ public class ECGService {
   private ECGStateHolder ecgStateHolder;
 
   public ECGService(DataRepository dataRepository, SettingsRepository settingsRepository, DataService dataService,
-                    AnalyserService analyserService, UserRepository userRepository, DeviceRepository deviceRepository) {
+                    AnalyserService analyserService, UserService userService, UserRepository userRepository,
+                    DeviceRepository deviceRepository) {
     this.dataRepository = dataRepository;
     this.settingsRepository = settingsRepository;
     this.dataService = dataService;
     this.analyserService = analyserService;
     this.userRepository = userRepository;
     this.deviceRepository = deviceRepository;
+    this.userService = userService;
     // TODO: Use production settings
     settings = settingsRepository.findByUserId(0L);
     if(settings != null) {
@@ -119,7 +122,9 @@ public class ECGService {
       return result;
     }
 
-    User user = userRepository.findByNameAndPassword(request.getUserName(), request.getPassword());
+    User user = userRepository.findByNameAndPassword(
+            request.getUserName(),
+            userService.hashUserPassword(request.getPassword()));
     ECGDevice device = deviceRepository.findECGDeviceByIdentifier(request.getDeviceIdentifier());
 
     ECGSTATE ecgState = ECGSTATE.OK;

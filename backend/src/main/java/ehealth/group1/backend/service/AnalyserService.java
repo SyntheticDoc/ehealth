@@ -1,6 +1,7 @@
 package ehealth.group1.backend.service;
 
 import ehealth.group1.backend.customfhirstructures.CustomObservation;
+import ehealth.group1.backend.entity.ECGAnalysisResult;
 import ehealth.group1.backend.entity.ECGAnalysisSettings;
 import ehealth.group1.backend.entity.Settings;
 import ehealth.group1.backend.enums.ECGSTATE;
@@ -16,6 +17,8 @@ import org.springframework.stereotype.Component;
 
 import java.lang.invoke.MethodHandles;
 import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
 
@@ -25,6 +28,8 @@ import java.util.Arrays;
 @Component
 public class AnalyserService {
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+
+    private final DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd.MM.uuuu HH:mm:ss:SSS");
 
     private final ErrorHandler errorHandler;
     private final Datawriter datawriter;
@@ -46,10 +51,13 @@ public class AnalyserService {
      * @param obs The observation containing all ecg electrode components to be analysed
      * @return The ECGSTATE of the analysed observation
      */
-    public ECGSTATE analyse(CustomObservation obs, Settings settings) {
+    public ECGAnalysisResult analyse(CustomObservation obs, Settings settings) {
         Instant start = Instant.now();
 
         ECGSTATE[] stateList = new ECGSTATE[obs.getComponent().size()];
+        ECGSTATE finalState = ECGSTATE.OK;
+
+        String comment = "No comment";
 
         if(serverSettings.writeDataToDisk()) {
             datawriter.writeData(obs);
@@ -63,22 +71,43 @@ public class AnalyserService {
             stateList[i] = analyseComponent(obs.getComponent().get(i), settings.getEcgAnalysisSettings());
         }
 
+        int okStates = 0, invalidStates = 0, warningStates = 0;
+
         for(ECGSTATE s : stateList) {
             if(s == ECGSTATE.OK) {
-                Instant end = Instant.now();
-                logTimeNeededForAnalysis(start, end);
-                return ECGSTATE.OK;
+                okStates++;
             } else if(s == ECGSTATE.INVALID) {
-                Instant end = Instant.now();
-                logTimeNeededForAnalysis(start, end);
-                return ECGSTATE.INVALID;
+                invalidStates++;
+            } else if(s == ECGSTATE.WARNING) {
+                warningStates++;
+            } else {
+                invalidStates++;
+                comment = "Invalid state detected: Analysis returned an unknown state.";
             }
         }
 
         Instant end = Instant.now();
         logTimeNeededForAnalysis(start, end);
 
-        return ECGSTATE.WARNING;
+        if(warningStates > 0) {
+            if(invalidStates > 0) {
+                finalState = ECGSTATE.INVALID;
+            } else {
+                finalState = ECGSTATE.WARNING;
+            }
+        } else if(invalidStates > 0) {
+            finalState = ECGSTATE.INVALID;
+        } else if(okStates < 0) {
+            finalState = ECGSTATE.WARNING;
+        } else {
+            finalState = ECGSTATE.OK;
+        }
+
+        if(finalState == ECGSTATE.WARNING) {
+            comment = "Possible asystole detected in at least one lead";
+        }
+
+        return new ECGAnalysisResult(finalState, dtf.format(LocalDateTime.now()), comment);
     }
 
     private void logTimeNeededForAnalysis(Instant start, Instant end) {

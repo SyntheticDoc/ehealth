@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -33,6 +34,9 @@ public class User {
     private String address;
     private Long phone;
     private boolean emergency;
+
+    @NotNull
+    @Column(length=1024)
     private String password;
 
     // Lead info

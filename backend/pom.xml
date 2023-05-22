@@ -59,6 +59,13 @@
             <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency>
 
+        <!-- for parsing LocalDateTime data from JSONs with Jackson -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.datatype</groupId>
+            <artifactId>jackson-datatype-jsr310</artifactId>
+            <version>2.15.1</version>
+        </dependency>
+
         <!-- for natively getting the number of logical cpu cores independent from the jvm -->
         <dependency>
             <groupId>com.github.oshi</groupId>

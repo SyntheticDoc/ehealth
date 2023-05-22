@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 import org.hibernate.annotations.ColumnDefault;
 
 /**
@@ -16,6 +17,7 @@ import org.hibernate.annotations.ColumnDefault;
 @Entity
 @NoArgsConstructor
 @Getter @Setter
+@ToString
 public class Settings {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

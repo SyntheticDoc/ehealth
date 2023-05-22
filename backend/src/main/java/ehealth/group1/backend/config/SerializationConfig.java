@@ -44,6 +44,7 @@ public class SerializationConfig {
                 });
 
         mapper.registerModule(simpleModule);
+        mapper.findAndRegisterModules();
 
         return mapper;
     }

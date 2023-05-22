@@ -1,13 +1,8 @@
 package ehealth.group1.backend.rest;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import ehealth.group1.backend.config.FhirHapiDeserializer;
 import ehealth.group1.backend.customfhirstructures.CustomObservation;
-import ehealth.group1.backend.entity.ECGHealthStatus;
-import ehealth.group1.backend.entity.RequestLastHealthStatus;
-import ehealth.group1.backend.entity.User;
+import ehealth.group1.backend.entity.*;
 import ehealth.group1.backend.helper.ErrorHandler;
-import ehealth.group1.backend.repositories.DeviceRepository;
 import ehealth.group1.backend.service.ECGService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -82,11 +77,22 @@ public class DataEndpoint {
 
   @PostMapping("/lastHealthStatus")
   @ResponseStatus(HttpStatus.OK)
-  public ECGHealthStatus reportLastHealthStatus(@RequestBody RequestLastHealthStatus request) {
+  public ECGHealthStatus reportLastHealthStatus(@RequestBody RequestDeviceAccess request) {
     try {
       return ecgService.getLastHealthStatus(request);
     } catch(Exception e) {
       errorHandler.handleCustomException("ecgService.getLastHealthStatus()", "Could not process request", e);
+      throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Could not process request: " + e.getMessage(), e);
+    }
+  }
+
+  @PostMapping("/getDataset")
+  @ResponseStatus(HttpStatus.OK)
+  public ECGDataSet getDatasets(@RequestBody RequestDatasets request) {
+    try {
+      return ecgService.getDataSets(request);
+    } catch(Exception e) {
+      errorHandler.handleCustomException("ecgService.getDatasets()", "Could not process request", e);
       throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Could not process request: " + e.getMessage(), e);
     }
   }

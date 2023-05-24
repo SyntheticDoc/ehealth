@@ -34,25 +34,25 @@ public class UserEndpoint {
         this.errorHandler = errorHandler;
     }
 
-    @PostMapping("/test")
-    @ResponseStatus(HttpStatus.OK)
-    public String testConnection(@RequestBody String data) {
-        return "Connection test successful. Your data: " + data;
-    }
+//    @PostMapping("/test")
+//    @ResponseStatus(HttpStatus.OK)
+//    public String testConnection(@RequestBody String data) {
+//        return "Connection test successful. Your data: " + data;
+//    }
 
-    @GetMapping("/")
-    public int returnHealthStatus(){
-        return 1;
-    }
+//    @GetMapping("/")
+//    public int returnHealthStatus(){
+//        return 1;
+//    }
 
-    @PostMapping("/getRecentEcg")
-    public String getRecentEcgData(@RequestBody String data){
-        LOGGER.info("/data called?");
-        return ecgService.getData(data);
-    }
+//    @PostMapping("/getRecentEcg")
+//    public String getRecentEcgData(@RequestBody String data){
+//        LOGGER.info("/data called?");
+//        return ecgService.getData(data);
+//    }
 
     @GetMapping("/sendsms")
-    public String sendSMS(@RequestParam String recipient,@RequestParam String message){
+    public String sendSMS(@RequestParam String recipient, @RequestParam String message){
         try {
             msgService.sendSMS(recipient,message);
         } catch (IOException e) {

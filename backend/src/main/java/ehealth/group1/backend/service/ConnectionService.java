@@ -22,14 +22,14 @@ public class ConnectionService {
     DataRepository dataRepository;
     DeviceRepository deviceRepository;
     UserRepository userRepository;
-    private Argon2PasswordEncoderWithParams passwordEncoder;
+    UserService userService;
 
     public ConnectionService(DataRepository dataRepository, DeviceRepository deviceRepository, UserRepository userRepository,
-                             Argon2PasswordEncoderWithParams passwordEncoder) {
+                             UserService userService) {
         this.dataRepository = dataRepository;
         this.deviceRepository = deviceRepository;
         this.userRepository = userRepository;
-        this.passwordEncoder = passwordEncoder;
+        this.userService = userService;
     }
 
     /**
@@ -64,31 +64,6 @@ public class ConnectionService {
     }
 
     /**
-     * Registers a user in the database. Checks if the user already exists and throws an exception in this case.
-     *
-     * @param user The user to be registered.
-     */
-    public void registerUser(User user) throws UserAlreadyExistsException {
-        User user2 = userRepository.findByName(user.getName());
-
-        if(user.getPhone().equals(user2.getPhone())) {
-            throw new UserAlreadyExistsException("A user with the name " + user.getName() + " and the same phone number " +
-                    "already exists! No new user was created!");
-        }
-
-        if(user.getAddress().equals(user2.getAddress())) {
-            throw new UserAlreadyExistsException("A user with the name " + user.getName() + " and the same address " +
-                    "already exists! No new user was created!");
-        }
-
-        // TODO: Hash password
-        // Build Argon2-hash from users password
-        // user.setPassword(passwordEncoder.encode(user.getPassword(), null, null));
-
-        userRepository.save(user);
-    }
-
-    /**
      * Connects an ECGDevice matching the pin provided in data to the user provided in data
      *
      * @param data ConnectDeviceData containing the pin of the device and the user data of the user to connect
@@ -99,7 +74,7 @@ public class ConnectionService {
         LOGGER.info("Trying to connect ECGDevice to user...");
 
         ECGDevice device = deviceRepository.findECGDeviceByNameAndPin(data.getRegDeviceName(), data.getRegDevicePin());
-        User user = userRepository.findByNameAndPassword(data.getUserName(), data.getPassword());
+        User user = userRepository.findByNameAndPassword(data.getUserName(), userService.hashUserPassword(data.getPassword()));
 
         if(device == null) {
             throw new PersistenceException("Can't find ECGDevice \"" + data.getRegDeviceName() + "\", check name and pin!");

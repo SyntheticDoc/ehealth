@@ -69,22 +69,6 @@ public class ConnectionEndpoint {
         }
     }
 
-//    /**
-//     * Registers a user in the database.
-//     *
-//     * @param user
-//     */
-//    @PostMapping("/registerUser")
-//    @ResponseStatus(HttpStatus.CREATED)
-//    public void registerUser(@RequestBody User user) {
-//        try {
-//            connectionService.registerUser(user);
-//        } catch(PersistenceException e) {
-//            errorHandler.handleCustomException("connectionService.registerUser()", "Could not register user", e);
-//            throw new ResponseStatusException(HttpStatus.CONFLICT, "Could not register user: " +  e.getMessage(), e);
-//        }
-//    }
-
     /**
      * Connects an ECGDevice to a specific user.
      *

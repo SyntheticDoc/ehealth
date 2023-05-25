@@ -1,6 +1,6 @@
 #FileLock
-#Mon May 22 15:55:49 CEST 2023
-server=192.168.0.234\:52719
-hostName=192.168.0.234
+#Thu May 25 23:14:50 CEST 2023
+hostName=P6678-MD61550
+id=18854c3ae70174fd323a8bd81be041865f1a77b02e7
 method=file
-id=18843bea53a0a76bc53b973aa3db8d9816af51fce3c
+server=127.0.1.1\:46451

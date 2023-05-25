@@ -153,13 +153,13 @@ public class DefaultDataLoader implements CommandLineRunner {
         ECGDeviceComponent c1 = new ECGDeviceComponent(), c2 = new ECGDeviceComponent(), c3 = new ECGDeviceComponent();
         c1.setSelfID("c1");
         c1.setName("Lead c1");
-        c1.setIdentifier(IDStringGenerator.getNewIDString());
+        c1.setIdentifier("Lead c1");
         c2.setSelfID("c2");
         c2.setName("Lead c2");
-        c2.setIdentifier(IDStringGenerator.getNewIDString());
+        c2.setIdentifier("Lead c2");
         c3.setSelfID("c3");
         c3.setName("Lead c3");
-        c3.setIdentifier(IDStringGenerator.getNewIDString());
+        c3.setIdentifier("Lead c3");
 
         List<ECGDeviceComponent> d1Comps = new ArrayList<>();
         List<ECGDeviceComponent> d2Comps = new ArrayList<>();
@@ -170,13 +170,13 @@ public class DefaultDataLoader implements CommandLineRunner {
 
         ECGDevice user1Device = new ECGDevice(), user2Device = new ECGDevice();
         user1Device.setSelfID("user1DeviceSelfID");
-        user1Device.setIdentifier(IDStringGenerator.getNewIDString());
+        user1Device.setIdentifier("user1DeviceSelfID");
         user1Device.setName("user1Device");
         user1Device.setLeads(1);
         user1Device.setComponents(d1Comps);
         user1Device.setPin("123");
         user2Device.setSelfID("user2DeviceSelfID");
-        user2Device.setIdentifier(IDStringGenerator.getNewIDString());
+        user2Device.setIdentifier("user2DeviceSelfID");
         user2Device.setName("user2Device");
         user2Device.setLeads(2);
         user2Device.setComponents(d2Comps);

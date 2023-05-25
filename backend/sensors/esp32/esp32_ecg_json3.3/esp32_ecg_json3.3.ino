@@ -27,7 +27,7 @@ const long  gmtOffset_sec = 3600;
 const int   daylightOffset_sec = 3600;
 
 //Your Domain name with URL path or IP address with path
-String serverName = "http://192.168.188.95:8080/data/receive/esp32_custom";
+String serverName = "http://192.168.188.95:8080/user/test";
 
 
 // the following variables are unsigned longs because the time, measured in

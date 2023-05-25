@@ -22,14 +22,14 @@ public class ConnectionService {
     DataRepository dataRepository;
     DeviceRepository deviceRepository;
     UserRepository userRepository;
-    private Argon2PasswordEncoderWithParams passwordEncoder;
+    UserService userService;
 
     public ConnectionService(DataRepository dataRepository, DeviceRepository deviceRepository, UserRepository userRepository,
-                             Argon2PasswordEncoderWithParams passwordEncoder) {
+                             UserService userService) {
         this.dataRepository = dataRepository;
         this.deviceRepository = deviceRepository;
         this.userRepository = userRepository;
-        this.passwordEncoder = passwordEncoder;
+        this.userService = userService;
     }
 
     /**
@@ -99,7 +99,7 @@ public class ConnectionService {
         LOGGER.info("Trying to connect ECGDevice to user...");
 
         ECGDevice device = deviceRepository.findECGDeviceByNameAndPin(data.getRegDeviceName(), data.getRegDevicePin());
-        User user = userRepository.findByNameAndPassword(data.getUserName(), data.getPassword());
+        User user = userRepository.findByNameAndPassword(data.getUserName(), userService.hashUserPassword(data.getPassword()));
 
         if(device == null) {
             throw new PersistenceException("Can't find ECGDevice \"" + data.getRegDeviceName() + "\", check name and pin!");

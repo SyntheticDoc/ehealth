@@ -79,7 +79,7 @@ public class ECGService {
     CustomObservation obs = dataService.getObservation_fromCustomEsp32(data);
 
     if(obs.getDevice().getDisplay().equals("ESP32 custom ecg device")) {
-      User user = userRepository.findByNameAndPassword("User Userman3", "pwd3");
+      User user = userRepository.findByNameAndPassword("User Userman3", userService.hashUserPassword("pwd3"));
 
       if (user.getDevices() == null || user.getDevices().isEmpty()) {
         ECGDevice device = deviceRepository.findECGDeviceByIdentifier(obs.getDeviceID().getValue());

@@ -83,8 +83,10 @@ public class UserService {
         if(user2 != null) {
             throw new UserAlreadyExistsException("A user with the name \"" + user.getName() + "\" is already existing!");
         } else {
-            user.setPassword("");
-            return userRepository.save(user);
+            user.setPassword(hashUserPassword(user.getPassword()));
+            User result = userRepository.save(user);
+            result.setPassword("");
+            return result;
         }
     }
 

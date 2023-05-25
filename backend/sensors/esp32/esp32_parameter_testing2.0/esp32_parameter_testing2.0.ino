@@ -62,7 +62,6 @@ void setup() {
  
   Serial.println("Timer set to 5 seconds (timerDelay variable), it will take 5 seconds before publishing the first reading.");
   delay(1000); 
-  
 
 
    
@@ -77,14 +76,19 @@ void setup() {
   Serial.println(get_time_format()); 
 
   delay(5000);
+  
+  Serial.println("Welcome to the parameter testing sketch");
+  Serial.println("Data will be sent to Heartguard, and the serial monitor, after you set values for the parameters");
 
-  device_identifier = get_identifier(register_device()); 
+ 
 
   milliseconds = millis(); 
   serverName = "http://10.0.0.56:8080/data/receive/esp32_custom";
 
   sampling_rate = get_sampling_rate(); 
   in_miliV = in_mV(); 
+
+  device_identifier = get_identifier(register_device());
 
 }
 
@@ -150,8 +154,6 @@ void loop() {
     // Your Domain name with URL path or IP address with path
     http.begin(client, serverName);
       
-      // If you need Node-RED/server authentication, insert user and password below
-      //http.setAuthorization("REPLACE_WITH_SERVER_USERNAME", "REPLACE_WITH_SERVER_PASSWORD");
       
       http.addHeader("Content-Type", "application/json");
 
@@ -178,7 +180,7 @@ int get_analogRead() { // gets the ecg output from the AD8232 (as int representa
        return analogRead(14); 
    }
    
-    else {  return 0;  } //returns 0 if leads are off 
+    else {  return 0;  } //returns 0 if both leads are off 
   }
 
 double calculate_voltage(int input, int max_value) {// calculates the actual values (max anolog read for esp is 4095) 
@@ -296,7 +298,7 @@ while (Serial.available() == 0) {   }
 }
 
 bool in_mV(){
-  Serial.println("Please choose if the output sould be in mV, 1 for yes and any other value for no: "); 
+  Serial.println("Please choose if the output should be in mV, 1 for yes and any other value for no: "); 
   while (Serial.available() == 0) {}                                     
   int input; 
   input = Serial.parseInt();                                              // read integer value from serial monitor

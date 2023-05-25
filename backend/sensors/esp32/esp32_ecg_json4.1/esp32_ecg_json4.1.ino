@@ -292,7 +292,7 @@ while (Serial.available() == 0) {   }
 }
 
 bool in_mV(){
-  Serial.println("Please choose if the output sould be in mV, 1 for yes and any other value for no: "); 
+  Serial.println("Please choose if the output should be in mV, 1 for yes and any other value for no: "); 
   while (Serial.available() == 0) {}                                     
   int input; 
   input = Serial.parseInt();                                              // read integer value from serial monitor

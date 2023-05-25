@@ -7,6 +7,9 @@ import lombok.Setter;
 
 import java.util.ArrayList;
 
+/**
+ * Represents an ecg component (lead) of ECGData. This class contains the real ecg data.
+ */
 @Entity
 @NoArgsConstructor
 @Getter @Setter
@@ -16,50 +19,18 @@ public class ECGDataComponent {
     private Long id;
 
     private String displayName;
+    private String componentIdentifier;
 
-    // SampledData
-    private Double originValue;
-    private Double intervalValue;
-    private String intervalUnit;
-    private Double factor;
-    private Double lowerLimit;
-    private Double upperLimit;
-    private Integer dimensions;
+    private Double samplingRate;
 
     @Transient
     private String data;
 
-    public ECGDataComponent(Long id, String displayName, String data) {
-        this.id = id;
+    public ECGDataComponent(String displayName, String componentIdentifier, Double samplingRate, String data) {
         this.displayName = displayName;
+        this.componentIdentifier = componentIdentifier;
+        this.samplingRate = samplingRate;
         this.data = data;
-    }
-
-    public ArrayList<String> getJSONRepresentation() {
-        ArrayList<String> result = new ArrayList<>();
-        String spacer = "  ";
-
-        result.add("\"component\" : [{");
-        result.add(spacer + "\"code\" : {");
-        result.add(spacer + spacer + "\"coding\" : [{");
-        result.add(spacer + spacer + spacer + "\"display\" : \"" + displayName + "\"");
-        result.add(spacer + spacer + "}]");
-        result.add(spacer + "},");
-        result.add(spacer + "\"valueSampledData\" : {");
-        result.add(spacer + spacer + "\"origin\" : {");
-        result.add(spacer + spacer + spacer + "\"value\" : " + originValue);
-        result.add(spacer + spacer + "},");
-        result.add(spacer + spacer + "\"interval\" : " + intervalValue + ",");
-        result.add(spacer + spacer + "\"intervalUnit\" : \"" + intervalUnit + "\",");
-        result.add(spacer + spacer + "\"factor\" : " + factor + ",");
-        result.add(spacer + spacer + "\"lowerLimit\" : " + lowerLimit + ",");
-        result.add(spacer + spacer + "\"upperLimit\" : " + upperLimit + ",");
-        result.add(spacer + spacer + "\"dimensions\" : " + dimensions + ",");
-        result.add(spacer + spacer + "\"data\" : \"" + data + "\"");
-        result.add(spacer + "}");
-        result.add("}]");
-
-        return result;
     }
 
     public String toStringShort() {
@@ -70,15 +41,10 @@ public class ECGDataComponent {
     public String toString() {
         return "ECGDataComponent[" +
                 "id=" + id +
-                ", displayName='" + displayName +
-                ", originValue=" + originValue +
-                ", interval=" + intervalValue +
-                ", intervalUnit='" + intervalUnit +
-                ", factor=" + factor +
-                ", lowerLimit=" + lowerLimit +
-                ", upperLimit=" + upperLimit +
-                ", dimensions=" + dimensions +
-                ", data='" + data +
+                ", displayName='" + displayName + "'" +
+                ", componentIdentifier='" + componentIdentifier + "'" +
+                ", samplingRate=" + samplingRate +
+                ", data=" + data +
                 ']';
     }
 }

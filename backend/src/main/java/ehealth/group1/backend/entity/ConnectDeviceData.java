@@ -5,8 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-/** Contains information to connect a registered ECGDevice to a registered User.
- *
+/**
+ * Contains information to connect a registered ECGDevice to a registered User.
  */
 @NoArgsConstructor @AllArgsConstructor
 @Getter @Setter

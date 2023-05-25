@@ -8,7 +8,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
-import java.awt.Color;
 import java.lang.invoke.MethodHandles;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -21,7 +20,7 @@ public class GraphicsModule {
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     private final int lead_num = 1;
-    private final int lead_y_size;
+    private int lead_y_size;
 
     private final DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd.MM.uuuu HH:mm:ss:SSS");
 
@@ -37,11 +36,15 @@ public class GraphicsModule {
     public GraphicsModule(DefaultDataLoader dataLoader, TransientServerSettings serverSettings) {
         this.dataLoader = dataLoader;
         this.gSettings = dataLoader.getGraphicsSettings();
+        this.serverSettings = serverSettings;
 
         if(!serverSettings.drawEcgData()) {
             lead_y_size = 0;
-            return;
         }
+    }
+
+    public void init() {
+        LOGGER.info("Creating graphics window: " + gSettings.getCanvas_x_size() + "x" + gSettings.getCanvas_y_size());
 
         StdDraw.setCanvasSize(gSettings.getCanvas_x_size(), gSettings.getCanvas_y_size());
         StdDraw.setXscale(0, gSettings.getCanvas_x_size());
@@ -51,6 +54,7 @@ public class GraphicsModule {
         titleBar_centerY = gSettings.getCanvas_y_size() - (0.5 * gSettings.getTitleBarSize());
         titleBar_halfWidth = 0.5 * gSettings.getCanvas_x_size();
         titleBar_halfHeight = 0.5 * gSettings.getTitleBarSize();
+
         if(gSettings.useDoubleBuffering()) {
             StdDraw.enableDoubleBuffering();
         } else {
@@ -96,7 +100,6 @@ public class GraphicsModule {
         StdDraw.setFont(gSettings.getFont_leadName());
         StdDraw.setPenColor(gSettings.getText());
 
-        String s = comp.getCode().getCoding().get(0).getDisplay();
         StdDraw.textLeft(10, (mod * lead_y_size) - 20, comp.getCode().getCoding().get(0).getDisplay());
 
         double[] data = transformData(

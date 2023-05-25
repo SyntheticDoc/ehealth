@@ -8,7 +8,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-// Holds data about the users frontend (smartphone)
+/**
+ * This class represents device information about the users frontend device (smartphone app)
+ */
 @Entity
 @NoArgsConstructor
 @Getter @Setter

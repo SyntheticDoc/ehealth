@@ -10,6 +10,10 @@ import org.hibernate.annotations.OnDeleteAction;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Contains all important information about the configuration, type and id of an ecg device.
+ * Uses ECGDeviceComponent to represent individual ecg components (leads) of the ECGDevice.
+ */
 @Entity
 @NoArgsConstructor
 @Getter @Setter
@@ -41,6 +45,21 @@ public class ECGDevice {
     public ECGDevice(Long id, String selfID, String identifier, String name, int leads, String pin, List<ECGDeviceComponent> components)
             throws IllegalStateException {
         this.id = id;
+        this.selfID = selfID;
+        this.identifier = identifier;
+        this.name = name;
+        this.leads = leads;
+        this.pin = pin;
+        this.components = components;
+
+        if (leads != components.size()) {
+            throw new IllegalStateException("ECGDevice(): Leads argument and internal count of leads is not equal [Leads: " +
+                    leads + ", component count: " + components.size() + "]. Can't construct Object ECGDevice!");
+        }
+    }
+
+    public ECGDevice(String selfID, String identifier, String name, int leads, String pin, List<ECGDeviceComponent> components)
+            throws IllegalStateException {
         this.selfID = selfID;
         this.identifier = identifier;
         this.name = name;

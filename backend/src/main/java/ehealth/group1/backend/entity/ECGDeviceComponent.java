@@ -11,6 +11,9 @@ import lombok.Setter;
 
 import java.io.Serializable;
 
+/**
+ * Used by ECGDevice to represent individual ecg components (leads) of the ECGDevice.
+ */
 @Entity
 @NoArgsConstructor @AllArgsConstructor
 @Getter @Setter

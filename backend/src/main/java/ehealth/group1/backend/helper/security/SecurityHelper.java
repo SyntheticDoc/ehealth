@@ -49,10 +49,6 @@ public class SecurityHelper {
             return;
         }
 
-        if(false) {
-            securityDataRepository.deleteAll();
-        }
-
         // Check if the parameters of the current machine have changed or are not yet created
         MachineParameters mParamsFromRepo = new MachineParameters(securityDataRepository);
         MachineParameters mParamsFromSystem = new MachineParameters(securityDataRepository, true);
@@ -79,13 +75,6 @@ public class SecurityHelper {
                     return null;
                 });
 
-                // Delete old machineParams
-                /*securityDataRepository.deleteByType("SYS_availableMem");
-                securityDataRepository.deleteByType("SYS_osVersion");
-                securityDataRepository.deleteByType("SYS_hardwareUUID");
-                securityDataRepository.deleteByType("SYS_cpuIdentifier");
-                securityDataRepository.deleteByType("SYS_cpuLogicalThreads");*/
-
                 mParamsFromSystem.saveToRepo();
                 hasNewMachineParams = true;
             } else {
@@ -101,8 +90,8 @@ public class SecurityHelper {
             LOGGER.info("Generating new parameters for changed machine parameters");
             getNewArgon2Parameters();
         } else {
-            LOGGER.info("Argon2 fast parameters found: " + argon2ParametersRepository.findByType("fast"));
-            LOGGER.info("Argon2 default parameters found: " + argon2ParametersRepository.findByType("default"));
+            LOGGER.info("Argon2 fast parameters found: " + argon2ParametersRepository.findByType(Argon2ParameterChecker.getParamNameFast()));
+            LOGGER.info("Argon2 default parameters found: " + argon2ParametersRepository.findByType(Argon2ParameterChecker.getParamNameSlow()));
         }
 
         LOGGER.info("Checking cryptographic salts...");
@@ -130,8 +119,8 @@ public class SecurityHelper {
         LOGGER.info("Creating reduced Argon2 parameters...");
         argon2ParametersRepository.deleteAll();
         argon2ParametersRepository.flush();
-        argon2ParametersRepository.save(getStandardParameters("fast"));
-        argon2ParametersRepository.save(getStandardParameters("default"));
+        argon2ParametersRepository.save(getStandardParameters(Argon2ParameterChecker.getParamNameFast()));
+        argon2ParametersRepository.save(getStandardParameters(Argon2ParameterChecker.getParamNameSlow()));
         argon2ParametersRepository.flush();
 
         String salt = "w4NqRcIeIfMBbM1KYGz4abkPepmf0K1pJPD6K/0KcpmdUz+1lMm89woNAs42Y9BuQmFS0JZbr9gyyr/jeuPcc9z36ZchYpI2+"
@@ -151,10 +140,10 @@ public class SecurityHelper {
         securityDataRepository.save(saltData2);
         securityDataRepository.flush();
 
-        LOGGER.info("Argon2 fast parameters found: " + argon2ParametersRepository.findByType("fast"));
-        LOGGER.info("Argon2 default parameters found: " + argon2ParametersRepository.findByType("default"));
-        LOGGER.info("Fast salt: " + securityDataRepository.findByType("fast").getVal());
-        LOGGER.info("Default salt: " + securityDataRepository.findByType("default").getVal());
+        LOGGER.info("Argon2 fast parameters found: " + argon2ParametersRepository.findByType(Argon2ParameterChecker.getParamNameFast()));
+        LOGGER.info("Argon2 default parameters found: " + argon2ParametersRepository.findByType(Argon2ParameterChecker.getParamNameSlow()));
+        LOGGER.info("Fast salt: " + securityDataRepository.findByType("saltFast").getVal());
+        LOGGER.info("Default salt: " + securityDataRepository.findByType("saltDefault").getVal());
     }
 
     private void getNewArgon2Parameters() {
@@ -166,17 +155,17 @@ public class SecurityHelper {
         Argon2Parameters fastParams;
 
         LOGGER.info("Calculating Argon2 fast parameters...");
-        fastParams = argon2ParameterChecker.getParametersForExecutionTime(300, saltLength, 128,
-                3, 4, 2);
+        fastParams = argon2ParameterChecker.getParametersForExecutionTime(Argon2ParameterChecker.getFastHashMilliseconds(), saltLength, 128,
+                3, 8, 2);
 
         Argon2Parameters defaultParams;
 
         LOGGER.info("Calculating Argon2 default parameters...");
-        defaultParams = argon2ParameterChecker.getParametersForExecutionTime(1000, saltLength, 128,
-                3, 4, 2);
+        defaultParams = argon2ParameterChecker.getParametersForExecutionTime(Argon2ParameterChecker.getSlowHashMilliseconds(), saltLength, 128,
+                3, 8, 2);
 
         if (fastParams != null) {
-            fastParams.setType("fast");
+            fastParams.setType(Argon2ParameterChecker.getParamNameFast());
             argon2ParametersRepository.save(fastParams);
         } else {
             LOGGER.error("Could not get new argon2 parameters for fast computations! Setting standard parameters. WARNING: This is unsafe, "
@@ -185,7 +174,7 @@ public class SecurityHelper {
         }
 
         if (defaultParams != null) {
-            defaultParams.setType("default");
+            defaultParams.setType(Argon2ParameterChecker.getParamNameSlow());
             argon2ParametersRepository.save(defaultParams);
         } else {
             LOGGER.error("Could not get new default argon2 parameters! Setting standard parameters. WARNING: This is unsafe, "

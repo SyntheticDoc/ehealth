@@ -61,7 +61,7 @@ public class CustomObservation extends Observation {
         return checksum;
     }
 
-    /** Getter for timestamp */
+    /** Getter for deviceID */
     public StringType getDeviceID() {
         return deviceID;
     }

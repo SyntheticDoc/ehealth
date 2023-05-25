@@ -14,13 +14,11 @@ public class TestDataLoader {
 
     private DataRepository dataRepository;
     private DeviceRepository deviceRepository;
-    private ECGDataRepository ecgDataRepository;
     private UserRepository userRepository;
 
-    public TestDataLoader(DataRepository dataRepository, DeviceRepository deviceRepository, ECGDataRepository ecgDataRepository, UserRepository userRepository) {
+    public TestDataLoader(DataRepository dataRepository, DeviceRepository deviceRepository, UserRepository userRepository) {
         this.dataRepository = dataRepository;
         this.deviceRepository = deviceRepository;
-        this.ecgDataRepository = ecgDataRepository;
         this.userRepository = userRepository;
     }
 
@@ -29,7 +27,6 @@ public class TestDataLoader {
         LOGGER.warn("Executing the TestDataLoader will delete all prior data in the database!");
 
         dataRepository.deleteAll();
-        ecgDataRepository.deleteAll();
         userRepository.deleteAll();
         deviceRepository.deleteAll();
 

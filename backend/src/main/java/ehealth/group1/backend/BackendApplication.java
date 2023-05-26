@@ -4,6 +4,7 @@ import ca.uhn.fhir.context.FhirContext;
 import ehealth.group1.backend.entity.Argon2Parameters;
 import ehealth.group1.backend.entity.SecurityData;
 import ehealth.group1.backend.entity.Settings;
+import ehealth.group1.backend.enums.ECGSTATE;
 import ehealth.group1.backend.generators.IDStringGenerator;
 import ehealth.group1.backend.helper.ErrorHandler;
 import ehealth.group1.backend.helper.PathFinder;
@@ -13,6 +14,7 @@ import ehealth.group1.backend.helper.argon2crypto.Argon2PasswordEncoderWithParam
 import ehealth.group1.backend.helper.dataloaders.DefaultDataLoader;
 import ehealth.group1.backend.helper.dataloaders.TestDataLoader;
 import ehealth.group1.backend.helper.graphics.GraphicsModule;
+import ehealth.group1.backend.helper.mock.RingBuffer;
 import ehealth.group1.backend.helper.wlan.WlanConnector;
 import ehealth.group1.backend.repositories.*;
 import ehealth.group1.backend.service.ECGService;
@@ -99,7 +101,7 @@ public class BackendApplication {
     return (args) -> {
       // TODO: Change to PROFILE_PRODUCTION for a production-ready server
       // env.setActiveProfiles(serverSettings.getPROFILE_PRODUCTION());
-      env.setActiveProfiles(serverSettings.getPROFILE_DEVELOPMENT());
+      // env.setActiveProfiles(serverSettings.getPROFILE_DEVELOPMENT());
 
       if(args.length > 0) {
         LOGGER.info("Starting server with command line arguments: " + Arrays.toString(args));
@@ -116,11 +118,13 @@ public class BackendApplication {
                 return;
               }
 
+              // testRingBuffer();
+
               testArgon2();
 
               // Execute testDataLoader and set active profiles to testing
-              testDataLoader.exec();
-              env.setActiveProfiles(serverSettings.getPROFILE_TESTING(), serverSettings.getPROFILE_DEVELOPMENT());
+              // testDataLoader.exec();
+              // env.setActiveProfiles(serverSettings.getPROFILE_TESTING(), serverSettings.getPROFILE_DEVELOPMENT());
               break;
             case "writeDataToDisk":
               // Enable writing data to disk
@@ -168,6 +172,20 @@ public class BackendApplication {
       LOGGER.info("CommandLineRunner executed.\n" + serverSettings + "\nCURRENT ACTIVE PROFILES:\n" + curProfiles);
       LOGGER.info("All done, HeartGuard is online and listening to the world!");
     };
+  }
+
+  private void testRingBuffer() {
+    RingBuffer buf = new RingBuffer(4);
+    buf.memPut(ECGSTATE.OK, 0);
+    buf.memPut(ECGSTATE.WARNING, 1);
+    buf.memPut(ECGSTATE.CRITICAL, 2);
+    buf.memPut(ECGSTATE.CALLEMERGENCY, 3);
+
+    System.out.println("\nRingBufferTest:");
+
+    for(int i = 0; i < 8; i++) {
+      System.out.println(buf.getNext());
+    }
   }
 
   private void testArgon2() {

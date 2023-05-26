@@ -8,6 +8,7 @@ import ehealth.group1.backend.exception.ECGStateHolderNotFoundException;
 import ehealth.group1.backend.exception.PersistenceException;
 import ehealth.group1.backend.exception.UserNotFoundException;
 import ehealth.group1.backend.helper.ECGStateHolder;
+import ehealth.group1.backend.helper.mock.MockDataProvider;
 import ehealth.group1.backend.repositories.*;
 import org.hl7.fhir.r5.model.Observation;
 import org.slf4j.Logger;
@@ -36,13 +37,16 @@ public class ECGService {
 
   private final DataService dataService;
   private final AnalyserService analyserService;
+  private final MockDataProvider mockDataProvider;
   private Environment env;
+
+  private ArrayList<String> currentProfiles = new ArrayList<>();
 
   private HashMap<String, ECGStateHolder> ecgStateHolders = new HashMap<>();
 
   public ECGService(DataRepository dataRepository, ECGAnalysisRepository analysisRepository, SettingsRepository settingsRepository,
                     DataService dataService, AnalyserService analyserService, UserService userService, UserRepository userRepository,
-                    DeviceRepository deviceRepository, Environment env) {
+                    DeviceRepository deviceRepository, MockDataProvider mockDataProvider, Environment env) {
     this.dataRepository = dataRepository;
     this.analysisRepository = analysisRepository;
     this.settingsRepository = settingsRepository;
@@ -51,7 +55,10 @@ public class ECGService {
     this.userRepository = userRepository;
     this.deviceRepository = deviceRepository;
     this.userService = userService;
+    this.mockDataProvider = mockDataProvider;
     this.env = env;
+
+    currentProfiles.addAll(Arrays.asList(env.getActiveProfiles()));
   }
 
   @Deprecated
@@ -69,19 +76,22 @@ public class ECGService {
   }
 
   public void processECG_customEsp32(String data) {
-    User user = userRepository.findByName("User Userman3");
     CustomObservation obs = dataService.getObservation_fromCustomEsp32(data);
 
-    if(user.getDevices() == null || user.getDevices().isEmpty()) {
-      ECGDevice device = deviceRepository.findECGDeviceByIdentifier(obs.getDeviceID().getValue());
-      LOGGER.debug("Device not yet registered to user, registering it to test user \"User Userman3\".");
+    if(obs.getDevice().getDisplay().equals("ESP32 custom ecg device")) {
+      User user = userRepository.findByNameAndPassword("User Userman3", userService.hashUserPassword("pwd3"));
 
-      if(device == null) {
-        throw new PersistenceException("Device data for custom ESP32 could not be found, please register the device first.");
+      if (user.getDevices() == null || user.getDevices().isEmpty()) {
+        ECGDevice device = deviceRepository.findECGDeviceByIdentifier(obs.getDeviceID().getValue());
+        LOGGER.debug("Device not yet registered to user, registering it to test user \"User Userman3\".");
+
+        if (device == null) {
+          throw new PersistenceException("Device data for custom ESP32 could not be found, please register the device first.");
+        }
+
+        user.addECGDevice(device);
+        userRepository.save(user);
       }
-
-      user.addECGDevice(device);
-      userRepository.save(user);
     }
 
     processECGObservation(obs);
@@ -125,25 +135,14 @@ public class ECGService {
   }
 
   public ECGHealthStatus getLastHealthStatus(RequestDeviceAccess request) throws IllegalAccessException {
-    // Mock status:
-    if(false) {
-      ECGSTATE ecgState = ECGSTATE.OK;
-      ECGAnalysisResult analysisResult = new ECGAnalysisResult();
-      ECGHealthStatus result = new ECGHealthStatus();
-
-      DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd.MM.uuuu HH:mm:ss:SSS");
-
-      analysisResult.setEcgstate(ecgState);
-      analysisResult.setTimestamp(dtf.format(LocalDateTime.now()));
-      analysisResult.setComment("No comment");
-
-      result.setAssociatedUserName(request.getUserName());
-      result.setLastAnalysisResult(analysisResult);
-
-      return result;
-    }
-
     User user = grantDeviceAccess(request);
+
+    // Mock status:
+    if(currentProfiles.contains("mock")) {
+      if(user.getName().equals("User Userman1") || user.getName().equals("User Userman2")) {
+        return mockDataProvider.getForUser(user.getName());
+      }
+    }
 
     ECGStateHolder ecgStateHolder = ecgStateHolders.get(request.getDeviceIdentifier());
 

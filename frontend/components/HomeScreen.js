@@ -36,7 +36,7 @@ const HomeScreen = ({ navigation }) => {
 
     if(healthStatus ==2 && activated==true){
 		const response = await fetch(
-			'http://10.0.0.74:8080/data/lastHealthStatus',
+			'http://172.16.0.35:8080/data/lastHealthStatus',
 			{
 				method: 'Post',
 				headers: {
@@ -100,6 +100,7 @@ const HomeScreen = ({ navigation }) => {
 	
  useEffect(() => {
 	   clearInterval(x);
+	   console.log(generaluser.device[0]);
 	   getECGdata();
 	   var x = setInterval(() => {
 	     getECGdata();

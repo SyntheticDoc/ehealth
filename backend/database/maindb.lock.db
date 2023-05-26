@@ -1,6 +1,6 @@
 #FileLock
-#Thu May 25 15:46:00 CEST 2023
-server=192.168.0.234\:52150
-hostName=192.168.0.234
+#Fri May 26 13:34:06 CEST 2023
+hostName=128.131.215.25
+id=18857d653a8ff571525b4a1f94c1fcc268e9a1ddd2e
 method=file
-id=1885328bccdf6eb9bf3526a7d6dbdfee8ec28d34489
+server=128.131.215.25\:50440

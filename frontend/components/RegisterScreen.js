@@ -29,6 +29,7 @@ const RegisterScreen = ({ navigation }) => {
   const [device, setDevice] = useState("");
 
   const { generaluser, setGeneraluser } = useContext(AppContext);
+  const {IPAdresse, setIPAdresse} = useContext(AppContext);
 
   const handleToast = ()  => {
     Toast.show({
@@ -52,7 +53,7 @@ const RegisterScreen = ({ navigation }) => {
     
     const response = await fetch(
       "http://" +
-                "172.16.0.35" +
+                "128.131.215.113" +
                 ":8080/user/post-user"
                ,
       {
@@ -65,11 +66,13 @@ const RegisterScreen = ({ navigation }) => {
 
     );
     const json = await response.json();
+    console.log("JSON"+json);
     if(json.error!==undefined){
       handleToast();
       console.log("FAIL")
     }else{
-      setGeneraluser(json); 
+      setGeneraluser(postData); 
+      console.log(generaluser)
       Toast.show({
         type: 'success',
         text1: 'REGISTRATION Successful',

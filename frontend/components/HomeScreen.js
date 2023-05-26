@@ -16,6 +16,7 @@ const HomeScreen = ({ navigation }) => {
   const[activated,setActivated]=useState(false)
 
 	const { generaluser, setGeneraluser } = useContext(AppContext);
+	const {IPAdresse, setIPAdresse} = useContext(AppContext);
 	var timer = useRef();
 
 	
@@ -36,7 +37,7 @@ const HomeScreen = ({ navigation }) => {
 
     if(healthStatus ==2 && activated==true){
 		const response = await fetch(
-			'http://172.16.0.35:8080/data/lastHealthStatus',
+			'http://'+IPAdresse+':8080/data/lastHealthStatus',
 			{
 				method: 'Post',
 				headers: {
@@ -100,7 +101,7 @@ const HomeScreen = ({ navigation }) => {
 	
  useEffect(() => {
 	   clearInterval(x);
-	   console.log(generaluser.device[0]);
+	   console.log(generaluser);
 	   getECGdata();
 	   var x = setInterval(() => {
 	     getECGdata();

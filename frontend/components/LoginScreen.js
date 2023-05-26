@@ -14,6 +14,7 @@ const LoginScreen = ({ navigation }) => {
     const [name, setName] = useState('');
     const [password, setPassword] = useState('');
 
+    const {IPAdresse, setIPAdresse} = useContext(AppContext);
     const { generaluser, setGeneraluser } = useContext(AppContext);
   
     const handleRegister = () => {
@@ -32,7 +33,7 @@ const LoginScreen = ({ navigation }) => {
     
       const response = await fetch(
         "http://" +
-                  "172.16.0.35" +
+                  "128.131.215.113" +
                   ":8080/user/get-user?name=" +
                   name +
                   "&password=" +
@@ -48,6 +49,10 @@ const LoginScreen = ({ navigation }) => {
         console.log("FAIL")
       }else{
         setGeneraluser(json); 
+        const user= generaluser; 
+        user.password= password; 
+        console.log(user); 
+        setGeneraluser(user); 
         Toast.show({
           type: 'success',
           text1: 'LOGIN Successful',

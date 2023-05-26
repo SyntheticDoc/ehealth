@@ -28,8 +28,44 @@ public class MockDataProvider {
 
     DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd.MM.uuuu HH:mm:ss:SSS");
 
+    private boolean hasData = false;
+
     public MockDataProvider(SettingsRepository settingsRepository) {
         this.settingsRepository = settingsRepository;
+    }
+
+    public ECGHealthStatus getForUser(String username) {
+        if(!hasData) {
+            init();
+        }
+
+        ECGSTATE current;
+
+        if(username.equals("User Userman1")) {
+            current = userman1Buf.getNext();
+        } else if(username.equals("User Userman2")) {
+            current = userman2Buf.getNext();
+        } else {
+            throw new IllegalArgumentException("No mock data for user " + username + " found!");
+        }
+
+        ECGAnalysisResult analysisResult = new ECGAnalysisResult();
+        analysisResult.setEcgstate(current);
+        analysisResult.setComment("MOCK DATA");
+        analysisResult.setTimestamp(dtf.format(LocalDateTime.now()));
+
+        ECGHealthStatus result = new ECGHealthStatus();
+        result.setAssociatedUserName(username);
+        result.setLastAnalysisResult(analysisResult);
+
+        return result;
+    }
+
+    private ECGSTATE getRandomECGState(ECGSTATE[] allowedStates) {
+        return allowedStates[ThreadLocalRandom.current().nextInt(0, allowedStates.length)];
+    }
+
+    private void init() {
         Settings settings = settingsRepository.findByUserId(0L);
         ECGStateHolderSettings stateHolderSettings = settings.getEcgStateHolderSettings();
         iterationsToStateTransition = stateHolderSettings.getIterationsToStateTransition();
@@ -62,32 +98,5 @@ public class MockDataProvider {
                 userman2Buf.memPut(ECGSTATE.CALLEMERGENCY, i);
             }
         }
-    }
-
-    public ECGHealthStatus getForUser(String username) {
-        ECGSTATE current;
-
-        if(username.equals("User Userman1")) {
-            current = userman1Buf.getNext();
-        } else if(username.equals("User Userman2")) {
-            current = userman2Buf.getNext();
-        } else {
-            throw new IllegalArgumentException("No mock data for user " + username + " found!");
-        }
-
-        ECGAnalysisResult analysisResult = new ECGAnalysisResult();
-        analysisResult.setEcgstate(current);
-        analysisResult.setComment("MOCK DATA");
-        analysisResult.setTimestamp(dtf.format(LocalDateTime.now()));
-
-        ECGHealthStatus result = new ECGHealthStatus();
-        result.setAssociatedUserName(username);
-        result.setLastAnalysisResult(analysisResult);
-
-        return result;
-    }
-
-    private ECGSTATE getRandomECGState(ECGSTATE[] allowedStates) {
-        return allowedStates[ThreadLocalRandom.current().nextInt(0, allowedStates.length)];
     }
 }

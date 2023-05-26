@@ -89,8 +89,10 @@ public class ECGService {
           throw new PersistenceException("Device data for custom ESP32 could not be found, please register the device first.");
         }
 
-        user.addECGDevice(device);
-        userRepository.save(user);
+        if(!user.getDevices().contains(device)) {
+          user.addECGDevice(device);
+          userRepository.save(user);
+        }
       }
     }
 
@@ -302,6 +304,15 @@ public class ECGService {
   }
 
   private User grantDeviceAccess(RequestDeviceAccess request) throws IllegalAccessException {
+    StringBuilder users = new StringBuilder();
+
+    for(User u : userRepository.findAll()) {
+      users.append(u).append("\n");
+    }
+
+    LOGGER.info("Userman2, name=" + request.getUserName() +", password=" + request.getPassword() + ", hash=" +
+            userService.hashUserPassword(request.getPassword()));
+
     User user = userRepository.findByNameAndPassword(
             request.getUserName(),
             userService.hashUserPassword(request.getPassword()));

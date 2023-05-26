@@ -60,6 +60,14 @@ public class UserService {
 
     public User getUser(String name, String password) {
         User result;
+        LOGGER.info("User dat: name=" + name + ", password=" + password);
+        StringBuilder users = new StringBuilder();
+
+        for(User u : userRepository.findAll()) {
+            users.append(u).append("\n");
+        }
+
+        LOGGER.info("GET - DEBUG USERS:\n" + users);
 
         try {
             result = userRepository.findByNameAndPassword(name, hashUserPassword(password));
@@ -92,6 +100,8 @@ public class UserService {
 
     public User updateUser(UserUpdate user) throws UserPasswordMismatchException {
         LOGGER.info("Updating user: " + user.toString());
+        LOGGER.info("User dat: oldName=" + user.getOldName() + ", oldPassword=" + user.getOldPassword() + ", name=" + user.getPassword() +
+                ", password=" + user.getPassword());
 
         User userToUpdate = userRepository.findByNameAndPassword(user.getOldName(), hashUserPassword(user.getOldPassword()));
 
@@ -110,7 +120,7 @@ public class UserService {
                 - SyntheticDoc
              */
             userToUpdate.setName(user.getName());
-            userToUpdate.setPassword(hashUserPassword(user.getPassword()));
+            userToUpdate.setPassword(user.getPassword());
             userToUpdate.setAddress(user.getAddress());
             userToUpdate.setPhone(user.getPhone());
             userToUpdate.setEmergency(user.isEmergency());
@@ -119,9 +129,10 @@ public class UserService {
     }
 
     private User saveUserToRepo(User u) {
+        String temp = u.getPassword();
         u.setPassword(hashUserPassword(u.getPassword()));
         User result = userRepository.save(u);
-        result.setPassword("");
+        result.setPassword(temp);
         return result;
     }
 

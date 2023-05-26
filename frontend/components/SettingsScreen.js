@@ -25,25 +25,27 @@ const SettingsScreen = ({ navigation }) => {
 
 
   const updateUser = async () => {
+
+    console.log(generaluser)
+    const postData = {
+			name: name,
+      address: address,
+      phone: phoneNumber,
+      emergency: true,
+			password: generaluser.password,
+			devices: [],
+		};
+    
     const response = await fetch(
       "http://" +
-        "10.0.0.74" +
-        ":8080/user/update-user"+
-        "?name=" +
-        name +
-        "&address=" +
-        address +
-        "&phone=" +
-        phoneNumber +
-        "&emergency=" +
-        true +
-        "&password=" +
-        password,
+        "172.16.0.35" +
+        ":8080/user/update-user",
       {
         method: "Post",
-		headers: {
-			"Content-Type": "application/json",
-		  },
+        headers: {
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify(postData),
       }
     );
     const json = await response.json();

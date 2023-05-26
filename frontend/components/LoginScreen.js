@@ -32,7 +32,7 @@ const LoginScreen = ({ navigation }) => {
     
       const response = await fetch(
         "http://" +
-                  "10.0.0.74" +
+                  "172.16.0.35" +
                   ":8080/user/get-user?name=" +
                   name +
                   "&password=" +

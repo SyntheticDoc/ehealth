@@ -10,7 +10,7 @@ const getData = () => {
 
   
 
-  fetch(":8080/data/lasthealthstatus?userName="+"&password="+"&deviceIdentifier", { method: "GET" })
+  fetch("172.16.0.35:8080/data/lasthealthstatus?userName="+"&password="+"&deviceIdentifier", { method: "GET" })
     .then((response) => response.json())
     .then((responseJson) => {
       //setData(JSON.stringify(responseJson));

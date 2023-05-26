@@ -40,22 +40,27 @@ const RegisterScreen = ({ navigation }) => {
   };
 
   const postUser = async () => {
+
+    const postData = {
+			name: name,
+      address: street +" "+number+", "+zip+" "+city,
+      phone: phoneNumber,
+      emergency: true,
+			password: password,
+			devices: [],
+		};
     
     const response = await fetch(
       "http://" +
-                "10.0.0.74" +
-                ":8080/user/post-user?name=" +
-                name +
-                "&address=" +
-                street +" "+number+", "+zip+" "+city+
-                "&phone=" +
-                phoneNumber +
-                "&emergency=" +
-                true +
-                "&password=" +
-                password,
+                "172.16.0.35" +
+                ":8080/user/post-user"
+               ,
       {
         method: 'Post',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify(postData),
       }
 
     );

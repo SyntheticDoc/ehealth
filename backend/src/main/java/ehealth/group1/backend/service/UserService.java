@@ -61,8 +61,10 @@ public class UserService {
     public User getUser(String name, String password) {
         User result;
 
+
         try {
             result = userRepository.findByNameAndPassword(name, hashUserPassword(password));
+            LOGGER.info("LOGIN user: " + result.toString());
         } catch (Error e){
             throw new PersistenceException("Error in UserService.getUser()", e);
         }

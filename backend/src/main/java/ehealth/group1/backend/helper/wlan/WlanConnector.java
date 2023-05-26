@@ -10,8 +10,10 @@ import java.lang.invoke.MethodHandles;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Enumeration;
+import java.util.Scanner;
 
 @Component
 public class WlanConnector {
@@ -26,13 +28,41 @@ public class WlanConnector {
     }
 
     public void changeAddressToWlan() {
-        InetAddress wlanIp = getWlanIpAddress();
+        ArrayList<InetAddress> wlanIps = getWlanIpAddress();
 
-        if(wlanIp != null) {
-            LOGGER.info("Wlan address found: " + wlanIp.getHostAddress());
+        if(wlanIps != null && wlanIps.size() != 0) {
+            StringBuilder addresses = new StringBuilder();
+
+            for(InetAddress a : wlanIps) {
+                addresses.append(a.getHostAddress()).append("\n");
+            }
+
+            LOGGER.info("Wlan addresses found: " + addresses);
         } else {
             LOGGER.info("Could not find valid wlan address!");
             return;
+        }
+
+        InetAddress wlanIp = null;
+
+        Scanner sc = new Scanner(System.in);
+
+        while(wlanIp == null) {
+            System.out.println();
+            System.out.println("Choose the wlan ip to host the server on:\n");
+
+            for(int i = 0; i < wlanIps.size(); i++) {
+                System.out.println("\t" + (i+1) + ". " + wlanIps.get(i).getHostAddress());
+            }
+
+            System.out.println();
+            System.out.print(":> ");
+
+            int userInput = sc.nextInt();
+
+            if(userInput > 0 && userInput <= wlanIps.size()) {
+                wlanIp = wlanIps.get(userInput-1);
+            }
         }
 
         try {
@@ -55,7 +85,9 @@ public class WlanConnector {
         LOGGER.info("New server address: " + serverProperties.getAddress() + ":" + serverProperties.getPort());
     }
 
-    private InetAddress getWlanIpAddress() {
+    private ArrayList<InetAddress> getWlanIpAddress() {
+        ArrayList<InetAddress> result = new ArrayList<>();
+
         try {
             Enumeration<NetworkInterface> networkInterfaces = NetworkInterface.getNetworkInterfaces();
 
@@ -69,8 +101,7 @@ public class WlanConnector {
                         InetAddress address = addresses.nextElement();
 
                         if(!address.isLoopbackAddress() && !address.isLinkLocalAddress()) {
-                            LOGGER.info("InetAddress: " + address.toString());
-                            return address;
+                            result.add(address);
                         }
                     }
                 }
@@ -79,6 +110,6 @@ public class WlanConnector {
             e.printStackTrace();
         }
 
-        return null;
+        return result;
     }
 }

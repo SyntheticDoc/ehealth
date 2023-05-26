@@ -80,19 +80,17 @@ public class ECGService {
 
     if(obs.getDevice().getDisplay().equals("ESP32 custom ecg device")) {
       User user = userRepository.findByNameAndPassword("User Userman3", userService.hashUserPassword("pwd3"));
+      ECGDevice device = deviceRepository.findECGDeviceByIdentifier(obs.getDeviceID().getValue());
 
-      if (user.getDevices() == null || user.getDevices().isEmpty()) {
-        ECGDevice device = deviceRepository.findECGDeviceByIdentifier(obs.getDeviceID().getValue());
+      if (!user.getDevices().contains(device)) {
         LOGGER.debug("Device not yet registered to user, registering it to test user \"User Userman3\".");
 
         if (device == null) {
           throw new PersistenceException("Device data for custom ESP32 could not be found, please register the device first.");
         }
 
-        if(!user.getDevices().contains(device)) {
-          user.addECGDevice(device);
-          userRepository.save(user);
-        }
+        user.addECGDevice(device);
+        userRepository.save(user);
       }
     }
 
@@ -221,7 +219,7 @@ public class ECGService {
       datasets.add(data);
     }
 
-    LOGGER.info("Saving datasets...\n" + Arrays.toString(datasets.toArray()) + "\n\n");
+    // LOGGER.info("Saving datasets...\n" + Arrays.toString(datasets.toArray()) + "\n\n");
 
     for(ECGData dat : datasets) {
       analysisRepository.save(dat.getEcgAnalysisResult());

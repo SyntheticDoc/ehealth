@@ -61,6 +61,10 @@ public class MockDataProvider {
         return result;
     }
 
+    public String getMockESP32Identifier() {
+        return "123";
+    }
+
     private ECGSTATE getRandomECGState(ECGSTATE[] allowedStates) {
         return allowedStates[ThreadLocalRandom.current().nextInt(0, allowedStates.length)];
     }

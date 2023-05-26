@@ -4,12 +4,14 @@ import ehealth.group1.backend.entity.*;
 import ehealth.group1.backend.exception.UserAlreadyExistsException;
 import ehealth.group1.backend.generators.IDStringGenerator;
 import ehealth.group1.backend.helper.argon2crypto.Argon2PasswordEncoderWithParams;
+import ehealth.group1.backend.helper.mock.MockDataProvider;
 import ehealth.group1.backend.repositories.DataRepository;
 import ehealth.group1.backend.repositories.DeviceRepository;
 import ehealth.group1.backend.repositories.UserRepository;
 import jakarta.persistence.PersistenceException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.env.Environment;
 import org.springframework.security.crypto.argon2.Argon2PasswordEncoder;
 import org.springframework.stereotype.Component;
 
@@ -23,13 +25,17 @@ public class ConnectionService {
     DeviceRepository deviceRepository;
     UserRepository userRepository;
     UserService userService;
+    Environment env;
+    MockDataProvider mockDataProvider;
 
     public ConnectionService(DataRepository dataRepository, DeviceRepository deviceRepository, UserRepository userRepository,
-                             UserService userService) {
+                             UserService userService, MockDataProvider mockDataProvider, Environment env) {
         this.dataRepository = dataRepository;
         this.deviceRepository = deviceRepository;
         this.userRepository = userRepository;
         this.userService = userService;
+        this.mockDataProvider = mockDataProvider;
+        this.env = env;
     }
 
     /**
@@ -39,7 +45,23 @@ public class ConnectionService {
      * @return A JSON string containing the generated identifier for the device.
      */
     public String registerECGDevice(ECGDevice ecgDevice) {
-        ecgDevice.setIdentifier(IDStringGenerator.getNewIDString());
+        boolean isMock = false;
+
+        for(String s : env.getActiveProfiles()) {
+            if(s.equals("mock")) {
+                isMock = true;
+            }
+        }
+
+        if(isMock) {
+            if(deviceRepository.findECGDeviceByIdentifier(mockDataProvider.getMockESP32Identifier()) != null) {
+                return "{\"identifier\" : \"" + mockDataProvider.getMockESP32Identifier() + "\"}";
+            }
+
+            ecgDevice.setIdentifier(mockDataProvider.getMockESP32Identifier());
+        } else {
+            ecgDevice.setIdentifier(IDStringGenerator.getNewIDString());
+        }
 
         for (ECGDeviceComponent c : ecgDevice.getComponents()) {
             c.setIdentifier(IDStringGenerator.getNewIDString());

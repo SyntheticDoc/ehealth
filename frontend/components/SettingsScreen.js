@@ -11,7 +11,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faArrowLeft } from "@fortawesome/free-solid-svg-icons/faArrowLeft";
 import { AppContext } from "../App";
 import Toast from 'react-native-toast-message';
-
+import { faEye } from '@fortawesome/free-solid-svg-icons';
+import { faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 
 const textSize = 30;
 const SettingsScreen = ({ navigation }) => {
@@ -24,9 +25,24 @@ const SettingsScreen = ({ navigation }) => {
   const [emergency, setEmergency] = useState(generaluser.emergency);
   const [password, setPassword] = useState(generaluser.password); 
   const [device, setDevice] = useState(generaluser.devices[0].identifier)
+  const [newPassword, setNewPassword] = useState();
+  const [newPassword1, setNewPassword1] = useState();
+  const [showPassword, setShowPassword] = useState(false); 
+  const [showPassword1, setShowPassword1] = useState(false); 
 
 
   const updateUser = async () => {
+
+    if(newPassword!=newPassword1){
+      Toast.show({
+        type: 'error',
+        text1: 'Passwörter sind nicht gleich',
+        
+
+      });
+      return;
+    }
+
 
     console.log(generaluser)
     const postData = {
@@ -34,7 +50,7 @@ const SettingsScreen = ({ navigation }) => {
       address: address,
       phone: phoneNumber,
       emergency: emergency,
-			password: generaluser.password,
+			password: newPassword,
 			devices: [],
       oldName: name,
       oldPassword:generaluser.password
@@ -133,6 +149,8 @@ const SettingsScreen = ({ navigation }) => {
           onChangeText={setDevice}
         />
       </View>
+
+      
 {/* 
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>E-Mail-Adresse</Text>
@@ -162,6 +180,48 @@ const SettingsScreen = ({ navigation }) => {
         </Text>
       </View>
 
+      <Text style={styles.sectionTitle}>Passwort ändern</Text>
+      <View style={styles.inputContainer}>
+        
+        <TextInput
+          style={styles.inputpasswort}
+          placeholder="Neues Passwort eingeben:"
+          onChangeText={setNewPassword1}
+          value={newPassword1}
+          secureTextEntry={!showPassword}
+        />
+        <TouchableOpacity
+          style={styles.eyeIcon}
+          onPress={() => setShowPassword(!showPassword)}
+        >
+          <FontAwesomeIcon
+            style={{ color: showPassword ? 'gray' : '#454545' }}
+            icon={showPassword ? faEyeSlash : faEye}
+            size={20}
+          />
+        </TouchableOpacity>
+      </View>
+
+      <View style={styles.inputContainer}>
+        <TextInput
+          style={styles.inputpasswort}
+          placeholder="Neues Passwort wiederholden:"
+          onChangeText={setNewPassword}
+          value={newPassword}
+          secureTextEntry={!showPassword1}
+        />
+        <TouchableOpacity
+          style={styles.eyeIcon}
+          onPress={() => setShowPassword1(!showPassword1)}
+        >
+          <FontAwesomeIcon
+            style={{ color: showPassword1 ? 'gray' : '#454545' }}
+            icon={showPassword1 ? faEyeSlash : faEye}
+            size={20}
+          />
+        </TouchableOpacity>
+      </View>
+
       <TouchableOpacity style={styles.button} onPress={handleSaveChanges}>
         <Text style={styles.buttonText}>Änderungen speichern</Text>
       </TouchableOpacity>
@@ -184,6 +244,24 @@ const SettingsScreen = ({ navigation }) => {
 export default SettingsScreen;
 
 const styles = StyleSheet.create({
+  inputContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: 'gray',
+    backgroundColor: 'white',
+    borderRadius: 5,
+    padding: 10,
+    marginBottom: 20,
+    width: '100%',
+  },
+  inputpasswort: {
+    flex: 1,
+    marginRight: 10,
+  },
+  eyeIcon: {
+    marginLeft: 10,
+  },
   container: {
     flex: 1,
     backgroundColor: "#93CAED",
@@ -193,7 +271,8 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 20,
     fontWeight: "bold",
-    marginBottom: 20,
+    marginBottom: 16,
+    marginTop:10,
     color: "#454545",
   },
   section: {
@@ -214,7 +293,7 @@ const styles = StyleSheet.create({
   name: {
     fontSize: 18,
     fontWeight: "bold",
-    marginBottom: 10,
+    marginBottom: 0,
     color: "#454545",
   },
 
@@ -249,8 +328,8 @@ const styles = StyleSheet.create({
   },
   backButton: {
     position: "absolute",
-    bottom: 0,
+   top: 0,
     right: 0,
-    margin: 60,
+    margin: 35,
   },
 });

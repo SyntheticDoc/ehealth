@@ -24,6 +24,9 @@ const HomeScreen = ({ navigation }) => {
   const handlePress = () => {
     setActivated(!activated);
     console.log(activated)
+	if (activated){
+		setHealthStatus(2);
+	}
     
   };
 
@@ -31,13 +34,13 @@ const HomeScreen = ({ navigation }) => {
 
 	const getECGdata = async () => {
 		const postData = {
-			userName: 'User Userman2',
-			password: 'pwd2',
-			deviceIdentifier: 'user2DeviceSelfID',
+			userName: 'User Userman1',
+			password: 'pwd',
+			deviceIdentifier: 'user1DeviceSelfID',
 		};
 		console.log(postData)
 
-		console.log(healthStatus+activated)
+		
 
     if(healthStatus ==2 && activated==true){
 		const response = await fetch(
@@ -111,7 +114,7 @@ const HomeScreen = ({ navigation }) => {
 		  getECGdata();
 		  x = setInterval(() => {
 			getECGdata();
-		  }, 10000);
+		  }, 1000);
 		}
 		return () => {
 		  clearInterval(x);
@@ -134,11 +137,11 @@ const HomeScreen = ({ navigation }) => {
 
 	useEffect(() => {
 		if (healthStatus == 0) {
-			Alert.alert('Making Phone API Call now, EMERGENCY');
+			//Alert.alert('Making Phone API Call now, EMERGENCY');
 			clearInterval(timer.current);
 		}
 		if (healthStatus == 1) {
-			Alert.alert('Starting Alarm and Waiting for user input!');
+			//Alert.alert('Starting Alarm and Waiting for user input!');
 			playSound();
 			timer.current = setInterval(() => {
 				setCountdown((previous) => {
@@ -190,6 +193,7 @@ const HomeScreen = ({ navigation }) => {
 				onPress={() => {
 					if (healthStatus == 2) {
 						setHealthStatus(1);
+						clearInterval(timer.current);
 					} else {
 						clearInterval(timer.current);
 						setHealthStatus(2);

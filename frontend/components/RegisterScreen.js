@@ -14,6 +14,9 @@ import { faHeartPulse } from "@fortawesome/free-solid-svg-icons/faHeartPulse";
 import { castEmergencyCall, postUser } from "./NetworkFunctions";
 import { AppContext } from "../App";
 import Toast from 'react-native-toast-message';
+import { faEye } from '@fortawesome/free-solid-svg-icons';
+import { faEyeSlash } from '@fortawesome/free-solid-svg-icons';
+
 
 
 const RegisterScreen = ({ navigation }) => {
@@ -27,9 +30,10 @@ const RegisterScreen = ({ navigation }) => {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [password, setPassword] = useState("");
   const [device, setDevice] = useState("");
+  const [showPassword, setShowPassword] = useState(false); 
 
   const { generaluser, setGeneraluser } = useContext(AppContext);
-  const {IPAdresse, setIPAdresse} = useContext(AppContext);
+  
 
   const handleToast = ()  => {
     Toast.show({
@@ -42,9 +46,51 @@ const RegisterScreen = ({ navigation }) => {
 
   const postUser = async () => {
 
+    if(name ===""){
+      Toast.show({
+        type: 'error',
+        text1: 'Bitte fülle Vorname und Nachname aus',
+      });
+      return;
+    }
+    if(street ===""){
+      Toast.show({
+        type: 'error',
+        text1: 'Bitte gib deine Straße und Hausnummer an',
+      });
+      return;
+    }
+    if(city ===""){
+      Toast.show({
+        type: 'error',
+        text1: 'Bitte gib deine Postleitzahl und Ort an',
+      });
+      return;
+    }
+    if(phoneNumber ===""){
+      Toast.show({
+        type: 'error',
+        text1: 'Bitte gib deine Handynummer an',
+      });
+      return;
+    }
+    if(password ===""){
+      Toast.show({
+        type: 'error',
+        text1: 'Bitte gib ein Passwort an',
+      });
+      return;
+    }
+    if(device ===""){
+      Toast.show({
+        type: 'error',
+        text1: 'Bitte gib deine SonsorID an',
+      });
+      return;
+    }
     const postData = {
 			name: name,
-      address: street +" "+number+", "+zip+" "+city,
+      address: street +", "+city,
       phone: phoneNumber,
       emergency: true,
 			password: password,
@@ -53,7 +99,7 @@ const RegisterScreen = ({ navigation }) => {
     
     const response = await fetch(
       "http://" +
-                "128.131.215.113" +
+                "172.16.0.35" +
                 ":8080/user/post-user"
                ,
       {
@@ -112,25 +158,14 @@ const RegisterScreen = ({ navigation }) => {
       
       <TextInput
         style={styles.input}
-        placeholder="Straße"
+        placeholder="Straße & Hausnummer"
         onChangeText={setStreet}
         value={street}
       />
+     
       <TextInput
         style={styles.input}
-        placeholder="Hausnummer"
-        onChangeText={setNumber}
-        value={number}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Postleitzahl"
-        onChangeText={setZip}
-        value={zip}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Ort"
+        placeholder="Postleitzahl & Ort"
         onChangeText={setCity}
         value={city}
       />
@@ -141,11 +176,33 @@ const RegisterScreen = ({ navigation }) => {
         value={phoneNumber}
         keyboardType="phone-pad"
       />
+
+<View style={styles.inputContainer}>
+        <TextInput
+          style={styles.inputpasswort}
+          placeholder="Passwort"
+          onChangeText={setPassword}
+          value={password}
+          secureTextEntry={!showPassword}
+        />
+        <TouchableOpacity
+          style={styles.eyeIcon}
+          onPress={() => setShowPassword(!showPassword)}
+        >
+          <FontAwesomeIcon
+            style={{ color: showPassword ? 'gray' : '#454545' }}
+            icon={showPassword ? faEyeSlash : faEye}
+            size={20}
+          />
+        </TouchableOpacity>
+      </View>
+
+
       <TextInput
         style={styles.input}
-        placeholder="Passwort"
-        onChangeText={setPassword}
-        value={password}
+        placeholder="Sensor ID"
+        onChangeText={setDevice}
+        value={device}
       />
       <Text>
         Klicke{" "}
@@ -213,6 +270,24 @@ const styles = StyleSheet.create({
     padding: 10,
     marginBottom: 20,
     width: "100%",
+  },
+  inputContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: 'gray',
+    backgroundColor: 'white',
+    borderRadius: 5,
+    padding: 10,
+    marginBottom: 20,
+    width: '100%',
+  },
+  inputpasswort: {
+    flex: 1,
+    marginRight: 10,
+  },
+  eyeIcon: {
+    marginLeft: 10,
   },
   arrow: {
     position: "absolute",

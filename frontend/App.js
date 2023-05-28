@@ -21,7 +21,6 @@ export default function App() {
 
 	const Stack = createStackNavigator();
 	const [generaluser, setGeneraluser] = useState(null); 
-	const [IPAdresse, setIPAdresse]= useState("128.131.215.113")
 	return (
 		<AppContext.Provider value={{generaluser, setGeneraluser}}>
 			<NavigationContainer>

@@ -5,6 +5,9 @@ import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faHeartPulse } from '@fortawesome/free-solid-svg-icons/faHeartPulse';
 import { AppContext } from "../App";
 import Toast from 'react-native-toast-message';
+import { faEye } from '@fortawesome/free-solid-svg-icons';
+import { faEyeSlash } from '@fortawesome/free-solid-svg-icons';
+
 
 
 
@@ -13,8 +16,9 @@ const LoginScreen = ({ navigation }) => {
 
     const [name, setName] = useState('');
     const [password, setPassword] = useState('');
+    const [showPassword, setShowPassword] = useState(false); 
 
-    const {IPAdresse, setIPAdresse} = useContext(AppContext);
+    
     const { generaluser, setGeneraluser } = useContext(AppContext);
   
     const handleRegister = () => {
@@ -33,7 +37,7 @@ const LoginScreen = ({ navigation }) => {
     
       const response = await fetch(
         "http://" +
-                  "128.131.215.113" +
+                  "172.16.0.35" +
                   ":8080/user/get-user?name=" +
                   name +
                   "&password=" +
@@ -84,12 +88,25 @@ const LoginScreen = ({ navigation }) => {
           onChangeText={setName}
           value={name}
         />
+        <View style={styles.inputContainer}>
         <TextInput
-          style={styles.input}
+          style={styles.inputpasswort}
           placeholder="Passwort"
           onChangeText={setPassword}
           value={password}
+          secureTextEntry={!showPassword}
         />
+        <TouchableOpacity
+          style={styles.eyeIcon}
+          onPress={() => setShowPassword(!showPassword)}
+        >
+          <FontAwesomeIcon
+            style={{ color: showPassword ? 'gray' : '#454545' }}
+            icon={showPassword ? faEyeSlash : faEye}
+            size={20}
+          />
+        </TouchableOpacity>
+      </View>
         <Text>
       Klicke{' '}
       <Text
@@ -158,6 +175,24 @@ const styles = StyleSheet.create({
       padding: 10,
       marginBottom: 20,
       width: '100%',
+    },
+    inputContainer: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      borderWidth: 1,
+      borderColor: 'gray',
+      backgroundColor: 'white',
+      borderRadius: 5,
+      padding: 10,
+      marginBottom: 20,
+      width: '100%',
+    },
+    inputpasswort: {
+      flex: 1,
+      marginRight: 10,
+    },
+    eyeIcon: {
+      marginLeft: 10,
     },
     arrow: {
 		position: 'absolute',

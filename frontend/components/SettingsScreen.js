@@ -15,7 +15,7 @@ import Toast from 'react-native-toast-message';
 
 const textSize = 30;
 const SettingsScreen = ({ navigation }) => {
-  const {IPAdresse, setIPAdresse} = useContext(AppContext);
+  
   const { generaluser, setGeneraluser } = useContext(AppContext);
   const [name, setName] = useState(generaluser.name);
   const [address, setAddress] = useState(generaluser.address);
@@ -32,7 +32,7 @@ const SettingsScreen = ({ navigation }) => {
 			name: name,
       address: address,
       phone: phoneNumber,
-      emergency: true,
+      emergency: emergency,
 			password: generaluser.password,
 			devices: [],
       oldName: name,
@@ -45,7 +45,7 @@ const SettingsScreen = ({ navigation }) => {
     
     const response = await fetch(
       "http://" +
-        "128.131.215.113" +
+        "172.16.0.35" +
         ":8080/user/update-user",
       {
         method: "Post",
@@ -66,16 +66,11 @@ const SettingsScreen = ({ navigation }) => {
 			style:{backgroundColor: "red"}
 	
 		  });
+      console.log(error);
         console.log("FAIL")
       }else{
         setGeneraluser(json); 
-        const user= generaluser; 
-        user.password= password; 
-        console.log(user.password)
-        console.log(user); 
-        setGeneraluser(user); 
-        console.log("generaluser")
-        console.log(generaluser)
+        //
         Toast.show({
           type: 'success',
           text1: 'SAVED Successful',

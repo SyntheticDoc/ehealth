@@ -16,7 +16,6 @@ const HomeScreen = ({ navigation }) => {
   const[activated,setActivated]=useState(false)
 
 	const { generaluser, setGeneraluser } = useContext(AppContext);
-	const {IPAdresse, setIPAdresse} = useContext(AppContext);
 	var timer = useRef();
 
 	
@@ -30,14 +29,17 @@ const HomeScreen = ({ navigation }) => {
 
 	const getECGdata = async () => {
 		const postData = {
-			userName: 'test',
-			password: 'test',
-			deviceIdentifier: '123',
+			userName: 'User Userman2',
+			password: 'pwd2',
+			deviceIdentifier: 'user2DeviceSelfID',
 		};
+		console.log(postData)
+
+		console.log(healthStatus+activated)
 
     if(healthStatus ==2 && activated==true){
 		const response = await fetch(
-			'http://'+IPAdresse+':8080/data/lastHealthStatus',
+			'http://'+ "172.16.0.35"+':8080/data/lastHealthStatus',
 			{
 				method: 'Post',
 				headers: {

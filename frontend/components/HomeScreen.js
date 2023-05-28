@@ -4,6 +4,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faHeartPulse } from '@fortawesome/free-solid-svg-icons/faHeartPulse';
 import { faGear } from '@fortawesome/free-solid-svg-icons/faGear';
 import { faUser } from '@fortawesome/free-solid-svg-icons/faUser';
+import { faSignOutAlt } from '@fortawesome/free-solid-svg-icons/faSignOutAlt';
+
 import { getData, castEmergencyCall, getUserbyId } from './NetworkFunctions';
 import Toast from 'react-native-toast-message';
 import { AppContext } from '../App';
@@ -101,14 +103,20 @@ const HomeScreen = ({ navigation }) => {
 	}, [sound]);
 
 	
- useEffect(() => {
-	   clearInterval(x);
-	   console.log(generaluser);
-	   getECGdata();
-	   var x = setInterval(() => {
-	     getECGdata();
-	   }, 10000);
-	 }, []);
+	useEffect(() => {
+		clearInterval(x);
+		console.log(generaluser);
+		var x;
+		if (activated && healthStatus==2) {
+		  getECGdata();
+		  x = setInterval(() => {
+			getECGdata();
+		  }, 10000);
+		}
+		return () => {
+		  clearInterval(x);
+		};
+	  }, [activated, healthStatus]);
 
 	/*useEffect(() => {
     clearInterval(x);
@@ -150,7 +158,16 @@ const HomeScreen = ({ navigation }) => {
 
 	return (
 		<View style={styles.container}>
-			<View style={styles.headerContainer}>
+			
+
+      <View><TouchableOpacity style={[
+    styles.active,
+    { backgroundColor: activated ? '#c6e7cf' : '#ffcfc8' },
+  ]} onPress={handlePress}>
+        <Text >{activated ? 'Aktiviert' : 'Deaktiviert'}</Text>
+      </TouchableOpacity>
+	  </View>
+	  <View style={styles.headerContainer}>
 				<FontAwesomeIcon
 					style={{
 						color: '#fff',
@@ -168,10 +185,6 @@ const HomeScreen = ({ navigation }) => {
 			) : (
 				<View></View>
 			)}
-
-      <View><TouchableOpacity onPress={handlePress}>
-        <Text>{activated ? 'Deaktiviert' : 'Aktiviert'}</Text>
-      </TouchableOpacity></View>
 
 			<TouchableOpacity
 				onPress={() => {
@@ -244,11 +257,12 @@ const HomeScreen = ({ navigation }) => {
 			<TouchableOpacity
 				style={styles.user}
 				onPress={() => {
+					setGeneraluser(null)
 					navigation.navigate('Register');
 				}}
 			>
 				<FontAwesomeIcon
-					icon={faUser}
+					icon={faSignOutAlt}
 					style={{ color: '#454545' }}
 					size={50}
 				></FontAwesomeIcon>
@@ -268,12 +282,19 @@ const styles = StyleSheet.create({
 		alignItems: 'center',
 		justifyContent: 'flex-start',
 	},
+	active: {
+		marginTop: 80,
+		borderColor: "gray",
+		padding: 10,
+    	borderRadius: 5,
+
+	},
 	heading: {
 		color: 'white',
 		fontSize: 50,
 	},
 	headerContainer: {
-		marginTop: 100,
+		marginTop: 30,
 		flexDirection: 'row',
 		alignItems: 'center',
 	},

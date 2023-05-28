@@ -22,7 +22,8 @@ const SettingsScreen = ({ navigation }) => {
   const [phoneNumber, setPhoneNumber] = useState(generaluser.phone);
   const [email, setEmail] = useState("max.mustermann@example.com");
   const [emergency, setEmergency] = useState(generaluser.emergency);
-  const [password, setPassword] = useState(generaluser.password)
+  const [password, setPassword] = useState(generaluser.password); 
+  const [device, setDevice] = useState(generaluser.devices[0].identifier)
 
 
   const updateUser = async () => {
@@ -121,6 +122,15 @@ const SettingsScreen = ({ navigation }) => {
           value={phoneNumber.toString()}
           onChangeText={setPhoneNumber}
           keyboardType="phone-pad"
+        />
+      </View>
+
+      <View style={styles.section}>
+        <Text style={styles.sectionTitle}>Sensor ID</Text>
+        <TextInput
+          style={styles.input}
+          value={device}
+          onChangeText={setDevice}
         />
       </View>
 {/* 

@@ -35,6 +35,21 @@ const LoginScreen = ({ navigation }) => {
     };
     const getuser = async () => {
     
+      if(name ===""){
+        Toast.show({
+          type: 'error',
+          text1: 'Bitte gib deinen Namen an',
+        });
+        return;
+      }
+      if(password ===""){
+        Toast.show({
+          type: 'error',
+          text1: 'Bitte gib dein Passwort an',
+        });
+        return;
+      }
+
       const response = await fetch(
         "http://" +
                   "172.16.0.35" +

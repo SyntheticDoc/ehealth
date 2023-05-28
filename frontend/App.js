@@ -7,13 +7,13 @@ import LoginScreen from './components/LoginScreen';
 import RegisterScreen from './components/RegisterScreen';
 import { createStackNavigator } from '@react-navigation/stack';
 import React from 'react'
+import Toast from 'react-native-toast-message';
 
 import User from "./type/User"
 import { useState } from 'react';
 
 
 
-//const [user, setUser] = useState(''); 
 
 export const AppContext = React.createContext(null);
 
@@ -28,14 +28,15 @@ export default function App() {
 				screenOptions={{
 					headerShown: false,
 				}}
-			>
+			><Stack.Screen name='Home' component={HomeScreen} />
 				<Stack.Screen name='Register' component={RegisterScreen} />
-				<Stack.Screen name='Home' component={HomeScreen} />
+				
 				<Stack.Screen name='Settings' component={SettingsScreen} />
 				<Stack.Screen name='Login' component={LoginScreen} />
 				
 			</Stack.Navigator>
 		</NavigationContainer>
+		<Toast/>
 		</AppContext.Provider>
 		
 	);

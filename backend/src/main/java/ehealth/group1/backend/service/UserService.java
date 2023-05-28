@@ -69,8 +69,10 @@ public class UserService {
 
         LOGGER.info("GET - DEBUG USERS:\n" + users);
 
+
         try {
             result = userRepository.findByNameAndPassword(name, hashUserPassword(password));
+            LOGGER.info("LOGIN user: " + result.toString());
         } catch (Error e){
             throw new PersistenceException("Error in UserService.getUser()", e);
         }

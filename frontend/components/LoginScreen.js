@@ -69,15 +69,11 @@ const LoginScreen = ({ navigation }) => {
         console.log("FAIL")
       }else{
         setGeneraluser(json); 
-        const updatedUser = { ...generaluser }; // Kopie des generaluser-Objekts erstellen
-        updatedUser.password = password; // Passwort in der Kopie aktualisieren
-        setGeneraluser(updatedUser);
+        const user = generaluser; 
+        user.password = password; 
+        setGeneraluser(user)
        
-        const user= generaluser; 
-      user.password= password; 
-        console.log(user); 
-        setGeneraluser(user); 
-        console.log(generaluser)
+        
         Toast.show({
           type: 'success',
           text1: 'LOGIN Successful',

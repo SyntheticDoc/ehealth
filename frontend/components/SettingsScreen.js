@@ -24,7 +24,7 @@ const SettingsScreen = ({ navigation }) => {
   const [email, setEmail] = useState("max.mustermann@example.com");
   const [emergency, setEmergency] = useState(generaluser.emergency);
   const [password, setPassword] = useState(generaluser.password); 
-  const [device, setDevice] = useState(generaluser.devices[0].identifier)
+ 
   const [newPassword, setNewPassword] = useState();
   const [newPassword1, setNewPassword1] = useState();
   const [showPassword, setShowPassword] = useState(false); 
@@ -140,15 +140,8 @@ const SettingsScreen = ({ navigation }) => {
           keyboardType="phone-pad"
         />
       </View>
-
-      <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Sensor ID</Text>
-        <TextInput
-          style={styles.input}
-          value={device}
-          onChangeText={setDevice}
-        />
-      </View>
+      
+      
 
       
 {/* 

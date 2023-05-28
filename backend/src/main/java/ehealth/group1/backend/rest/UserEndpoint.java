@@ -91,5 +91,4 @@ public class UserEndpoint {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Could not update user: " + e.getMessage(), e);
         }
     }
-
 }

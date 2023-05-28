@@ -80,9 +80,9 @@ public class ECGService {
 
     if(obs.getDevice().getDisplay().equals("ESP32 custom ecg device")) {
       User user = userRepository.findByNameAndPassword("User Userman3", userService.hashUserPassword("pwd3"));
+      ECGDevice device = deviceRepository.findECGDeviceByIdentifier(obs.getDeviceID().getValue());
 
-      if (user.getDevices() == null || user.getDevices().isEmpty()) {
-        ECGDevice device = deviceRepository.findECGDeviceByIdentifier(obs.getDeviceID().getValue());
+      if (!user.getDevices().contains(device)) {
         LOGGER.debug("Device not yet registered to user, registering it to test user \"User Userman3\".");
 
         if (device == null) {
@@ -219,7 +219,7 @@ public class ECGService {
       datasets.add(data);
     }
 
-    LOGGER.info("Saving datasets...\n" + Arrays.toString(datasets.toArray()) + "\n\n");
+    // LOGGER.info("Saving datasets...\n" + Arrays.toString(datasets.toArray()) + "\n\n");
 
     for(ECGData dat : datasets) {
       analysisRepository.save(dat.getEcgAnalysisResult());
@@ -302,6 +302,15 @@ public class ECGService {
   }
 
   private User grantDeviceAccess(RequestDeviceAccess request) throws IllegalAccessException {
+    StringBuilder users = new StringBuilder();
+
+    for(User u : userRepository.findAll()) {
+      users.append(u).append("\n");
+    }
+
+    LOGGER.info("Userman2, name=" + request.getUserName() +", password=" + request.getPassword() + ", hash=" +
+            userService.hashUserPassword(request.getPassword()));
+
     User user = userRepository.findByNameAndPassword(
             request.getUserName(),
             userService.hashUserPassword(request.getPassword()));

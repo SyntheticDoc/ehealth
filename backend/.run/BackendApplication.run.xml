@@ -1,9 +1,10 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="BackendApplication Wlan" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
-    <option name="ACTIVE_PROFILES" />
     <module name="backend" />
-    <option name="PROGRAM_PARAMETERS" value="wlan test drawEcgData" />
     <option name="SPRING_BOOT_MAIN_CLASS" value="ehealth.group1.backend.BackendApplication" />
+    <option name="PROGRAM_PARAMETERS" value="wlan drawEcgData" />
+    <option name="ALTERNATIVE_JRE_PATH" />
+    <option name="SHORTEN_COMMAND_LINE" value="NONE" />
     <method v="2">
       <option name="Make" enabled="true" />
     </method>

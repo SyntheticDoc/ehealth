@@ -15,9 +15,11 @@ import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.DoubleSummaryStatistics;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 @Component
-public class GraphicsModule {
+public class GraphicsModule extends Thread {
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     private final int lead_num = 1;
@@ -28,6 +30,8 @@ public class GraphicsModule {
     private DefaultDataLoader dataLoader;
     private GraphicsSettings gSettings;
     private TransientServerSettings serverSettings;
+
+    private ExecutorService executor = Executors.newSingleThreadExecutor();
 
     private double titleBar_centerX;
     private double titleBar_centerY;
@@ -64,9 +68,19 @@ public class GraphicsModule {
     }
 
     public void drawECG(List<Observation.ObservationComponentComponent> comps, LocalDateTime timestamp) {
+        LOGGER.debug("Draw thread ID: " + GraphicsModule.currentThread().getId());
+        executor.submit(() -> {
+            LOGGER.info("Submitting run task to ExecutorService");
+            this.run(comps, timestamp);
+        });
+    }
+
+    public void run(List<Observation.ObservationComponentComponent> comps, LocalDateTime timestamp) {
         if(!serverSettings.drawEcgData()) {
             return;
         }
+
+        LOGGER.debug("Run thread ID: " + GraphicsModule.currentThread().getId());
 
         // Draw background
         StdDraw.clear(gSettings.getBackground());

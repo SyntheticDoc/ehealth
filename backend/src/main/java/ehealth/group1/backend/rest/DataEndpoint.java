@@ -96,4 +96,15 @@ public class DataEndpoint {
       throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Could not process request: " + e.getMessage(), e);
     }
   }
+
+  @PostMapping("/stopEmergency")
+  @ResponseStatus(HttpStatus.OK)
+  public void stopEmergency(@RequestBody RequestDeviceAccess request) {
+    try {
+      ecgService.abortEmergencyCall(request);
+    } catch(Exception e) {
+      errorHandler.handleCustomException("ecgService.abortEmergencyCall()", "Could not process request", e);
+      throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Could not process request: " + e.getMessage(), e);
+    }
+  }
 }

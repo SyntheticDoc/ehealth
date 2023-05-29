@@ -6,7 +6,7 @@ import { faGear } from '@fortawesome/free-solid-svg-icons/faGear';
 import { faUser } from '@fortawesome/free-solid-svg-icons/faUser';
 import { faSignOutAlt } from '@fortawesome/free-solid-svg-icons/faSignOutAlt';
 
-import { getData, castEmergencyCall, getUserbyId } from './NetworkFunctions';
+import { getData, getUserbyId } from './NetworkFunctions';
 import Toast from 'react-native-toast-message';
 import { AppContext } from '../App';
 import { Audio } from 'expo-av';
@@ -34,8 +34,8 @@ const HomeScreen = ({ navigation }) => {
 
 	const getECGdata = async () => {
 		const postData = {
-			userName: 'User Userman1',
-			password: 'pwd',
+			userName: generaluser.name,
+			password: generaluser.password,
 			deviceIdentifier: 'user1DeviceSelfID',
 		};
 		console.log(postData)
@@ -44,7 +44,7 @@ const HomeScreen = ({ navigation }) => {
 
     if(healthStatus ==2 && activated==true){
 		const response = await fetch(
-			'http://'+ "172.16.0.35"+':8080/data/lastHealthStatus',
+			'http://'+ "172.16.0.10"+':8080/data/lastHealthStatus',
 			{
 				method: 'Post',
 				headers: {
@@ -75,6 +75,46 @@ const HomeScreen = ({ navigation }) => {
 		}
   }
 	};
+	const castEmergencyCall = (user) => {
+		fetch(
+		  "http://" +
+			"172.16.0.10" +
+			':8080/user/sendsms?recipient='+user.phone+'&message="SOS! '+user.name+' has problems! Please check! '+user.address,
+		  { method: "GET" }
+		)
+		  .then((response) => console.log(response))
+		  .catch((error) => {
+			//Error
+			console.error(error);
+		  });
+	  };
+
+
+	  const stopEmergency =()=>
+	  {
+		const postData = {
+			userName: generaluser.name,
+			password: generaluser.password,
+			deviceIdentifier: 'user1DeviceSelfID',
+		};
+		console.log(postData)
+
+		fetch(
+			"http://" +
+			  "172.16.0.10" +
+			  ':8080/user/sendsms?recipient='+user.phone+'&message="SOS! '+user.name+' has problems! Please check! '+user.address,
+			{ method: "GET" }
+		  )
+			.then((response) => console.log(response))
+			.catch((error) => {
+			  //Error
+			  Toast.show({
+				type: 'error',
+				text1: 'FAIL to inform backend',
+			});
+			  console.error(error);
+			});
+	  }
 
 	const [sound, setSound] = React.useState();
 
@@ -147,7 +187,7 @@ const HomeScreen = ({ navigation }) => {
 				setCountdown((previous) => {
 					if (previous == 1) {
 						setHealthStatus(0);
-						castEmergencyCall();
+						castEmergencyCall(generaluser);
 						clearInterval(timer.current);
 					}
 					return previous - 1;
@@ -193,6 +233,7 @@ const HomeScreen = ({ navigation }) => {
 				onPress={() => {
 					if (healthStatus == 2) {
 						setHealthStatus(1);
+						stopEmergency(); 
 						clearInterval(timer.current);
 					} else {
 						clearInterval(timer.current);

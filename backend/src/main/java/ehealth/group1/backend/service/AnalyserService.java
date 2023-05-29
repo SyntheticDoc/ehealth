@@ -60,7 +60,7 @@ public class AnalyserService {
         ECGSTATE[] stateList = new ECGSTATE[obs.getComponent().size()];
         ECGSTATE finalState = ECGSTATE.OK;
 
-        String comment = "No comment";
+        String comment = "No asystole detected";
 
         if(serverSettings.writeDataToDisk()) {
             datawriter.writeData(obs);
@@ -70,8 +70,33 @@ public class AnalyserService {
             graphicsModule.drawECG(obs.getComponent(), obs.getTimestampAsLocalDateTime());
         }
 
+        StringBuilder jelyResults = new StringBuilder();
+
         for(int i = 0; i < obs.getComponent().size(); i++) {
-            stateList[i] = analyseComponent(obs.getComponent().get(i), settings.getEcgAnalysisSettings());
+            SampledData rawData = obs.getComponent().get(i).getValueSampledData();
+            double[] data;
+
+            try {
+                data = Arrays.stream(rawData.getData().trim().split(" ")).mapToDouble(Double::parseDouble).toArray();
+            } catch(NumberFormatException e) {
+                errorHandler.handleCustomException("AnalyserService.analyseComponent()", "SampledData contained invalid data", e);
+                stateList[i] = ECGSTATE.INVALID;
+                continue;
+            }
+
+            try {
+                jelyResults.append(jelyAnalyzer.analyze(data, obs.getComponent().get(i).getValueSampledData().getInterval().doubleValue()));
+            } catch(Exception e) {
+                //jelyResults.append("Error in jelyAnalyzer: ").append(e.getMessage());
+                e.printStackTrace();
+                throw new Error("Error in JelyAnalyzer");
+            }
+
+            if(i < (obs.getComponent().size() - 1)) {
+                jelyResults.append("\n");
+            }
+
+            stateList[i] = analyseComponent(data, settings.getEcgAnalysisSettings());
         }
 
         int okStates = 0, invalidStates = 0, warningStates = 0;
@@ -110,6 +135,10 @@ public class AnalyserService {
             comment = "Possible asystole detected in at least one lead";
         }
 
+        comment += "\nJELY results: " + jelyResults;
+
+        LOGGER.info("Result comment:\n" + comment);
+
         return new ECGAnalysisResult(finalState, dtf.format(LocalDateTime.now()), comment);
     }
 
@@ -121,25 +150,13 @@ public class AnalyserService {
     /**
      * Analyses the ecg data of a specific component and returns the result as ECGSTATE.
      *
-     * @param c The component (ecg lead) holding the data to be analysed
+     * @param data The data of the component to be analysed
      * @param ecgAnalysisSettings The settings object holding settings for the analyser
      * @return ECGSTATE.OK if no ecg abnormalities were detected, ECGSTATE.INVALID if the data could not be analysed,
      * possibly due to some data format error, ECGSTATE.WARNING if the analysed data looks like an asystole.
      */
-    private ECGSTATE analyseComponent(Observation.ObservationComponentComponent c, ECGAnalysisSettings ecgAnalysisSettings) {
-        SampledData rawData = c.getValueSampledData();
-        double[] data;
-
-        try {
-            data = Arrays.stream(rawData.getData().trim().split(" ")).mapToDouble(Double::parseDouble).toArray();
-        } catch(NumberFormatException e) {
-            errorHandler.handleCustomException("AnalyserService.analyseComponent()", "SampledData contained invalid data", e);
-            return ECGSTATE.INVALID;
-        }
-
-        jelyAnalyzer.analyze(data);
-
-        LOGGER.info("Analyzing data:\n" + Arrays.toString(rawData.getData().split(" ")) + "\n");
+    private ECGSTATE analyseComponent(double[] data, ECGAnalysisSettings ecgAnalysisSettings) {
+        LOGGER.info("Analyzing data:\n" + Arrays.toString(data) + "\n");
 
         int largeDeviationCount = 0;
 

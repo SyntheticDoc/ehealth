@@ -79,6 +79,10 @@ public class DataService {
                 obsData.append(s.replace("nodata", componentIdentifier));
             } else if(s.contains("\"data\": \"nodata\"")) {
                 obsData.append(s.replace("nodata", parsedData.get("data").toString()));
+            } else if(s.contains("\"interval\": 10")) {
+                // Calculate sampling interval first from sampling rate in Hz
+                String interval = String.valueOf(1000 / Double.parseDouble(parsedData.get("sampling").toString()));
+                obsData.append(s.replace("10", interval));
             } else {
                 obsData.append(s);
             }

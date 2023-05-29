@@ -21,6 +21,7 @@ public class CustomObservation extends Observation {
     @Description(shortDefinition="Checksum for checking observation data integrity")
     private IntegerType checksum;
 
+
     /**
      * Extension for timestamp of observation
      */

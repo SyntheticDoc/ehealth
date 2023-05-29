@@ -2,9 +2,15 @@ import User from "../type/User";
 
 const IPFelix = "192.168.188.95";
 const IPLarissa = "10.0.0.58";
+const IPM = "10.0.0.74"
+
+
 
 const getData = () => {
-  fetch("http://catfact.ninja/fact", { method: "GET" })
+
+  
+
+  fetch("172.16.0.35:8080/data/lasthealthstatus?userName="+"&password="+"&deviceIdentifier", { method: "GET" })
     .then((response) => response.json())
     .then((responseJson) => {
       //setData(JSON.stringify(responseJson));

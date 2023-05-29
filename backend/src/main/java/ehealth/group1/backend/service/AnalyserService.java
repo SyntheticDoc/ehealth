@@ -10,6 +10,7 @@ import ehealth.group1.backend.helper.TransientServerSettings;
 import ehealth.group1.backend.helper.datawriter.Datawriter;
 import ehealth.group1.backend.helper.graphics.GraphicsModule;
 import ehealth.group1.backend.helper.jely.JelyAnalyzer;
+import ehealth.group1.backend.helper.jely.JelyAnalyzerResult;
 import org.hl7.fhir.r5.model.Observation;
 import org.hl7.fhir.r5.model.SampledData;
 import org.slf4j.Logger;
@@ -75,6 +76,7 @@ public class AnalyserService {
         for(int i = 0; i < obs.getComponent().size(); i++) {
             SampledData rawData = obs.getComponent().get(i).getValueSampledData();
             double[] data;
+            ECGSTATE jelyState = ECGSTATE.INVALID;
 
             try {
                 data = Arrays.stream(rawData.getData().trim().split(" ")).mapToDouble(Double::parseDouble).toArray();
@@ -85,10 +87,18 @@ public class AnalyserService {
             }
 
             try {
-                jelyResults.append(jelyAnalyzer.analyze(data, obs.getComponent().get(i).getValueSampledData().getInterval().doubleValue()));
+                JelyAnalyzerResult jelyAnalyzerResult = jelyAnalyzer.analyze(data, obs.getComponent().get(i).getValueSampledData().getInterval().doubleValue());
+
+                if(jelyAnalyzerResult.isWarning()) {
+                    jelyState = ECGSTATE.WARNING;
+                } else {
+                    jelyState = ECGSTATE.OK;
+                }
+
+                jelyResults.append(jelyAnalyzerResult);
             } catch(Exception e) {
-                //jelyResults.append("Error in jelyAnalyzer: ").append(e.getMessage());
-                e.printStackTrace();
+                jelyResults.append("Error in jelyAnalyzer: ").append(e.getMessage());
+                //e.printStackTrace();
                 throw new Error("Error in JelyAnalyzer");
             }
 
@@ -97,6 +107,10 @@ public class AnalyserService {
             }
 
             stateList[i] = analyseComponent(data, settings.getEcgAnalysisSettings());
+
+            if(stateList[i] == ECGSTATE.OK && jelyState == ECGSTATE.WARNING) {
+                stateList[i] = ECGSTATE.WARNING;
+            }
         }
 
         int okStates = 0, invalidStates = 0, warningStates = 0;

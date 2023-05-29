@@ -44,4 +44,8 @@ public class RingBuffer {
 
         return result;
     }
+
+    public void resetPointer() {
+        memPointer = 0;
+    }
 }

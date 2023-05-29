@@ -167,6 +167,15 @@ public class ECGService {
   public void abortEmergencyCall(RequestDeviceAccess request) throws IllegalAccessException {
     User user = grantDeviceAccess(request);
     LOGGER.warn("ECG emergency call aborted by user!");
+
+    // Mock status:
+    if(currentProfiles.contains("mock")) {
+      if(user.getName().equals("User Userman1") || user.getName().equals("User Userman2")) {
+        mockDataProvider.resetPointer(user.getName());
+        return;
+      }
+    }
+
     ECGStateHolder ecgStateHolder = ecgStateHolders.get(request.getDeviceIdentifier());
 
     if(ecgStateHolder == null) {

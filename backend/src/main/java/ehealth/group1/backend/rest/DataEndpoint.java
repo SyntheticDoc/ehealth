@@ -91,6 +91,7 @@ public class DataEndpoint {
   public ECGDataSet getDatasets(@RequestBody RequestDatasets request) {
     try {
       return ecgService.getDataSets(request);
+
     } catch(Exception e) {
       errorHandler.handleCustomException("ecgService.getDatasets()", "Could not process request", e);
       throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Could not process request: " + e.getMessage(), e);
@@ -102,6 +103,7 @@ public class DataEndpoint {
   public void stopEmergency(@RequestBody RequestDeviceAccess request) {
     try {
       ecgService.abortEmergencyCall(request);
+      LOGGER.info("Stop emergency worked!");
     } catch(Exception e) {
       errorHandler.handleCustomException("ecgService.abortEmergencyCall()", "Could not process request", e);
       throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Could not process request: " + e.getMessage(), e);

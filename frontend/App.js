@@ -28,8 +28,10 @@ export default function App() {
 				screenOptions={{
 					headerShown: false,
 				}}
-			><Stack.Screen name='Home' component={HomeScreen} />
+			>
 				<Stack.Screen name='Register' component={RegisterScreen} />
+				<Stack.Screen name='Home' component={HomeScreen} />
+				
 				
 				<Stack.Screen name='Settings' component={SettingsScreen} />
 				<Stack.Screen name='Login' component={LoginScreen} />

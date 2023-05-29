@@ -26,6 +26,9 @@ const HomeScreen = ({ navigation }) => {
     console.log(activated)
 	if (activated){
 		setHealthStatus(2);
+		setCountdown(30)
+		clearInterval(timer.current);
+		stopSound();
 	}
     
   };
@@ -65,7 +68,7 @@ const HomeScreen = ({ navigation }) => {
 			console.log(state);
       if(state =="OK"){
         setHealthStatus(2);
-      }else if(state =="WARNING"){
+      }else if(state =="CALLEMERGENCY"){
         setHealthStatus(1);
       }
 			Toast.show({
@@ -79,7 +82,7 @@ const HomeScreen = ({ navigation }) => {
 		fetch(
 		  "http://" +
 			"172.16.0.10" +
-			':8080/user/sendsms?recipient='+user.phone+'&message="SOS! '+user.name+' has problems! Please check! '+user.address,
+			':8080/user/sendsms?recipient='+user.phone+'&message="An automated ecg-monitoring device detected a possible fatal heart rhythm for: '+user.name+', location: '+user.address+'. Assume that the user is alone, helpless and cannot open the door. Immediately send an ambulance to the address provided. ',
 		  { method: "GET" }
 		)
 		  .then((response) => console.log(response))
@@ -97,15 +100,20 @@ const HomeScreen = ({ navigation }) => {
 			password: generaluser.password,
 			deviceIdentifier: 'user1DeviceSelfID',
 		};
-		console.log(postData)
+		console.log("Try to stop emergency: "+postData.userName+','+postData.password+','+postData.deviceIdentifier)
 
 		fetch(
 			"http://" +
 			  "172.16.0.10" +
-			  ':8080/user/sendsms?recipient='+user.phone+'&message="SOS! '+user.name+' has problems! Please check! '+user.address,
-			{ method: "GET" }
+			  ':8080/data/stopEmergency',
+			{ 	method: 'Post', 
+			headers: {
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify(postData),
+		}
 		  )
-			.then((response) => console.log(response))
+			.then((response) => console.log("response: "+response))
 			.catch((error) => {
 			  //Error
 			  Toast.show({
@@ -233,12 +241,12 @@ const HomeScreen = ({ navigation }) => {
 				onPress={() => {
 					if (healthStatus == 2) {
 						setHealthStatus(1);
-						stopEmergency(); 
 						clearInterval(timer.current);
 					} else {
 						clearInterval(timer.current);
 						setHealthStatus(2);
 						setCountdown(30);
+						stopEmergency();
 						stopSound();
 					}
 				}}

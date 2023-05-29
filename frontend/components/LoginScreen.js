@@ -68,10 +68,13 @@ const LoginScreen = ({ navigation }) => {
         handleToast();
         console.log("FAIL")
       }else{
+        
+
         setGeneraluser(json); 
         const user = generaluser; 
         user.password = password; 
         setGeneraluser(user)
+       
        
         
         Toast.show({

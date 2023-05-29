@@ -11,6 +11,13 @@ import org.hl7.fhir.r5.model.Resource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+/**
+ * This method defines a bean for the `ObjectMapper`, which is a JSON object mapper used for serialization and
+ * deserialization. It configures the `ObjectMapper` with a custom `SimpleModule` to handle serialization and
+ * deserialization of FHIR (Fast Healthcare Interoperability Resources) resources using the `FhirHapiSerializer`
+ * and `FhirHapiDeserializer` classes. The method registers the `SimpleModule` with the `ObjectMapper` and returns
+ * the configured `ObjectMapper` instance.
+ */
 @Configuration
 public class SerializationConfig {
 
@@ -37,6 +44,7 @@ public class SerializationConfig {
                 });
 
         mapper.registerModule(simpleModule);
+        mapper.findAndRegisterModules();
 
         return mapper;
     }

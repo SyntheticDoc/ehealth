@@ -3,6 +3,9 @@ package ehealth.group1.backend.helper.argon2crypto;
 import ehealth.group1.backend.entity.Argon2Parameters;
 import ehealth.group1.backend.helper.security.MachineParameters;
 import ehealth.group1.backend.repositories.SecurityDataRepository;
+import jakarta.persistence.Transient;
+import lombok.AccessLevel;
+import lombok.Setter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.crypto.argon2.Argon2PasswordEncoder;
@@ -16,6 +19,11 @@ import java.time.temporal.ChronoUnit;
 @Component
 public class Argon2ParameterChecker {
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+
+    private final static String paramNameSlow = "slow";
+    private final static String paramNameFast = "fast";
+    private final static int slowHashMilliseconds = 1000;
+    private final static int fastHashMilliseconds = 300;
 
     private final SecurityDataRepository securityDataRepository;
 
@@ -150,5 +158,21 @@ public class Argon2ParameterChecker {
         byte[] salt = new byte[length];
         secureRandom.nextBytes(salt);
         return salt;
+    }
+
+    public static String getParamNameSlow() {
+        return paramNameSlow;
+    }
+
+    public static String getParamNameFast() {
+        return paramNameFast;
+    }
+
+    public static int getSlowHashMilliseconds() {
+        return slowHashMilliseconds;
+    }
+
+    public static int getFastHashMilliseconds() {
+        return fastHashMilliseconds;
     }
 }

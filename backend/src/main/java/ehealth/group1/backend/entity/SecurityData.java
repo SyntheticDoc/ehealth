@@ -8,6 +8,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+/**
+ * Class for wrapping important security configuration data from the SecurityRepository.
+ */
 @Entity
 @NoArgsConstructor
 @Getter @Setter

@@ -1,8 +1,8 @@
 package ehealth.group1.backend.rest;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import ehealth.group1.backend.config.FhirHapiDeserializer;
 import ehealth.group1.backend.customfhirstructures.CustomObservation;
+import ehealth.group1.backend.entity.*;
+import ehealth.group1.backend.helper.ErrorHandler;
 import ehealth.group1.backend.entity.ECGHealthStatus;
 import ehealth.group1.backend.entity.RequestLastHealthStatus;
 import ehealth.group1.backend.entity.User;
@@ -16,6 +16,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
@@ -26,9 +27,11 @@ import java.util.Arrays;
 public class DataEndpoint {
   private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
   ECGService ecgService;
+  ErrorHandler errorHandler;
 
-  public DataEndpoint(ECGService ecgService){
+  public DataEndpoint(ECGService ecgService, ErrorHandler errorHandler){
     this.ecgService = ecgService;
+    this.errorHandler = errorHandler;
   }
 
   // Method for letting spring boot deserialize the json immediately into a custom Observation, using a custom
@@ -38,7 +41,12 @@ public class DataEndpoint {
   @ResponseStatus(HttpStatus.OK)
   public void receiveObservation(@RequestBody CustomObservation obs) {
     LOGGER.info("Received ecg data from client (obs)");
-    ecgService.processECG(obs);
+    try {
+      ecgService.processECG(obs);
+    } catch(Exception e) {
+      errorHandler.handleCustomException("ecgService.processECG_customEsp32()", "Could not process data", e);
+      throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Could not process data: " + e.getMessage(), e);
+    }
   }
 
   // Method for processing incoming data missing a "Content-Type: application/json"-header or otherwise not conforming
@@ -47,7 +55,12 @@ public class DataEndpoint {
   @ResponseStatus(HttpStatus.OK)
   public void receiveJson(@RequestBody String data) {
     LOGGER.info("Received ecg data from client");
-    ecgService.processECG(data);
+    try {
+      ecgService.processECG(data);
+    } catch(Exception e) {
+      errorHandler.handleCustomException("ecgService.processECG()", "Could not process data", e);
+      throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Could not process data: " + e.getMessage(), e);
+    }
   }
 
   // Method for processing incoming reduced dataset explicitly from our custom esp32-device
@@ -55,7 +68,12 @@ public class DataEndpoint {
   @ResponseStatus(HttpStatus.OK)
   public void receiveJson_fromCustomEsp32(@RequestBody String data) {
     LOGGER.info("Received ecg data from custom ecp 32");
-    ecgService.processECG_customEsp32(data);
+    try {
+      ecgService.processECG_customEsp32(data);
+    } catch(Exception e) {
+      errorHandler.handleCustomException("ecgService.processECG_customEsp32()", "Could not process data", e);
+      throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Could not process data: " + e.getMessage(), e);
+    }
   }
 
   // For testing purposes, reflects the body of the incoming post message back to the sender
@@ -68,8 +86,37 @@ public class DataEndpoint {
 
   @PostMapping("/lastHealthStatus")
   @ResponseStatus(HttpStatus.OK)
-  public ECGHealthStatus reportLastHealthStatus(@RequestBody RequestLastHealthStatus request) {
-    return ecgService.getLastHealthStatus(request);
+  public ECGHealthStatus reportLastHealthStatus(@RequestBody RequestDeviceAccess request) {
+    try {
+      return ecgService.getLastHealthStatus(request);
+    } catch(Exception e) {
+      errorHandler.handleCustomException("ecgService.getLastHealthStatus()", "Could not process request", e);
+      throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Could not process request: " + e.getMessage(), e);
+    }
+  }
+
+  @PostMapping("/getDataset")
+  @ResponseStatus(HttpStatus.OK)
+  public ECGDataSet getDatasets(@RequestBody RequestDatasets request) {
+    try {
+      return ecgService.getDataSets(request);
+
+    } catch(Exception e) {
+      errorHandler.handleCustomException("ecgService.getDatasets()", "Could not process request", e);
+      throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Could not process request: " + e.getMessage(), e);
+    }
+  }
+
+  @PostMapping("/stopEmergency")
+  @ResponseStatus(HttpStatus.OK)
+  public void stopEmergency(@RequestBody RequestDeviceAccess request) {
+    try {
+      ecgService.abortEmergencyCall(request);
+      LOGGER.info("Stop emergency worked!");
+    } catch(Exception e) {
+      errorHandler.handleCustomException("ecgService.abortEmergencyCall()", "Could not process request", e);
+      throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Could not process request: " + e.getMessage(), e);
+    }
   }
 
   @GetMapping("/jelytest")

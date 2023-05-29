@@ -27,7 +27,7 @@ public class Initializer {
 
         if(settingsRepository.findByUserId(0L) == null) {
             LOGGER.warn("No default ecg settings found!");
-            dataLoader.defaultSettings();
+            //dataLoader.defaultSettings();
         }
     }
 }

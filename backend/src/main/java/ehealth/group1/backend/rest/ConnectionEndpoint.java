@@ -1,5 +1,7 @@
 package ehealth.group1.backend.rest;
 
+import com.fasterxml.jackson.databind.JsonDeserializer;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import ehealth.group1.backend.entity.ConnectDeviceData;
 import ehealth.group1.backend.entity.ECGDevice;
 import ehealth.group1.backend.entity.FrontendDevice;
@@ -36,9 +38,16 @@ public class ConnectionEndpoint {
      * @return A unique device identifier as String
      */
     @PostMapping("/registerECGDevice")
+    @JsonDeserialize(using = JsonDeserializer.class)
     @ResponseStatus(HttpStatus.CREATED)
     public String registerECGDevice(@RequestBody ECGDevice ecgDevice) {
-        return connectionService.registerECGDevice(ecgDevice);
+        LOGGER.info("ECGDevice: " + ecgDevice);
+        try {
+            return connectionService.registerECGDevice(ecgDevice);
+        } catch(Exception e) {
+            errorHandler.handleCustomException("connectionService.registerECGDevice()", "Could not register device", e);
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Could not register device: " + e.getMessage(), e);
+        }
     }
 
     /**
@@ -51,10 +60,20 @@ public class ConnectionEndpoint {
      */
     @PostMapping("/registerFrontendDevice")
     @ResponseStatus(HttpStatus.CREATED)
-    public String registerECGDevice(@RequestBody FrontendDevice frontendDevice) {
-        return connectionService.registerFrontendDevice(frontendDevice);
+    public String registerFrontendDevice(@RequestBody FrontendDevice frontendDevice) {
+        try {
+            return connectionService.registerFrontendDevice(frontendDevice);
+        } catch(Exception e) {
+            errorHandler.handleCustomException("connectionService.registerFrontendDevice()", "Could not register device", e);
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Could not register device: " + e.getMessage(), e);
+        }
     }
 
+    /**
+     * Registers a user in the database.
+     *
+     * @param user
+     */
     @PostMapping("/registerUser")
     @ResponseStatus(HttpStatus.CREATED)
     public void registerUser(@RequestBody User user) {
@@ -62,10 +81,16 @@ public class ConnectionEndpoint {
             connectionService.registerUser(user);
         } catch(PersistenceException e) {
             errorHandler.handleCustomException("connectionService.registerUser()", "Could not register user", e);
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "Could not register user", e);
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Could not register user: " +  e.getMessage(), e);
         }
     }
 
+    /**
+     * Connects an ECGDevice to a specific user.
+     *
+     * @param data Provides data about the user and a pin to identify the ECGDevice to connect to.
+     * @return Returns a JSON containing the generated identifier for the connected ECGDevice.
+     */
     @PostMapping("/connectECGDeviceToUser")
     @ResponseStatus(HttpStatus.CREATED)
     public String connectECGDeviceToUser(@RequestBody ConnectDeviceData data) {
@@ -73,7 +98,7 @@ public class ConnectionEndpoint {
             return connectionService.connectECGDeviceToUser(data);
         } catch(PersistenceException e) {
             errorHandler.handleCustomException("connectionService.connectECGDeviceToUser()", "Could not connect ECGDevice to user", e);
-            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Could not connect ECGDevice to user", e);
+            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Could not connect ECGDevice to user: " + e.getMessage(), e);
         }
     }
 }

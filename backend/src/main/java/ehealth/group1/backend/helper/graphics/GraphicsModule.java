@@ -1,40 +1,56 @@
 package ehealth.group1.backend.helper.graphics;
 
 import ehealth.group1.backend.entity.GraphicsSettings;
+import ehealth.group1.backend.helper.TransientServerSettings;
 import ehealth.group1.backend.helper.dataloaders.DefaultDataLoader;
 import org.hl7.fhir.r5.model.Observation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
-import java.awt.Color;
+import java.awt.*;
 import java.lang.invoke.MethodHandles;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.DoubleSummaryStatistics;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 @Component
-public class GraphicsModule {
+public class GraphicsModule extends Thread {
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     private final int lead_num = 1;
-    private final int lead_y_size;
+    private int lead_y_size;
 
     private final DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd.MM.uuuu HH:mm:ss:SSS");
 
     private DefaultDataLoader dataLoader;
     private GraphicsSettings gSettings;
+    private TransientServerSettings serverSettings;
+
+    private ExecutorService executor = Executors.newSingleThreadExecutor();
 
     private double titleBar_centerX;
     private double titleBar_centerY;
     private double titleBar_halfWidth;
     private double titleBar_halfHeight;
 
-    public GraphicsModule(DefaultDataLoader dataLoader) {
+    public GraphicsModule(DefaultDataLoader dataLoader, TransientServerSettings serverSettings) {
         this.dataLoader = dataLoader;
         this.gSettings = dataLoader.getGraphicsSettings();
+        this.serverSettings = serverSettings;
+
+        if(!serverSettings.drawEcgData()) {
+            lead_y_size = 0;
+        }
+    }
+
+    public void init() {
+        LOGGER.info("Creating graphics window: " + gSettings.getCanvas_x_size() + "x" + gSettings.getCanvas_y_size());
+
         StdDraw.setCanvasSize(gSettings.getCanvas_x_size(), gSettings.getCanvas_y_size());
         StdDraw.setXscale(0, gSettings.getCanvas_x_size());
         StdDraw.setYscale(0, gSettings.getCanvas_y_size());
@@ -52,6 +68,20 @@ public class GraphicsModule {
     }
 
     public void drawECG(List<Observation.ObservationComponentComponent> comps, LocalDateTime timestamp) {
+        LOGGER.debug("Draw thread ID: " + GraphicsModule.currentThread().getId());
+        executor.submit(() -> {
+            LOGGER.info("Submitting run task to ExecutorService");
+            this.run(comps, timestamp);
+        });
+    }
+
+    public void run(List<Observation.ObservationComponentComponent> comps, LocalDateTime timestamp) {
+        if(!serverSettings.drawEcgData()) {
+            return;
+        }
+
+        LOGGER.debug("Run thread ID: " + GraphicsModule.currentThread().getId());
+
         // Draw background
         StdDraw.clear(gSettings.getBackground());
 
@@ -85,7 +115,6 @@ public class GraphicsModule {
         StdDraw.setFont(gSettings.getFont_leadName());
         StdDraw.setPenColor(gSettings.getText());
 
-        String s = comp.getCode().getCoding().get(0).getDisplay();
         StdDraw.textLeft(10, (mod * lead_y_size) - 20, comp.getCode().getCoding().get(0).getDisplay());
 
         double[] data = transformData(

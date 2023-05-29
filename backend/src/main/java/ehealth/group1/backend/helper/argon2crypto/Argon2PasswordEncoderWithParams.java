@@ -61,6 +61,9 @@ public class Argon2PasswordEncoderWithParams extends Argon2PasswordEncoder {
 
         LOGGER.debug("Argon2 - hashed string in " + ChronoUnit.MILLIS.between(start, end) + " ms");
 
-        return Base64.getEncoder().encodeToString(hash);
+
+        return String.format("$%s$v=%d$m=%d,t=%d,p=%d$%s$%s", params.getArgonType().toLowerCase(), 19,
+                (int) params.getMemoryCost(), params.getIterations(), params.getParallelism(), salt,
+                Base64.getEncoder().encodeToString(hash));
     }
 }

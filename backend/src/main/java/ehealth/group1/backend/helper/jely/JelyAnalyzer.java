@@ -13,6 +13,7 @@ import org.springframework.stereotype.Component;
 import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 
 @Component
 public class JelyAnalyzer {
@@ -20,7 +21,7 @@ public class JelyAnalyzer {
 
     public JelyAnalyzerResult analyze(double[] ecgData, double interval) {
         LOGGER.info("Starting JelyAnalyzer...");
-        Ecglib.setDebugMode(true);
+        Ecglib.setDebugMode(false);
         LOGGER.debug("EcgLib.isDebugMode? " + Ecglib.isDebugMode());
 
         int samplingRate = (int) (1000 / interval);
@@ -40,6 +41,16 @@ public class JelyAnalyzer {
             return new JelyAnalyzerResult(false,"JELY couldn't find any heartbeats in the current data set. Skipping JELY analysis.");
         }
 
+        int qrsComplexNum = 0;
+
+        for(Heartbeat b : beatList) {
+            if(b.getQrs() != null) {
+                qrsComplexNum++;
+            }
+        }
+
+        LOGGER.info("QRS complexes found: " + qrsComplexNum);
+
 //        for(Heartbeat h : beatList) {
 //            QrsComplex qrs = h.getQrs();
 //            int rPeak = qrs.getRPosition();
@@ -52,16 +63,22 @@ public class JelyAnalyzer {
         TsipourasRuleBasedClassifier classifierTsipouras = new TsipourasRuleBasedClassifier();
 
         ArrayList<BeatClass> bclassesPhysiological = new ArrayList<>();
-        ArrayList<BeatClass> bclassesGradl = new ArrayList<>();
+        ArrayList<GradlDecisionTreeClassifier.GradlClass> bclassesGradl = new ArrayList<>();
         //ArrayList<BeatClass> bclassesLeutheuser = new ArrayList<>();
-        ArrayList<BeatClass> bclassesTsipouras = new ArrayList<>();
+        ArrayList<TsipourasRuleBasedClassifier.TsipourasClass> bclassesTsipouras = new ArrayList<>();
+
+        ArrayList<QrsComplex> gradlQRSComplexes = new ArrayList<>();
+        ArrayList<QrsComplex> tsipourasQRSComplexes = new ArrayList<>();
 
         for(Heartbeat h : beatList) {
             bclassesPhysiological.add(classifierPhysiological.classify(h));
-            bclassesGradl.add(classifierGradl.classify(h));
+            gradlQRSComplexes.add(h.getQrs());
             //bclassesLeutheuser.add(classifierLeutheuser.classify(h));
-            bclassesTsipouras.add(classifierTsipouras.classify(h));
+            tsipourasQRSComplexes.add(h.getQrs());
         }
+
+        bclassesGradl.addAll(classifierGradl.classifyToGradlClass(gradlQRSComplexes));
+        bclassesTsipouras.addAll(classifierTsipouras.classifyToTsipourasClass(tsipourasQRSComplexes));
 
         ClassifiedBeatList physiologicalList = new ClassifiedBeatList();
         ClassifiedBeatList gradlList = new ClassifiedBeatList();
@@ -77,21 +94,29 @@ public class JelyAnalyzer {
             }
         }
 
-        for (BeatClass bclass : bclassesGradl) {
-            if (bclass != null && bclass.isAbnormal()) {
-                gradlList.addBeat(bclass.getExplanation());
+        for (GradlDecisionTreeClassifier.GradlClass bclass : bclassesGradl) {
+            if (bclass != null && bclass != GradlDecisionTreeClassifier.GradlClass.NORMAL &&
+                    bclass != GradlDecisionTreeClassifier.GradlClass.UNKNOWN &&
+                    bclass != GradlDecisionTreeClassifier.GradlClass.ARTIFACT) {
+                gradlList.addBeat(bclass.name());
                 hasJelyWarning = true;
+            } else if(bclass == GradlDecisionTreeClassifier.GradlClass.UNKNOWN) {
+                gradlList.addBeat(bclass.name());
+            } else if(bclass == GradlDecisionTreeClassifier.GradlClass.ARTIFACT) {
+                gradlList.addBeat(bclass.name() + "(NORMAL)");
             } else {
-                gradlList.addBeat("Normal beat");
+                gradlList.addBeat("NORMAL");
             }
         }
 
-        for (BeatClass bclass : bclassesTsipouras) {
-            if (bclass != null && bclass.isAbnormal()) {
-                tsipourasList.addBeat(bclass.getExplanation());
+        for (TsipourasRuleBasedClassifier.TsipourasClass bclass : bclassesTsipouras) {
+            if (bclass != null && bclass != TsipourasRuleBasedClassifier.TsipourasClass.NORMAL && bclass != TsipourasRuleBasedClassifier.TsipourasClass.UNKNOWN) {
+                tsipourasList.addBeat(bclass.name());
                 hasJelyWarning = true;
+            } else if(bclass == TsipourasRuleBasedClassifier.TsipourasClass.UNKNOWN) {
+                gradlList.addBeat(bclass.name());
             } else {
-                tsipourasList.addBeat("Normal beat");
+                tsipourasList.addBeat("NORMAL");
             }
         }
 
@@ -100,6 +125,10 @@ public class JelyAnalyzer {
         ArrayList<String> classResultsTsipouras = tsipourasList.getResult();
 
         StringBuilder result = new StringBuilder();
+
+        Collections.sort(classResultsPhysiological);
+        Collections.sort(classResultsGradl);
+        Collections.sort(classResultsTsipouras);
 
         result.append("JELY ANALYZER RESULTS").append("\n").append("Physiological classifier:\n");
 

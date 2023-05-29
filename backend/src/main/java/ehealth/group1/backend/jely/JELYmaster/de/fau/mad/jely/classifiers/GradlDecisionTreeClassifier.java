@@ -39,8 +39,8 @@ import ehealth.group1.backend.jely.JELYmaster.de.fau.mad.jely.QrsClass;
  */
 public class GradlDecisionTreeClassifier implements Classifier {
 
-    private enum GradlClass {
-        UNKNOWN, NORMAL, PVC, PVC_ABERRANT, BB_BLOCK, ESCAPE, APC, APC_ABERRANT, PREMATURE, ABERRANT,
+    public enum GradlClass {
+        UNKNOWN, NORMAL, PVC, PVC_ABERRANT, BB_BLOCK, ESCAPE, APC, APC_ABERRANT, PREMATURE, ABERRANT, ARTIFACT
     }
 
     private final int NUMBER_CANDIDATES = 6;
@@ -83,6 +83,120 @@ public class GradlDecisionTreeClassifier implements Classifier {
     public void setTemplates(QrsComplex template1, QrsComplex template2) {
         this.template1 = template1;
         this.template2 = template2;
+    }
+
+    /**
+     * Classifies a list of QRS complexes using the decision tree classifier of Gradl.
+     *
+     * @param qrsComplexes the list of QRS complexes to be classified
+     * @return a list of QRS classes corresponding to the QRS complexes
+     */
+    public List<GradlClass> classifyToGradlClass(List<QrsComplex> qrsComplexes) {
+        selectTemplates(qrsComplexes);
+        ArrayList<GradlClass> qrsClasses = new ArrayList<>();
+        for (int i = 0; i < qrsComplexes.size(); i++) {
+            // only ignore first QrsComplex
+            if (i < 1) {
+                classifyNext(qrsComplexes.get(i));
+                qrsClasses.add(GradlClass.UNKNOWN);
+                continue;
+            }
+            qrsClasses.add(classifyNextToGradlClass(qrsComplexes.get(i)));
+        }
+        return qrsClasses;
+    }
+
+    /**
+     * Classifies a single QRS complex using the decision tree classifier of Gradl.
+     *
+     * @param qrsComplex the QRS to be classified
+     * @return a QRS class corresponding to the QRS complex
+     */
+    public GradlClass classifyNextToGradlClass(QrsComplex qrsComplex) {
+
+        // check QRS complexes
+        if (qrsComplex == null || precursor == null || template1 == null || template2 == null) {
+            // set QRS complex as precursor
+            precursor = qrsComplex;
+            // map and return QRS class
+            return GradlClass.UNKNOWN;
+        }
+
+        // initialize QRS class
+        GradlClass gradlClass = GradlClass.NORMAL;
+        // GradlRhythm gradlRhythm = GradlRhythm.NONE;
+        // extract features
+        double rrInterval = qrsComplex.getRRInterval() * 1000;
+        double rrIntervalPrior = precursor.getRRInterval() * 1000;
+        double qrsWidth = qrsComplex.getQRSWidth() * 1000;
+        double qrsWidthPrior = precursor.getQRSWidth() * 1000;
+        double crossCorrelation1 = qrsComplex.getCrossCorrelation(template1);
+        double crossCorrelation2 = qrsComplex.getCrossCorrelation(template2);
+        double areaDifference1 = qrsComplex.getAreaDifference(template1);
+        double areaDifference2 = qrsComplex.getAreaDifference(template2);
+
+        // analyze QRS width
+        if (qrsWidth > 130) {
+            gradlClass = GradlClass.BB_BLOCK;
+        } else if (qrsWidth < 45) {
+            gradlClass = GradlClass.PVC;
+        }
+        // analyze cross correlation and area difference
+        if (crossCorrelation1 < 0.2d || crossCorrelation2 < 0.2d) {
+            // gradlRhythm = GradlRhythm.ARTIFACT;
+        }
+        if (crossCorrelation1 < 0.3d || crossCorrelation2 < 0.3d) {
+            if (crossCorrelation1 < 0.2d || crossCorrelation2 < 0.2d) {
+                gradlClass = GradlClass.ARTIFACT;
+            } else {
+                gradlClass = GradlClass.ABERRANT;
+            }
+        } else if (crossCorrelation1 < 0.6d || crossCorrelation2 < 0.6d) {
+            gradlClass = GradlClass.PVC_ABERRANT;
+        } else if (crossCorrelation1 < 0.9d && crossCorrelation2 < 0.9d) {
+            gradlClass = GradlClass.PVC;
+        } else if (crossCorrelation1 < 0.98d && crossCorrelation2 < 0.98d) {
+            if (areaDifference1 > 0.7d || areaDifference2 > 0.7d) {
+                gradlClass = GradlClass.ABERRANT;
+            } else if (areaDifference1 > 0.5d || areaDifference2 > 0.5d) {
+                gradlClass = GradlClass.PVC_ABERRANT;
+            } else if (areaDifference1 > 0.2d && areaDifference2 > 0.2d) {
+                gradlClass = GradlClass.PVC;
+            }
+        }
+        // analyze RR interval
+        if ((rrInterval >= rrIntervalPrior * 1.5d && rrInterval > 800) || rrInterval > 1700) {
+            // gradlRhythm = GradlRhythm.AV_BLOCK;
+            if (gradlClass == GradlClass.NORMAL) {
+                gradlClass = GradlClass.APC;
+            }
+        } else if (rrInterval > 1 && rrInterval < 460) {
+            if (rrInterval > rrIntervalPrior * 0.92f) {
+                if (gradlClass == GradlClass.NORMAL && (crossCorrelation1 < 0.96d || crossCorrelation2 < 0.96d)) {
+                    gradlClass = GradlClass.APC;
+                }
+            } else {
+                // gradlRhythm = GradlRhythm.FUSION;
+            }
+            if (rrInterval < 400) {
+                if (crossCorrelation1 < 0.6d || crossCorrelation2 < 0.6d) {
+                    gradlClass = GradlClass.APC_ABERRANT;
+                } else {
+                    gradlClass = GradlClass.APC;
+                }
+            }
+        } else if (rrIntervalPrior > 800 && rrInterval < rrIntervalPrior * 0.6f) {
+            gradlClass = GradlClass.ESCAPE;
+        } else if (gradlClass == GradlClass.NORMAL && qrsWidth > 10 && qrsWidth < qrsWidthPrior * 0.6f
+                && (areaDifference1 > 0.1 || areaDifference2 > 0.1)) {
+            gradlClass = GradlClass.PREMATURE;
+        }
+
+        // set QRS complex as precursor
+        precursor = qrsComplex;
+
+        // map and return QRS class
+        return gradlClass;
     }
 
     /**

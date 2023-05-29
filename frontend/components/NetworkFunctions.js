@@ -22,11 +22,11 @@ const getData = () => {
       console.error(error);
     });
 };
-const castEmergencyCall = () => {
+const castEmergencyCall = (phone) => {
   fetch(
     "http://" +
       IPLarissa +
-      ':8080/user/sendsms?recipient=436649150335&message="Hey buddy, your heart is fine"',
+      ':8080/user/sendsms?recipient=++&message="Hey buddy, your heart is fine"',
     { method: "GET" }
   )
     .then((response) => console.log(response))

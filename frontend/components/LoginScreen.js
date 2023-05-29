@@ -52,7 +52,7 @@ const LoginScreen = ({ navigation }) => {
 
       const response = await fetch(
         "http://" +
-                  "172.16.0.35" +
+                  "172.16.0.10" +
                   ":8080/user/get-user?name=" +
                   name +
                   "&password=" +
@@ -68,10 +68,13 @@ const LoginScreen = ({ navigation }) => {
         handleToast();
         console.log("FAIL")
       }else{
+        
+
         setGeneraluser(json); 
         const user = generaluser; 
         user.password = password; 
         setGeneraluser(user)
+       
        
         
         Toast.show({

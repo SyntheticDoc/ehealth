@@ -166,6 +166,7 @@ public class ECGService {
 
   public void abortEmergencyCall(RequestDeviceAccess request) throws IllegalAccessException {
     User user = grantDeviceAccess(request);
+    LOGGER.info("abort emergency call");
     LOGGER.warn("ECG emergency call aborted by user!");
 
     // Mock status:

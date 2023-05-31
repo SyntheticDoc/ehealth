@@ -173,9 +173,16 @@ public class AnalyserService {
         LOGGER.info("Analyzing data:\n" + Arrays.toString(data) + "\n");
 
         int largeDeviationCount = 0;
+        int step;
 
-        for(int i = 0; i < (data.length - 1); i++) {
-            if (Math.abs(data[i] - data[i + 1]) > ecgAnalysisSettings.getMaxDeviation()) {
+        if((data.length / 100) > 1) {
+            step = data.length / 100;
+        } else {
+            step = 1;
+        }
+
+        for(int i = 0; (i + step) < data.length; i += step) {
+            if (Math.abs(data[i] - data[i + step]) > ecgAnalysisSettings.getMaxDeviation()) {
                 largeDeviationCount++;
             }
 

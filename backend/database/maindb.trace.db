@@ -1,0 +1,165 @@
+2023-06-01 14:22:28 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLDataException: Value too long for column "DATA CHARACTER VARYING(255)": "'6.52 2.74 3.81 3.80 4.42 3.92 4.43 3.98 4.65 4.25 4.62 4.18 4.75 4.24 4.85 4.41... (500)"; SQL statement:
+insert into ecgdata (component_id, data, ecg_analysis_result_id, timestamp, id) values (?, ?, ?, ?, ?) [22001-214]
+2023-06-01 14:22:31 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLDataException: Value too long for column "DATA CHARACTER VARYING(255)": "'4.69 5.55 4.40 5.25 4.39 5.25 4.46 4.97 3.99 4.84 4.01 4.89 4.06 5.03 4.26 5.19... (500)"; SQL statement:
+insert into ecgdata (component_id, data, ecg_analysis_result_id, timestamp, id) values (?, ?, ?, ?, ?) [22001-214]
+2023-06-01 14:22:33 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLDataException: Value too long for column "DATA CHARACTER VARYING(255)": "'5.46 5.98 4.82 5.40 4.87 5.71 5.32 5.88 5.04 5.34 3.99 4.60 3.80 4.48 3.80 4.46... (499)"; SQL statement:
+insert into ecgdata (component_id, data, ecg_analysis_result_id, timestamp, id) values (?, ?, ?, ?, ?) [22001-214]
+2023-06-01 14:22:35 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLDataException: Value too long for column "DATA CHARACTER VARYING(255)": "'6.38 4.90 5.78 4.53 5.61 4.46 5.60 4.10 5.05 3.81 4.95 3.83 4.85 3.74 4.85 3.78... (500)"; SQL statement:
+insert into ecgdata (component_id, data, ecg_analysis_result_id, timestamp, id) values (?, ?, ?, ?, ?) [22001-214]
+2023-06-01 14:22:38 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLDataException: Value too long for column "DATA CHARACTER VARYING(255)": "'4.65 5.58 4.33 5.37 4.21 5.02 3.87 6.44 9.18 7.34 2.26 3.95 3.30 4.49 3.43 4.65... (499)"; SQL statement:
+insert into ecgdata (component_id, data, ecg_analysis_result_id, timestamp, id) values (?, ?, ?, ?, ?) [22001-214]
+2023-06-01 14:22:41 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLDataException: Value too long for column "DATA CHARACTER VARYING(255)": "'5.20 6.18 4.61 5.59 4.42 5.52 4.51 5.17 3.86 4.96 3.90 4.92 3.79 4.92 3.87 4.86... (501)"; SQL statement:
+insert into ecgdata (component_id, data, ecg_analysis_result_id, timestamp, id) values (?, ?, ?, ?, ?) [22001-214]
+2023-06-01 14:22:43 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLDataException: Value too long for column "DATA CHARACTER VARYING(255)": "'5.93 6.29 4.42 5.27 8.01 10.00 5.32 3.32 3.47 4.05 3.78 4.03 3.83 4.11 3.90 4.2... (500)"; SQL statement:
+insert into ecgdata (component_id, data, ecg_analysis_result_id, timestamp, id) values (?, ?, ?, ?, ?) [22001-214]
+2023-06-01 14:22:45 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLDataException: Value too long for column "DATA CHARACTER VARYING(255)": "'6.60 5.47 6.07 5.06 6.06 5.09 6.08 4.60 5.37 4.21 5.09 3.96 4.88 3.88 4.85 3.88... (499)"; SQL statement:
+insert into ecgdata (component_id, data, ecg_analysis_result_id, timestamp, id) values (?, ?, ?, ?, ?) [22001-214]
+2023-06-01 14:22:47 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLDataException: Value too long for column "DATA CHARACTER VARYING(255)": "'5.57 4.71 5.43 4.54 5.50 4.59 5.62 4.43 5.16 4.34 5.32 4.46 5.32 4.45 5.38 4.37... (500)"; SQL statement:
+insert into ecgdata (component_id, data, ecg_analysis_result_id, timestamp, id) values (?, ?, ?, ?, ?) [22001-214]
+2023-06-01 14:22:49 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLDataException: Value too long for column "DATA CHARACTER VARYING(255)": "'4.25 5.63 5.60 10.00 8.19 4.49 3.29 4.21 3.37 4.42 3.32 4.38 3.40 4.40 3.55 4.5... (500)"; SQL statement:
+insert into ecgdata (component_id, data, ecg_analysis_result_id, timestamp, id) values (?, ?, ?, ?, ?) [22001-214]
+2023-06-01 14:22:52 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLDataException: Value too long for column "DATA CHARACTER VARYING(255)": "'5.62 5.24 8.66 10.00 5.40 3.40 4.53 3.92 4.39 3.72 4.34 3.87 4.39 3.83 4.46 3.9... (500)"; SQL statement:
+insert into ecgdata (component_id, data, ecg_analysis_result_id, timestamp, id) values (?, ?, ?, ?, ?) [22001-214]
+2023-06-01 14:22:54 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLDataException: Value too long for column "DATA CHARACTER VARYING(255)": "'5.20 6.45 5.05 6.03 5.02 6.01 5.11 5.74 4.32 5.21 3.99 4.91 3.81 4.79 3.75 4.73... (499)"; SQL statement:
+insert into ecgdata (component_id, data, ecg_analysis_result_id, timestamp, id) values (?, ?, ?, ?, ?) [22001-214]
+2023-06-01 14:22:56 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLDataException: Value too long for column "DATA CHARACTER VARYING(255)": "'5.51 5.81 5.47 4.80 5.27 4.92 5.24 4.27 4.52 4.02 4.61 4.25 4.93 4.74 5.46 4.76... (501)"; SQL statement:
+insert into ecgdata (component_id, data, ecg_analysis_result_id, timestamp, id) values (?, ?, ?, ?, ?) [22001-214]
+2023-06-01 14:22:58 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLDataException: Value too long for column "DATA CHARACTER VARYING(255)": "'5.98 5.18 5.32 4.71 5.20 4.57 5.15 4.57 4.99 4.09 4.56 3.94 4.43 3.87 4.38 3.83... (499)"; SQL statement:
+insert into ecgdata (component_id, data, ecg_analysis_result_id, timestamp, id) values (?, ?, ?, ?, ?) [22001-214]
+2023-06-01 14:23:01 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLDataException: Value too long for column "DATA CHARACTER VARYING(255)": "'6.00 4.72 5.78 4.49 5.70 4.45 5.77 4.08 5.09 4.02 5.37 4.34 5.97 4.73 5.61 3.87... (499)"; SQL statement:
+insert into ecgdata (component_id, data, ecg_analysis_result_id, timestamp, id) values (?, ?, ?, ?, ?) [22001-214]
+2023-06-01 14:23:04 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLDataException: Value too long for column "DATA CHARACTER VARYING(255)": "'6.19 5.36 5.37 4.75 5.16 4.61 5.15 4.25 4.10 4.07 7.19 10.00 5.12 2.72 3.89 3.7... (500)"; SQL statement:
+insert into ecgdata (component_id, data, ecg_analysis_result_id, timestamp, id) values (?, ?, ?, ?, ?) [22001-214]
+2023-06-01 14:23:06 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLDataException: Value too long for column "DATA CHARACTER VARYING(255)": "'5.25 6.44 4.55 5.41 4.33 5.26 3.90 4.94 6.13 10.00 4.80 3.49 2.97 4.36 3.40 4.4... (501)"; SQL statement:
+insert into ecgdata (component_id, data, ecg_analysis_result_id, timestamp, id) values (?, ?, ?, ?, ?) [22001-214]
+2023-06-01 14:23:09 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLDataException: Value too long for column "DATA CHARACTER VARYING(255)": "'5.70 5.51 5.22 5.08 5.20 5.03 5.14 4.84 5.04 4.41 4.42 4.23 4.42 4.22 4.47 4.25... (500)"; SQL statement:
+insert into ecgdata (component_id, data, ecg_analysis_result_id, timestamp, id) values (?, ?, ?, ?, ?) [22001-214]
+2023-06-01 14:23:12 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLDataException: Value too long for column "DATA CHARACTER VARYING(255)": "'4.78 5.95 4.50 5.63 4.49 5.55 4.45 5.17 3.86 4.99 3.82 4.92 3.82 5.05 4.11 5.35... (500)"; SQL statement:
+insert into ecgdata (component_id, data, ecg_analysis_result_id, timestamp, id) values (?, ?, ?, ?, ?) [22001-214]
+2023-06-01 14:23:14 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLDataException: Value too long for column "DATA CHARACTER VARYING(255)": "'5.41 6.51 4.99 5.27 4.67 5.20 4.72 4.84 4.37 4.88 4.64 5.45 4.74 4.73 3.98 4.41... (500)"; SQL statement:
+insert into ecgdata (component_id, data, ecg_analysis_result_id, timestamp, id) values (?, ?, ?, ?, ?) [22001-214]
+2023-06-01 14:23:16 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLDataException: Value too long for column "DATA CHARACTER VARYING(255)": "'6.35 5.36 5.53 4.82 5.31 4.77 5.31 4.10 4.25 5.26 10.00 7.89 3.56 3.14 4.19 3.8... (501)"; SQL statement:
+insert into ecgdata (component_id, data, ecg_analysis_result_id, timestamp, id) values (?, ?, ?, ?, ?) [22001-214]
+2023-06-01 14:23:19 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLDataException: Value too long for column "DATA CHARACTER VARYING(255)": "'5.98 5.36 5.47 5.14 5.51 5.20 5.59 4.92 5.09 4.65 4.88 4.37 4.64 4.25 4.62 4.13... (499)"; SQL statement:
+insert into ecgdata (component_id, data, ecg_analysis_result_id, timestamp, id) values (?, ?, ?, ?, ?) [22001-214]
+2023-06-01 14:23:21 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLDataException: Value too long for column "DATA CHARACTER VARYING(255)": "'10.00 6.35 3.71 4.70 4.23 5.13 4.29 4.82 3.87 4.62 3.87 4.64 3.78 4.73 4.06 4.8... (500)"; SQL statement:
+insert into ecgdata (component_id, data, ecg_analysis_result_id, timestamp, id) values (?, ?, ?, ?, ?) [22001-214]
+2023-06-01 14:23:24 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLDataException: Value too long for column "DATA CHARACTER VARYING(255)": "'5.57 6.97 5.39 5.82 4.50 5.39 4.40 4.81 3.74 4.61 3.50 4.18 4.77 9.99 7.42 3.69... (499)"; SQL statement:
+insert into ecgdata (component_id, data, ecg_analysis_result_id, timestamp, id) values (?, ?, ?, ?, ?) [22001-214]
+2023-06-01 14:23:25 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLDataException: Value too long for column "DATA CHARACTER VARYING(255)": "'4.30 4.64 4.73 4.65 4.69 4.68 4.75 4.34 4.20 4.24 4.22 4.23 4.33 4.39 4.47 4.57... (500)"; SQL statement:
+insert into ecgdata (component_id, data, ecg_analysis_result_id, timestamp, id) values (?, ?, ?, ?, ?) [22001-214]
+2023-06-01 14:23:27 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLDataException: Value too long for column "DATA CHARACTER VARYING(255)": "'5.58 5.86 4.77 5.38 4.53 5.19 5.40 5.31 3.99 4.70 3.91 4.63 3.79 4.60 3.92 4.61... (499)"; SQL statement:
+insert into ecgdata (component_id, data, ecg_analysis_result_id, timestamp, id) values (?, ?, ?, ?, ?) [22001-214]
+2023-06-01 14:23:29 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLDataException: Value too long for column "DATA CHARACTER VARYING(255)": "'6.45 5.38 6.06 4.93 6.07 4.92 6.08 4.50 5.34 4.06 5.03 3.82 4.80 3.63 4.76 3.65... (500)"; SQL statement:
+insert into ecgdata (component_id, data, ecg_analysis_result_id, timestamp, id) values (?, ?, ?, ?, ?) [22001-214]
+2023-06-01 14:23:32 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLDataException: Value too long for column "DATA CHARACTER VARYING(255)": "'5.99 5.09 5.64 4.63 5.59 4.46 5.63 4.17 5.02 3.94 4.93 3.95 4.95 3.87 4.89 3.90... (499)"; SQL statement:
+insert into ecgdata (component_id, data, ecg_analysis_result_id, timestamp, id) values (?, ?, ?, ?, ?) [22001-214]
+2023-06-01 14:23:34 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLDataException: Value too long for column "DATA CHARACTER VARYING(255)": "'4.53 5.28 4.64 5.06 4.64 5.08 4.70 4.85 4.19 4.77 4.34 4.84 4.47 4.92 4.55 5.04... (500)"; SQL statement:
+insert into ecgdata (component_id, data, ecg_analysis_result_id, timestamp, id) values (?, ?, ?, ?, ?) [22001-214]
+2023-06-01 14:23:37 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLDataException: Value too long for column "DATA CHARACTER VARYING(255)": "'6.45 5.11 5.92 4.59 5.65 4.49 5.60 3.97 5.04 3.80 4.96 3.83 5.04 3.84 5.05 3.78... (500)"; SQL statement:
+insert into ecgdata (component_id, data, ecg_analysis_result_id, timestamp, id) values (?, ?, ?, ?, ?) [22001-214]
+2023-06-01 14:23:39 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLDataException: Value too long for column "DATA CHARACTER VARYING(255)": "'5.30 4.99 4.93 4.83 4.92 4.76 4.89 4.41 4.30 4.18 4.20 4.15 4.29 4.35 4.84 4.73... (499)"; SQL statement:
+insert into ecgdata (component_id, data, ecg_analysis_result_id, timestamp, id) values (?, ?, ?, ?, ?) [22001-214]
+2023-06-01 14:23:41 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLDataException: Value too long for column "DATA CHARACTER VARYING(255)": "'5.36 5.04 4.96 5.11 5.51 5.95 5.64 5.02 4.89 4.49 4.32 4.20 4.09 4.04 3.93 4.04... (500)"; SQL statement:
+insert into ecgdata (component_id, data, ecg_analysis_result_id, timestamp, id) values (?, ?, ?, ?, ?) [22001-214]
+2023-06-01 14:23:44 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLDataException: Value too long for column "DATA CHARACTER VARYING(255)": "'5.36 5.16 5.35 4.73 5.33 4.80 5.27 4.31 4.63 4.06 4.55 4.06 4.78 4.41 5.14 4.96... (499)"; SQL statement:
+insert into ecgdata (component_id, data, ecg_analysis_result_id, timestamp, id) values (?, ?, ?, ?, ?) [22001-214]
+2023-06-01 14:23:47 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLDataException: Value too long for column "DATA CHARACTER VARYING(255)": "'5.25 4.67 5.38 4.39 5.40 4.40 5.43 4.09 4.97 4.03 5.02 3.97 5.12 4.22 5.32 4.42... (500)"; SQL statement:
+insert into ecgdata (component_id, data, ecg_analysis_result_id, timestamp, id) values (?, ?, ?, ?, ?) [22001-214]
+2023-06-01 14:23:49 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLDataException: Value too long for column "DATA CHARACTER VARYING(255)": "'4.78 5.03 4.57 4.78 4.53 4.79 4.69 4.65 4.12 4.44 4.17 4.60 4.37 4.69 4.52 4.88... (500)"; SQL statement:
+insert into ecgdata (component_id, data, ecg_analysis_result_id, timestamp, id) values (?, ?, ?, ?, ?) [22001-214]
+2023-06-01 14:23:50 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLDataException: Value too long for column "DATA CHARACTER VARYING(255)": "'5.84 5.37 6.03 5.41 6.53 5.45 5.84 4.31 4.92 3.89 4.65 3.82 4.64 3.63 4.20 5.17... (501)"; SQL statement:
+insert into ecgdata (component_id, data, ecg_analysis_result_id, timestamp, id) values (?, ?, ?, ?, ?) [22001-214]
+2023-06-01 14:23:53 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLDataException: Value too long for column "DATA CHARACTER VARYING(255)": "'5.65 5.72 5.74 5.49 4.97 4.60 4.61 4.15 3.91 3.84 3.80 3.61 3.51 5.47 9.86 6.70... (499)"; SQL statement:
+insert into ecgdata (component_id, data, ecg_analysis_result_id, timestamp, id) values (?, ?, ?, ?, ?) [22001-214]
+2023-06-01 14:23:56 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLDataException: Value too long for column "DATA CHARACTER VARYING(255)": "'6.36 5.04 5.92 4.86 6.00 4.84 6.00 4.65 5.45 4.24 5.19 3.92 4.73 3.74 4.79 3.85... (499)"; SQL statement:
+insert into ecgdata (component_id, data, ecg_analysis_result_id, timestamp, id) values (?, ?, ?, ?, ?) [22001-214]
+2023-06-01 14:23:57 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLDataException: Value too long for column "DATA CHARACTER VARYING(255)": "'5.52 5.03 5.13 4.56 4.97 4.48 4.57 4.43 7.91 9.39 4.29 2.79 3.92 3.71 4.26 3.78... (499)"; SQL statement:
+insert into ecgdata (component_id, data, ecg_analysis_result_id, timestamp, id) values (?, ?, ?, ?, ?) [22001-214]
+2023-06-01 14:23:59 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLDataException: Value too long for column "DATA CHARACTER VARYING(255)": "'4.82 5.59 5.00 5.67 5.27 6.04 5.41 5.08 4.08 4.46 3.64 4.39 3.83 4.35 3.44 4.25... (500)"; SQL statement:
+insert into ecgdata (component_id, data, ecg_analysis_result_id, timestamp, id) values (?, ?, ?, ?, ?) [22001-214]
+2023-06-01 14:24:01 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLDataException: Value too long for column "DATA CHARACTER VARYING(255)": "'4.49 5.04 4.25 4.81 4.26 4.61 4.40 4.68 3.95 4.43 3.94 4.50 4.07 4.66 4.22 4.75... (499)"; SQL statement:
+insert into ecgdata (component_id, data, ecg_analysis_result_id, timestamp, id) values (?, ?, ?, ?, ?) [22001-214]
+2023-06-01 14:24:04 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLDataException: Value too long for column "DATA CHARACTER VARYING(255)": "'4.63 5.37 4.42 5.04 4.42 5.08 4.50 4.81 3.95 4.62 3.99 4.67 4.10 4.83 4.30 5.00... (499)"; SQL statement:
+insert into ecgdata (component_id, data, ecg_analysis_result_id, timestamp, id) values (?, ?, ?, ?, ?) [22001-214]
+2023-06-01 14:24:07 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLDataException: Value too long for column "DATA CHARACTER VARYING(255)": "'5.14 5.52 4.86 5.29 4.77 5.17 4.76 4.87 4.24 4.57 4.14 4.53 4.02 4.44 4.02 4.53... (499)"; SQL statement:
+insert into ecgdata (component_id, data, ecg_analysis_result_id, timestamp, id) values (?, ?, ?, ?, ?) [22001-214]
+2023-06-01 14:24:09 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLDataException: Value too long for column "DATA CHARACTER VARYING(255)": "'5.25 4.73 5.13 4.28 5.18 4.28 5.10 3.89 4.52 3.71 4.78 4.07 5.19 4.49 5.20 3.91... (500)"; SQL statement:
+insert into ecgdata (component_id, data, ecg_analysis_result_id, timestamp, id) values (?, ?, ?, ?, ?) [22001-214]
+2023-06-01 14:24:11 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLDataException: Value too long for column "DATA CHARACTER VARYING(255)": "'4.25 0.00 4.02 0.00 2.84 0.00 2.52 0.00 1.95 0.00 1.91 0.00 1.21 0.00 1.16 0.00... (501)"; SQL statement:
+insert into ecgdata (component_id, data, ecg_analysis_result_id, timestamp, id) values (?, ?, ?, ?, ?) [22001-214]
+2023-06-01 14:24:12 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLDataException: Value too long for column "DATA CHARACTER VARYING(255)": "'7.20 6.13 6.64 5.39 6.60 5.72 7.58 5.74 7.85 5.88 6.99 5.18 7.01 5.04 7.36 4.78... (501)"; SQL statement:
+insert into ecgdata (component_id, data, ecg_analysis_result_id, timestamp, id) values (?, ?, ?, ?, ?) [22001-214]
+2023-06-01 14:24:15 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLDataException: Value too long for column "DATA CHARACTER VARYING(255)": "'5.80 4.33 5.21 3.25 5.18 3.45 5.39 3.50 4.65 3.05 4.93 2.69 4.64 3.06 4.69 2.93... (500)"; SQL statement:
+insert into ecgdata (component_id, data, ecg_analysis_result_id, timestamp, id) values (?, ?, ?, ?, ?) [22001-214]
+2023-06-01 14:24:16 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLDataException: Value too long for column "DATA CHARACTER VARYING(255)": "'4.66 5.51 4.54 5.25 4.63 5.23 5.18 4.94 3.79 4.73 4.03 4.76 4.26 4.69 4.07 4.86... (500)"; SQL statement:
+insert into ecgdata (component_id, data, ecg_analysis_result_id, timestamp, id) values (?, ?, ?, ?, ?) [22001-214]
+2023-06-01 14:24:19 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLDataException: Value too long for column "DATA CHARACTER VARYING(255)": "'6.19 5.24 5.64 4.81 5.43 4.46 5.23 3.94 4.54 3.78 4.57 3.71 4.48 3.68 4.57 3.73... (499)"; SQL statement:
+insert into ecgdata (component_id, data, ecg_analysis_result_id, timestamp, id) values (?, ?, ?, ?, ?) [22001-214]
+2023-06-01 14:24:21 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLDataException: Value too long for column "DATA CHARACTER VARYING(255)": "'5.84 5.78 5.60 5.67 5.11 5.17 5.16 4.63 4.31 4.34 4.16 4.30 4.14 4.26 4.18 4.34... (500)"; SQL statement:
+insert into ecgdata (component_id, data, ecg_analysis_result_id, timestamp, id) values (?, ?, ?, ?, ?) [22001-214]
+2023-06-01 14:24:24 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLDataException: Value too long for column "DATA CHARACTER VARYING(255)": "'5.64 5.26 5.40 4.90 5.32 4.77 5.34 4.44 4.67 4.16 4.57 4.13 4.58 4.11 4.58 4.33... (500)"; SQL statement:
+insert into ecgdata (component_id, data, ecg_analysis_result_id, timestamp, id) values (?, ?, ?, ?, ?) [22001-214]
+2023-06-01 14:24:27 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLDataException: Value too long for column "DATA CHARACTER VARYING(255)": "'4.58 5.26 4.34 5.05 4.52 5.18 4.50 4.87 4.08 4.73 4.18 4.82 4.27 4.99 4.46 5.19... (500)"; SQL statement:
+insert into ecgdata (component_id, data, ecg_analysis_result_id, timestamp, id) values (?, ?, ?, ?, ?) [22001-214]
+2023-06-01 14:24:28 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLDataException: Value too long for column "DATA CHARACTER VARYING(255)": "'10.00 5.33 3.54 4.81 4.37 5.10 4.44 4.80 3.94 4.53 3.91 4.69 3.96 4.71 4.10 4.8... (500)"; SQL statement:
+insert into ecgdata (component_id, data, ecg_analysis_result_id, timestamp, id) values (?, ?, ?, ?, ?) [22001-214]
+2023-06-01 14:24:30 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLDataException: Value too long for column "DATA CHARACTER VARYING(255)": "'4.70 5.16 4.49 5.04 4.52 5.08 4.68 4.80 4.21 4.67 4.32 4.89 4.47 5.08 4.63 5.08... (500)"; SQL statement:
+insert into ecgdata (component_id, data, ecg_analysis_result_id, timestamp, id) values (?, ?, ?, ?, ?) [22001-214]
+2023-06-01 14:24:32 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLDataException: Value too long for column "DATA CHARACTER VARYING(255)": "'5.21 5.37 4.44 4.90 4.34 4.78 4.30 4.62 4.15 4.77 4.55 5.10 4.32 4.30 3.74 4.23... (499)"; SQL statement:
+insert into ecgdata (component_id, data, ecg_analysis_result_id, timestamp, id) values (?, ?, ?, ?, ?) [22001-214]

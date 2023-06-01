@@ -48,7 +48,7 @@ bool miliVolt = true;
 
 
 void setup() {
-  Serial.begin(9600);
+  Serial.begin(115200);
 
   WiFi.begin(ssid, password);
   Serial.println("Connecting");
@@ -85,7 +85,9 @@ void setup() {
   serverName = "http://10.0.0.56:8080/data/receive/esp32_custom";
 
   sampling_rate = get_sampling_rate(); 
-  miliVolt = in_mV(); 
+  miliVolt = in_mV();  
+
+
 
 }
 
@@ -113,11 +115,8 @@ void loop() {
     output["timestamp"] = get_time_format()+"."+currenttime;
 
 
-    // //data = component.createNestedArray("data"); 
+   
 
-
-
-  
     double AO_voltage = 0; 
     //add_x_values(data,1000); 
 
@@ -131,6 +130,7 @@ void loop() {
       if(i!=0){data_string = data_string + " ";}
       
       data_string = data_string + String(AO_voltage); 
+      Serial.println(AO_voltage); 
       //data[i] = AO_voltage; 
 
       delay(sampling_rate); // delays 1 millisecond 
@@ -171,7 +171,7 @@ void loop() {
 int get_analogRead() { // gets the ecg output from the AD8232 (as int representation) 
 
   if((digitalRead(16) != 1) && (digitalRead(15) != 1)){
-       return analogRead(14); 
+       return analogRead(32); 
    }
    
     else {  return 0;  } //returns 0 if leads are off 

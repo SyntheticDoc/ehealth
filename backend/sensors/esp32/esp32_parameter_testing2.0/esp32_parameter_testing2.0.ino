@@ -16,18 +16,17 @@
 #include <NTPClient.h>
 #include <WiFiUdp.h> // to get the first time stamp for the beginning 
 
-DynamicJsonDocument output(2980); //with capacity > 1040; file is always null (on arduino) or other unexpected behavior
-//DynamicJsonDocument header(200);
+DynamicJsonDocument output(2980); //with capacity > 1040; 
 
 const char* ntpServer = "pool.ntp.org";
-const char* ssid ="A1-653BBD";
-const char* password = "E2F613F91B";
+const char* ssid ="DESKTOP-RBTNDRT 4714";
+const char* password = "7M0o]174";
 
 const long  gmtOffset_sec = 3600;
 const int   daylightOffset_sec = 3600;
 
 //Your Domain name with URL path or IP address with path
-String serverName = "http://10.0.0.56:8080/connect/registerECGDevice";
+String serverName = "http://128.131.215.113:8080/connect/registerECGDevice";
 
 
 // the following variables are unsigned longs because the time, measured in
@@ -83,12 +82,14 @@ void setup() {
  
 
   milliseconds = millis(); 
-  serverName = "http://10.0.0.56:8080/data/receive/esp32_custom";
 
   sampling_rate = get_sampling_rate(); 
   in_miliV = in_mV(); 
 
+  
   device_identifier = get_identifier(register_device());
+  
+  serverName = "http://128.131.215.113:8080/data/receive/esp32_custom";
 
 }
 
@@ -136,7 +137,7 @@ void loop() {
 
       Serial.println("ECG_value :  "+String(AO_voltage)); 
       
-      data_string = data_string + " " + String(AO_voltage); 
+      data_string = data_string + String(AO_voltage); 
       //data[i] = AO_voltage; 
 
       delay(sampling_rate); // delays 1 millisecond 
@@ -197,8 +198,8 @@ String get_time_format(){
   String time; 
 
   if(!getLocalTime(&timeinfo)){
-    Serial.println("Failed to obtain time");
-    return "an error occured ";
+    Serial.println("Failed to obtain time, set default");
+    return "2023-05-26T14:41:43";
   }
   
   char formatted_time[50]; 
@@ -225,7 +226,7 @@ JsonObject comp1 = components.createNestedObject();
 comp1["id"] =0;
 comp1["selfID"] ="2708a274f35b1b"; 
 comp1["identifier"] ="";
-comp1["name"] ="ESP32_ECG_ELEC_POTL_I";
+comp1["name"] ="MDC_ECG_ELEC_POTL_I";
 
 String serialized_json; 
 serializeJson(register_json,serialized_json); 
@@ -247,6 +248,9 @@ http.addHeader("Content-Type", "application/json");
     payload = http.getString();
     Serial.println(payload); 
   }
+  else { 
+        Serial.println("httpResponseCode:");
+        Serial.println(httpResponseCode);  }
 
   return payload; 
 }

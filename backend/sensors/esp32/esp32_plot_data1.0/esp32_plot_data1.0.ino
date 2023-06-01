@@ -6,7 +6,7 @@ void setup() {
   Serial.begin(115200);
   pinMode(16, INPUT); // Setup for leads off detection LO +
   pinMode(15, INPUT); // Setup for leads off detection LO -
-  Serial.println("ECG Module Test sampling every second "); 
+  Serial.println("ECG Module plot (output 32) ecg data "); 
 
   sampling_rate = get_sampling_rate(); 
 
@@ -20,10 +20,11 @@ void loop() {
   for (int i = 0; i<1000 ; i = i+sampling_rate){ 
 
     
-    double AO_voltage = calculate_voltage(analogRead(14),4095); // 4095 is the max anlog read value of esp32 
+    double AO_voltage = calculate_voltage(analogRead(32),4095); // 4095 is the max anlog read value of esp32 
 
     if(i!=0){data_string= data_string +" "; }
-    data_string = data_string+ String(AO_voltage); 
+    data_string = data_string+ String(AO_voltage);
+    Serial.println(AO_voltage) ; 
       //data[i] = AO_voltage; 
 
     delay(sampling_rate); // delays 1 millisecond 
@@ -31,7 +32,7 @@ void loop() {
     }
 
   data_string = data_string+"}"; 
-  Serial.println(data_string);  // plot/display data on serial plotter/monitor
+  //Serial.println(data_string);  // plot/display data on serial plotter/monitor
   
   
 }

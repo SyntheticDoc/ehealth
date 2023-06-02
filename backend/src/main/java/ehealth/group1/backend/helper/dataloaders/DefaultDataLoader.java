@@ -25,10 +25,10 @@ import java.util.List;
 public class DefaultDataLoader implements CommandLineRunner {
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-    private final double maxDeviation = 0.1;
+    private final double maxDeviation = 0.2;
     private final double maxDeviationNum = 5.0;
     private final int iterations_transition = 3;
-    private final int iterations_emergency = 5;
+    private final int iterations_emergency = 3;
 
     private final Argon2ParametersRepository argon2ParametersRepository;
     private final DataRepository dataRepository;

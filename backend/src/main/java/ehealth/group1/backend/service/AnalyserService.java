@@ -9,6 +9,8 @@ import ehealth.group1.backend.helper.ErrorHandler;
 import ehealth.group1.backend.helper.TransientServerSettings;
 import ehealth.group1.backend.helper.datawriter.Datawriter;
 import ehealth.group1.backend.helper.graphics.GraphicsModule;
+import ehealth.group1.backend.helper.jely.JelyAnalyzer;
+import ehealth.group1.backend.helper.jely.JelyAnalyzerResult;
 import org.hl7.fhir.r5.model.Observation;
 import org.hl7.fhir.r5.model.SampledData;
 import org.slf4j.Logger;
@@ -31,17 +33,19 @@ public class AnalyserService {
 
     private final DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd.MM.uuuu HH:mm:ss:SSS");
 
+    private final JelyAnalyzer jelyAnalyzer;
     private final ErrorHandler errorHandler;
     private final Datawriter datawriter;
     private final GraphicsModule graphicsModule;
     private final TransientServerSettings serverSettings;
 
     public AnalyserService(ErrorHandler errorHandler, Datawriter datawriter, GraphicsModule graphicsModule,
-                           TransientServerSettings serverSettings) {
+                           TransientServerSettings serverSettings, JelyAnalyzer jelyAnalyzer) {
         this.errorHandler = errorHandler;
         this.datawriter = datawriter;
         this.graphicsModule = graphicsModule;
         this.serverSettings = serverSettings;
+        this.jelyAnalyzer = jelyAnalyzer;
     }
 
     /**
@@ -57,7 +61,7 @@ public class AnalyserService {
         ECGSTATE[] stateList = new ECGSTATE[obs.getComponent().size()];
         ECGSTATE finalState = ECGSTATE.OK;
 
-        String comment = "No comment";
+        String comment = "No asystole detected";
 
         if(serverSettings.writeDataToDisk()) {
             datawriter.writeData(obs);
@@ -67,8 +71,46 @@ public class AnalyserService {
             graphicsModule.drawECG(obs.getComponent(), obs.getTimestampAsLocalDateTime());
         }
 
+        StringBuilder jelyResults = new StringBuilder();
+
         for(int i = 0; i < obs.getComponent().size(); i++) {
-            stateList[i] = analyseComponent(obs.getComponent().get(i), settings.getEcgAnalysisSettings());
+            SampledData rawData = obs.getComponent().get(i).getValueSampledData();
+            double[] data;
+            ECGSTATE jelyState = ECGSTATE.INVALID;
+
+            try {
+                data = Arrays.stream(rawData.getData().trim().split(" ")).mapToDouble(Double::parseDouble).toArray();
+            } catch(NumberFormatException e) {
+                errorHandler.handleCustomException("AnalyserService.analyseComponent()", "SampledData contained invalid data", e);
+                stateList[i] = ECGSTATE.INVALID;
+                continue;
+            }
+
+            try {
+                JelyAnalyzerResult jelyAnalyzerResult = jelyAnalyzer.analyze(data, obs.getComponent().get(i).getValueSampledData().getInterval().doubleValue());
+
+                if(jelyAnalyzerResult.isWarning()) {
+                    jelyState = ECGSTATE.WARNING;
+                } else {
+                    jelyState = ECGSTATE.OK;
+                }
+
+                jelyResults.append(jelyAnalyzerResult);
+            } catch(Exception e) {
+                jelyResults.append("Error in jelyAnalyzer: ").append(e.getMessage());
+                //e.printStackTrace();
+                throw new Error("Error in JelyAnalyzer");
+            }
+
+            if(i < (obs.getComponent().size() - 1)) {
+                jelyResults.append("\n");
+            }
+
+            stateList[i] = analyseComponent(data, settings.getEcgAnalysisSettings());
+
+            if(stateList[i] == ECGSTATE.OK && jelyState == ECGSTATE.WARNING) {
+                stateList[i] = ECGSTATE.WARNING;
+            }
         }
 
         int okStates = 0, invalidStates = 0, warningStates = 0;
@@ -107,6 +149,10 @@ public class AnalyserService {
             comment = "Possible asystole detected in at least one lead";
         }
 
+        comment += "\nJELY results: " + jelyResults;
+
+        LOGGER.info("Result comment:\n" + comment);
+
         return new ECGAnalysisResult(finalState, dtf.format(LocalDateTime.now()), comment);
     }
 
@@ -118,28 +164,25 @@ public class AnalyserService {
     /**
      * Analyses the ecg data of a specific component and returns the result as ECGSTATE.
      *
-     * @param c The component (ecg lead) holding the data to be analysed
+     * @param data The data of the component to be analysed
      * @param ecgAnalysisSettings The settings object holding settings for the analyser
      * @return ECGSTATE.OK if no ecg abnormalities were detected, ECGSTATE.INVALID if the data could not be analysed,
      * possibly due to some data format error, ECGSTATE.WARNING if the analysed data looks like an asystole.
      */
-    private ECGSTATE analyseComponent(Observation.ObservationComponentComponent c, ECGAnalysisSettings ecgAnalysisSettings) {
-        SampledData rawData = c.getValueSampledData();
-        double[] data;
-
-        try {
-            data = Arrays.stream(rawData.getData().trim().split(" ")).mapToDouble(Double::parseDouble).toArray();
-        } catch(NumberFormatException e) {
-            errorHandler.handleCustomException("AnalyserService.analyseComponent()", "SampledData contained invalid data", e);
-            return ECGSTATE.INVALID;
-        }
-
-        LOGGER.info("Analyzing data:\n" + Arrays.toString(rawData.getData().split(" ")) + "\n");
+    private ECGSTATE analyseComponent(double[] data, ECGAnalysisSettings ecgAnalysisSettings) {
+        LOGGER.info("Analyzing data:\n" + Arrays.toString(data) + "\n");
 
         int largeDeviationCount = 0;
+        int step;
 
-        for(int i = 0; i < (data.length - 1); i++) {
-            if (Math.abs(data[i] - data[i + 1]) > ecgAnalysisSettings.getMaxDeviation()) {
+        if((data.length / 100) > 1) {
+            step = data.length / 100;
+        } else {
+            step = 1;
+        }
+
+        for(int i = 0; (i + step) < data.length; i += step) {
+            if (Math.abs(data[i] - data[i + step]) > ecgAnalysisSettings.getMaxDeviation()) {
                 largeDeviationCount++;
             }
 

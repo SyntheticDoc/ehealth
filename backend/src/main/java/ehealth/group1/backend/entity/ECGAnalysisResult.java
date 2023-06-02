@@ -1,10 +1,7 @@
 package ehealth.group1.backend.entity;
 
 import ehealth.group1.backend.enums.ECGSTATE;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -26,6 +23,7 @@ public class ECGAnalysisResult {
 
     private String timestamp;
 
+    @Column(length = 262144)
     private String comment;
 
     public ECGAnalysisResult(ECGSTATE ecgstate, String timestamp, String comment) {

@@ -61,6 +61,14 @@ public class MockDataProvider {
         return result;
     }
 
+    public void resetPointer(String user) {
+        if(user.equals("User Userman1")) {
+            userman1Buf.resetPointer();
+        } else if(user.equals("User Userman2")) {
+            userman2Buf.resetPointer();
+        }
+    }
+
     public String getMockESP32Identifier() {
         return "123";
     }

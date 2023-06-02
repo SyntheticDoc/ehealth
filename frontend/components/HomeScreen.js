@@ -39,7 +39,7 @@ const HomeScreen = ({ navigation }) => {
 		const postData = {
 			userName: generaluser.name,
 			password: generaluser.password,
-			deviceIdentifier: 'user1DeviceSelfID',
+			deviceIdentifier: 'user3DeviceSelfID',
 		};
 		console.log(postData)
 
@@ -47,7 +47,7 @@ const HomeScreen = ({ navigation }) => {
 
     if(healthStatus ==2 && activated==true){
 		const response = await fetch(
-			'http://'+ "172.16.0.10"+':8080/data/lastHealthStatus',
+			'http://'+ "128.131.193.44"+':8080/data/lastHealthStatus',
 			{
 				method: 'Post',
 				headers: {
@@ -81,7 +81,7 @@ const HomeScreen = ({ navigation }) => {
 	const castEmergencyCall = (user) => {
 		fetch(
 		  "http://" +
-			"172.16.0.10" +
+			"128.131.193.44" +
 			':8080/user/sendsms?recipient='+user.phone+'&message="An automated ecg-monitoring device detected a possible fatal heart rhythm for: '+user.name+', location: '+user.address+'. Assume that the user is alone, helpless and cannot open the door. Immediately send an ambulance to the address provided. ',
 		  { method: "GET" }
 		)
@@ -104,7 +104,7 @@ const HomeScreen = ({ navigation }) => {
 
 		fetch(
 			"http://" +
-			  "172.16.0.10" +
+			  "128.131.193.44" +
 			  ':8080/data/stopEmergency',
 			{ 	method: 'Post', 
 			headers: {

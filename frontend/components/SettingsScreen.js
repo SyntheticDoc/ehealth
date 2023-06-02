@@ -62,7 +62,7 @@ const SettingsScreen = ({ navigation }) => {
     
     const response = await fetch(
       "http://" +
-        "172.16.0.10" +
+        "128.131.193.44" +
         ":8080/user/update-user",
       {
         method: "Post",

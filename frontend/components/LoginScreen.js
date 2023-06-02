@@ -71,9 +71,9 @@ const LoginScreen = ({ navigation }) => {
         
 
         setGeneraluser(json); 
-        const user = generaluser; 
-        user.password = password; 
-        setGeneraluser(user)
+        //const user = generaluser; 
+        //user.password = password; 
+        //setGeneraluser(user)
        
        
         

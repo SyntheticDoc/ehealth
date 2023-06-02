@@ -39,7 +39,7 @@ const HomeScreen = ({ navigation }) => {
 		const postData = {
 			userName: generaluser.name,
 			password: generaluser.password,
-			deviceIdentifier: 'user3DeviceSelfID',
+			deviceIdentifier: '123',
 		};
 		console.log(postData)
 
@@ -82,7 +82,7 @@ const HomeScreen = ({ navigation }) => {
 		fetch(
 		  "http://" +
 			"128.131.193.44" +
-			':8080/user/sendsms?recipient='+user.phone+'&message="An automated ecg-monitoring device detected a possible fatal heart rhythm for: '+user.name+', location: '+user.address+'. Assume that the user is alone, helpless and cannot open the door. Immediately send an ambulance to the address provided. ',
+			':8080/user/sendsms?recipient=0043'+user.phone+'&message=An automated ecg-monitoring device detected a possible fatal heart rhythm for: '+user.name+', location: '+user.address+'. Assume that the user is alone, helpless and cannot open the door. Immediately send an ambulance to the address provided. ',
 		  { method: "GET" }
 		)
 		  .then((response) => console.log(response))
@@ -98,7 +98,7 @@ const HomeScreen = ({ navigation }) => {
 		const postData = {
 			userName: generaluser.name,
 			password: generaluser.password,
-			deviceIdentifier: 'user1DeviceSelfID',
+			deviceIdentifier: '123',
 		};
 		console.log("Try to stop emergency: "+postData.userName+','+postData.password+','+postData.deviceIdentifier)
 

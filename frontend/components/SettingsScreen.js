@@ -45,7 +45,11 @@ const SettingsScreen = ({ navigation }) => {
 
 
     console.log(generaluser)
-    const postData = {
+
+    
+    let postData= null;
+    if(newPassword!=="" && newPassword!==null&& newPassword!==undefined){
+     postData = {
 			name: name,
       address: address,
       phone: phoneNumber,
@@ -56,6 +60,19 @@ const SettingsScreen = ({ navigation }) => {
       oldPassword:generaluser.password
 
 		};
+  }else{
+    postData = {
+			name: name,
+      address: address,
+      phone: phoneNumber,
+      emergency: emergency,
+			password: generaluser.password,
+			devices: [],
+      oldName: name,
+      oldPassword:generaluser.password
+
+		};
+  }
     console.log(postData)
     setPassword(postData.password); 
     console.log(password)

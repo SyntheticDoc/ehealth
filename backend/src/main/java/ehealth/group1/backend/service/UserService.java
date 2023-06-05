@@ -80,7 +80,7 @@ public class UserService {
         if(result == null) {
             throw new UserNotFoundException("User " + name + " was not found in the database.");
         } else {
-            result.setPassword("");
+            result.setPassword(password);
             return result;
         }
     }
@@ -93,9 +93,10 @@ public class UserService {
         if(user2 != null) {
             throw new UserAlreadyExistsException("A user with the name \"" + user.getName() + "\" is already existing!");
         } else {
+            String tempPwd = user.getPassword();
             user.setPassword(hashUserPassword(user.getPassword()));
             User result = userRepository.save(user);
-            result.setPassword("");
+            result.setPassword(tempPwd);
             return result;
         }
     }

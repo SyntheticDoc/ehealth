@@ -24,10 +24,12 @@ public class MessagingService {
 
     public void sendSMS(String recipient, String message) throws IOException {
         // TODO: Remove following if in production version
-        if(true) {
+        if(false) {
             LOGGER.info("MOCK-sending EMERGENCY SMS to " + recipient + " (message: " + message + ")");
             return;
         }
+
+        LOGGER.info("Sending EMERGENCY SMS to " + recipient + " (message: " + message + ")");
 
         URL url = new URL("https://gatewayapi.com/rest/mtsms");
         HttpsURLConnection con = (HttpsURLConnection) url.openConnection();

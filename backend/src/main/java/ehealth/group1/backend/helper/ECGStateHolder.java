@@ -71,6 +71,8 @@ public class ECGStateHolder {
             }
         }
 
+        currentAnalysisResult.setEcgstate(current);
+
         //LOGGER.warn("STATE NEW - AnalysisResult: " + analysisResult + ", current: " + current + ", last: " + last);
     }
 
